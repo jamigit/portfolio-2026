@@ -42,8 +42,9 @@ src/
   scripts/
     menu.js                   # Mobile hamburger toggle
 
-  altCaseStudy/               # Draft / WIP content — NOT published
-  case-study-save-170825/     # Archived versions — NOT published
+_drafts/                      # Draft / archived content — NOT part of the build
+  altCaseStudy/
+  case-study-save-170825/
 ```
 
 ---
@@ -206,6 +207,13 @@ npm run preview  # preview built output
 
 ---
 
+## Astro config notes
+
+- `astro.config.mjs` has a `site` placeholder comment — set this to the production domain before deploying so the sitemap generates absolute URLs.
+- The Netlify adapter is set up for SSR capability, but all current pages are static.
+
+---
+
 ## What NOT to do
 
 - Do not add Tailwind, shadcn, or any component library — the design intentionally uses plain CSS.
@@ -213,4 +221,6 @@ npm run preview  # preview built output
 - Do not use `any` casts in `.astro` frontmatter without a comment explaining why.
 - Do not add images to `public/images/` and reference them with raw paths — use the `src/assets/` + Astro `<Image>` pipeline.
 - Do not add new hero images without updating both `CaseStudyLayout.astro` and `index.astro`.
-- Do not touch `altCaseStudy/` or `case-study-save-170825/` — these are drafts/archives.
+- Do not touch `_drafts/` — these are archived content versions, not part of the build.
+- Do not add named imports (`{ ComponentName }`) from `.astro` files — Astro components only have default exports.
+- Do not put duplicate `class` props on a single element — only the last one will apply.

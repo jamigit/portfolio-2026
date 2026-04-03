@@ -3,7 +3,6 @@ const { frontmatter } = Astro.props;
 
 import BaseLayout from "./BaseLayout.astro";
 import { Image } from 'astro:assets';
-import { Sidebar } from '../components/Sidebar.astro'
 
 // Import all your hero images here
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
@@ -19,8 +18,6 @@ import rmssHero from '../assets/images/hero/rmss-hero.png';
 import sitesafeHero from '../assets/images/hero/sitesafe-hero.png';
 import times7HomeShadow from '../assets/images/hero/times7-home-shadow.png';
 import vocalHomeShadow from '../assets/images/hero/vocal-home-shadow.png';
-import Sidebar from "../components/Sidebar.astro";
-
 const { image, customData, title, metaTitle, metaDescription, author} = frontmatter;
 
 // Create a mapping object that connects filename to imported image

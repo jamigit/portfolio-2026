@@ -9,7 +9,8 @@ import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
+  // TODO: set to your production domain so sitemap generates absolute URLs
+  // site: 'https://yourdomain.com',
   integrations: [sitemap(), mdx()],
-    outDir: 'dist',
-  adapter: netlify()
+  adapter: netlify(),
 });
