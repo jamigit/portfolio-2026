@@ -735,85 +735,223 @@ To prevent one-off styles proliferating:
 
 ---
 
-## 6. Implementation Phases
+## 6. Mobile-First Principles
+
+These rules apply to **every phase**. Mobile-first is not a QA step — it is how the code is written from the start.
+
+### CSS direction
+All styles are written for mobile first. Desktop enhancements use `min-width`:
+```css
+/* Always this pattern */
+.element { /* mobile base */ }
+@media (min-width: 768px) { .element { /* desktop enhancement */ } }
+
+/* Never this */
+@media (max-width: 767px) { .element { /* mobile override */ } }
+```
+Flag any `max-width` query in new code as a bug.
+
+### Touch targets
+All interactive elements: minimum `44×44px` (WCAG 2.5.5). All buttons must have `min-height: 44px`.
+
+### ThreeJS on mobile
+Canvas is disabled or significantly reduced on mobile (`< 768px`). Bloom, god rays and heavy post-processing do not run on small screens. A static fallback (dark gradient matching the canvas mood) shows instead.
+
+### Grid on mobile
+Default: single column, `1rem` side padding. Eight-column grid activates at `min-width: 768px`. All `.col-*` placement utilities are scoped inside `min-width: 768px`.
+
+### Workitem cards on mobile
+Mobile: text stacks above image, full width. Accent circle is hidden on mobile (`display: none` below 768px) to prevent horizontal overflow. Desktop: side-by-side grid layout with accent circle visible.
+
+### No horizontal scroll
+Any component that could cause overflow (accent circles, grid overlays, fixed nav) must be audited. `overflow-x: hidden` on `body` is a last resort — fix the root cause first.
+
+### Run `/mobile-review` after each phase
+Before marking a phase complete, run `/mobile-review` on the files changed in that phase.
+
+---
+
+## 7. Implementation Phases
+
+Phases are ordered by dependency. Each phase must pass `/phase-gate [n]` before the next begins.
+
+---
 
 ### Phase 1 — Foundations *(unblocks everything)*
-- [ ] Add PP Paloma + PP Neue Montreal font files to `public/fonts/`
-- [ ] Create `src/styles/fonts.css`
-- [ ] Add font import to `BaseLayout.astro`
-- [ ] Replace all tokens in `global.css` — full grey/accent/secondary/tertiary scales + semantic aliases
-- [ ] Remove old tokens (`--primary-*`, `--midnight-blue`, `--gradient-standard`, `--font-work-sans`, `--font-inconsolata`)
-- [ ] Update all font references throughout `global.css` to `--font-heading` / `--font-body`
-- [ ] Update all colour references to semantic tokens
-- [ ] Verify: `npm run build` passes, site renders with new fonts + colours
 
-### Phase 2 — Grid system
-- [ ] Add grid tokens + `.grid` + `.col-*` utilities to `global.css`
-- [ ] Create `src/components/GridOverlay.astro`
-- [ ] Add `<GridOverlay>` to `BaseLayout.astro`
-- [ ] Add `.has-canvas-hero` class logic to homepage
-- [ ] Verify: grid lines visible, aligned at all breakpoints
+**Goal:** Correct token system in place. Fonts loading (or fallback confirmed). Build passing.
 
-### Phase 3 — Button + Badge components
-- [ ] Create `src/components/Button.astro`
+**Font file dependency:** If PP Paloma / PP Neue Montreal files are not yet available, use system font fallbacks (`Georgia, serif` / `Helvetica, Arial, sans-serif`) and mark Phase 1 as **partial**. All other phases can proceed. Replace with real fonts when files arrive.
+
+- [ ] Add font files to `public/fonts/` (or confirm fallback strategy)
+- [ ] Create `src/styles/fonts.css` with all `@font-face` rules
+- [ ] Import `fonts.css` in `BaseLayout.astro`
+- [ ] Rewrite `global.css` token section — add all four scales (grey, accent, secondary, tertiary) + semantic aliases
+- [ ] Remove all old tokens: `--primary-*`, `--midnight-blue`, `--gradient-standard`, `--note`, `--dark-gray`, `--0b0b0b`, `--box-shadow-underline`, `--font-work-sans`, `--font-inconsolata`
+- [ ] Update all font and colour references in `global.css` to new tokens
+- [ ] Convert any remaining `max-width` breakpoints in `global.css` to `min-width` (mobile-first fix)
+- [ ] `npm run build` passes, zero errors
+- [ ] **Run `/phase-gate 1`** before proceeding
+
+---
+
+### Phase 2 — Core Components (Button + TagBadge)
+
+**Goal:** Reusable interactive components available for all subsequent phases. No more `.link-large` ad-hoc styling.
+
+- [ ] Create `src/components/Button.astro` — `variant` prop, renders `<a>` or `<button>`, all three variants
+- [ ] Add `min-height: 44px` to all button sizes (touch target)
 - [ ] Create `src/components/TagBadge.astro`
-- [ ] Add button CSS to `global.css`
-- [ ] Replace all existing `.link-large` usage with `<Button>`
-- [ ] Verify: all three variants render correctly on light and dark backgrounds
+- [ ] Add button + badge CSS to `global.css`
+- [ ] Replace all existing `.link-large` usage with `<Button>` in all layouts + components
+- [ ] Verify all three button variants on light bg, dark bg, and mobile
+- [ ] **Run `/mobile-review`** on `Button.astro`
+- [ ] **Run `/phase-gate 2`** before proceeding
 
-### Phase 4 — ThreeJS integration
-- [ ] Move `threejsbackground/cloud_layer/*.png` → `public/images/cloud_layer/`
+---
+
+### Phase 3 — Grid System
+
+**Goal:** 8-column grid and visible grid overlay working on all pages, mobile-first.
+
+- [ ] Add grid tokens + `.grid` container + `.col-*` utilities to `global.css`
+- [ ] Grid base style: `display: block` (mobile) — eight-column grid only at `min-width: 768px`
+- [ ] All `.col-*` utilities scoped inside `@media (min-width: 768px)`
+- [ ] Create `src/components/GridOverlay.astro` — 8 column spans, `position: fixed`, `pointer-events: none`
+- [ ] Grid overlay hidden on mobile (`display: none` below 768px)
+- [ ] Add `<GridOverlay>` to `BaseLayout.astro`
+- [ ] Add `--color-grid-line` and `--color-grid-line-dark` tokens to `global.css`
+- [ ] Add `.has-canvas-hero` class handling for dark grid line variant
+- [ ] Verify: grid lines visible on all pages at desktop, absent on mobile
+- [ ] Verify: no interactive element blocked by the overlay
+- [ ] **Run `/mobile-review`** on grid CSS
+- [ ] **Run `/phase-gate 3`** before proceeding
+
+---
+
+### Phase 4 — ThreeJS Integration
+
+**Goal:** Existing canvas code running in the homepage hero. Mobile fallback in place. No shader code changed.
+
+- [ ] Move `threejsbackground/cloud_layer/0–3.png` → `public/images/cloud_layer/`
 - [ ] Create `src/components/ThreeBackground.astro`
-- [ ] Copy JS verbatim from `threejsbackground/index.html` into `<script>` block
-- [ ] Update asset paths (`../cloud_layer/` → `/images/cloud_layer/`)
-- [ ] Wrap controls panel in dev-only guard
-- [ ] Add `prefers-reduced-motion` fallback
-- [ ] Integrate into `index.astro` hero
-- [ ] Add hero CSS (relative/absolute positioning, z-index layering)
-- [ ] Add `has-canvas-hero` class to homepage `<body>` or hero section
-- [ ] Verify: canvas renders, grid lines visible in dark mode over canvas
+- [ ] Copy ALL JS verbatim from `threejsbackground/index.html` — do not modify shaders or pipeline
+- [ ] Update only: asset paths (`../cloud_layer/` → `/images/cloud_layer/`)
+- [ ] Add `renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))`
+- [ ] Add `prefers-reduced-motion` check — freeze after first frame if reduced
+- [ ] Add mobile fallback: detect `window.innerWidth < 768` or `matchMedia('(max-width: 767px)')` — skip canvas init and show static dark gradient fallback instead
+- [ ] Wrap controls panel in `if (import.meta.env.DEV)` guard
+- [ ] Integrate into `index.astro` hero: `position: relative` hero, `position: absolute; inset: 0` canvas
+- [ ] Add `aria-hidden="true" role="presentation"` to canvas wrapper
+- [ ] Add `has-canvas-hero` to homepage body/section
+- [ ] Verify: canvas renders on desktop, static fallback on mobile, grid lines show dark variant over canvas
+- [ ] Verify: page scrolls normally on mobile (canvas doesn't capture touch events)
+- [ ] **Run `/mobile-review`** on `ThreeBackground.astro`
+- [ ] **Run `/phase-gate 4`** before proceeding
 
-### Phase 5 — Nav rethink
-- [ ] Rewrite `Header.astro` — new pill nav structure
-- [ ] Rewrite `Navigation.astro` — simplified (no unused glob imports)
-- [ ] Update nav CSS — pill shape, dark bg, centred
-- [ ] Update `menu.js` — add transparent-over-hero scroll behaviour
-- [ ] Mobile hamburger restyle within pill
-- [ ] Verify: all pages, scroll behaviour on homepage, keyboard nav
+---
 
-### Phase 6 — Homepage cards
-- [ ] Update `Workitem.astro` — new layout (number, badge, title, desc, button, image, accent circle)
+### Phase 5 — Nav Rethink
+
+**Goal:** Dark pill nav on all pages. Transparent over hero on homepage. Full mobile support.
+
+**Depends on Phase 4** — transparent behaviour must be tested with the ThreeJS canvas in place.
+
+- [ ] Rewrite `Header.astro` — dark pill structure, centred, logo left / links right
+- [ ] Rewrite `Navigation.astro` — clean, no unused imports
+- [ ] Nav CSS: `position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); border-radius: 999px; max-width: 780px; width: calc(100% - 2rem)`
+- [ ] Nav text always `--grey-0` regardless of transparent/opaque state
+- [ ] Update `menu.js` — transparent class on homepage, removed after 80px scroll
+- [ ] Add `data-page="home"` to homepage `<body>`
+- [ ] Mobile: pill stays within viewport, hamburger minimum 44×44px touch target
+- [ ] Mobile menu: opens as panel below pill, Escape key closes, body scroll locked
+- [ ] Verify on: homepage (transparent → opaque scroll), all case study pages, project pages
+- [ ] Verify keyboard navigation and focus management
+- [ ] **Run `/mobile-review`** on nav CSS + `menu.js`
+- [ ] **Run `/phase-gate 5`** before proceeding
+
+---
+
+### Phase 6 — Homepage Cards
+
+**Goal:** Updated Workitem layout matching mockups. Mobile stacking working. Accent circles contained.
+
+**Depends on Phases 2, 3** — uses `<Button>`, `<TagBadge>`, and `.grid`/`.col-*`.
+
+- [ ] Update `Workitem.astro` — number, `<TagBadge>`, title, description, `<Button>`, image, accent circle
+- [ ] Accent circle: `position: absolute`, `overflow: hidden` on parent, `display: none` on mobile
+- [ ] Workitem mobile: `display: block`, text then image, image full width
+- [ ] Workitem desktop (`min-width: 768px`): grid layout, text left cols, image right cols, accent circle visible
 - [ ] Update `WorkitemProject.astro` — same pattern, smaller scale
-- [ ] Update `index.astro` — apply grid to case study + project sections
-- [ ] Pass `order` and `accentColor` props through from MDX frontmatter
-- [ ] Add `accentColor` field to case study frontmatter files
+- [ ] Update `index.astro` — apply `.grid` to sections, pass `order` + `accentColor` props
+- [ ] Add `accentColor` field to all case study + project MDX frontmatter files
+- [ ] Verify: no horizontal scroll from accent circles at any viewport
+- [ ] **Run `/mobile-review`** on `Workitem.astro`
+- [ ] **Run `/phase-gate 6`** before proceeding
 
-### Phase 7 — Case study headers + layouts
-- [ ] Update `.hero-casestudy` default in `global.css` — dark grey bg
-- [ ] Add new flat client colour palette classes to `global.css`
-- [ ] Update `CaseStudyLayout.astro` — grid layout for hero content, use `<Button>` for project link
+---
+
+### Phase 7 — Case Study Headers
+
+**Goal:** Case study heroes default to dark grey. Per-client colours preserved via named palette.
+
+- [ ] Update `.hero-casestudy` default to `background-color: var(--color-dark-bg)` in `global.css`
+- [ ] Add all new flat palette classes: `.slate`, `.sage`, `.rust`, `.sand`, `.indigo`, `.midnight`, `.accent`
+- [ ] Each class sets `--cs-text` and `--cs-accent` custom properties
+- [ ] Legacy gradient classes preserved unchanged: `.kepla`, `.aurora`, `.pelorus`, `.sitesmart`
+- [ ] Update `CaseStudyLayout.astro` — hero uses `.grid`, hero text uses `--cs-text`, `<Button>` for project link
 - [ ] Update `ProjectLayout.astro` — same
-- [ ] Update `src/pages/case-study/*.mdx` — set appropriate `bgClass` per case study
+- [ ] Update `src/pages/case-study/*.mdx` — assign appropriate `bgClass` per case study
+- [ ] Mobile: hero text never clipped, image scales correctly, info block readable
+- [ ] Verify all 4 case studies + 6 project pages render without errors at mobile + desktop
+- [ ] **Run `/mobile-review`** on `CaseStudyLayout.astro`
+- [ ] **Run `/phase-gate 7`** before proceeding
 
-### Phase 8 — Case study interior content
-- [ ] Apply `.grid` + `.col-*` to content sections in case study pages
-- [ ] Full-width images: `.col-full`
-- [ ] Prose text: `.col-narrow` or `.col-centered`
-- [ ] Side-by-side images: `.col-left` + `.col-right`
-- [ ] Update `.content-case-study` CSS — remove max-width constraint, let grid handle it
+---
 
-### Phase 9 — Footer + remaining components
-- [ ] Update `Footer.astro` — font + colour tokens, consider dark bg variant
-- [ ] Audit all remaining hardcoded hex values in `global.css`
-- [ ] Audit all `--midnight-blue`, `--primary-*` references missed in Phase 1
+### Phase 8 — Case Study Interior Content
 
-### Phase 10 — Polish + QA
+**Goal:** Case study body content uses the grid. Images placed correctly. Mobile readable.
+
+- [ ] Update content wrapper in `CaseStudyLayout.astro` to use `.grid`
+- [ ] Remove `max-width` constraint on `.content-case-study` — grid handles width
+- [ ] Document and apply grid placement conventions for MDX content:
+  - Prose: `.col-narrow` (4 cols left-aligned) or `.col-centered` (4 cols centred)
+  - Full-width images: `.col-full`
+  - Side-by-side images: `.col-left` + `.col-right`
+- [ ] Mobile: all content full width, images stack, text readable
+- [ ] Verify all 4 case studies render correctly at mobile + desktop
+- [ ] **Run `/mobile-review`** on case study content layout
+- [ ] **Run `/phase-gate 8`** before proceeding
+
+---
+
+### Phase 9 — Footer + Global Cleanup
+
+**Goal:** Footer updated. Zero hardcoded values remaining. Build clean.
+
+- [ ] Update `Footer.astro` — font tokens, colour tokens, decide light/dark bg
+- [ ] Audit all of `global.css` — zero hardcoded hex values outside token definitions
+- [ ] Search for any remaining `--midnight-blue`, `--primary-*`, `--font-work-sans`, `--font-inconsolata` — remove all
 - [ ] `npm run build` — zero errors
-- [ ] Test all pages: mobile 375px, tablet 768px, desktop 1280px+
-- [ ] All hover/focus states use `--color-accent-border` or `--color-accent-subtle`
-- [ ] All text passes WCAG AA contrast on respective backgrounds
-- [ ] Run `/astro` skill review
-- [ ] Run `/styleguide` to generate updated living styleguide
+- [ ] **Run `/phase-gate 9`** before proceeding
+
+---
+
+### Phase 10 — QA + Living Styleguide
+
+**Goal:** Ship-ready. Every page, every viewport, every interaction confirmed.
+
+- [ ] Test every page at: 375px, 390px (iPhone 14), 768px, 1024px, 1280px, 1600px
+- [ ] Zero horizontal scroll at any viewport
+- [ ] All buttons, links, nav items: visible focus state with `--color-accent-border`
+- [ ] WCAG AA contrast: body text on `--grey-5` bg, white text on `--grey-100` bg, accent on dark bg
+- [ ] ThreeJS: canvas on desktop, static fallback on mobile
+- [ ] `npm run build` — zero errors or warnings
+- [ ] **Run `/astro`** — zero critical or warning issues
+- [ ] **Run `/mobile-review`** on `global.css` — zero critical issues
+- [ ] **Run `/styleguide`** — generate and save updated living styleguide
+- [ ] **Run `/phase-gate 10`** — final sign-off
 
 ---
 
