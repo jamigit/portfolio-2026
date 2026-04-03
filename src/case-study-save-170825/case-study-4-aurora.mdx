@@ -1,0 +1,300 @@
+---
+layout: ../../layouts/CaseStudyLayout.astro
+
+title: 'Electrical Outages Map'
+description: 'Ensuring the public is served critical information about electrical outages.'
+image:
+    url: '../images/hero/Aurora-home-shadow.png'
+    alt: 'The Aurora Energy website homepage and outages map'
+projectLink: 'https://www.auroraenergy.co.nz//'
+projectLinkCopy: 'Check out the map'
+id: 'aurora'
+bgClass: 'aurora'
+
+
+metaTitle: 'Case Study for Electrical Outages Map Design'
+metaDescription: 'Ensuring the public is served critical information about electrical outages.'
+author: 'Jamie Barter'
+
+
+client: 'Aurora Energy'
+projectType: 'Website Re-development'
+role: 'UX Designer'
+timeframe: '4 months'
+team: 'Product Owner,  Project Manager (1), Software Engineers (3)'
+skills: 'User research, User interviews, Card sorting, Stakeholder Workshops, IA Design, Tree-testing, Wireframing, User flows, UI design, Prototpying, Usability Testing '
+
+
+---
+
+import { Image } from 'astro:assets';
+
+
+import competitors from '../../assets/images/aurora/competitors.png'
+import earlyConcepts from '../../assets/images/aurora/early-concepts.png'
+import finalDocumentLibrary from '../../assets/images/aurora/final-document-library.png'
+import finalGetConnected from '../../assets/images/aurora/final-getconnected.png'
+import finalHome from '../../assets/images/aurora/final-home.png'
+import finalMajorProjects from '../../assets/images/aurora/final-major-projects.png'
+import finalStandard from '../../assets/images/aurora/final-standard.png'
+import generalLayoutOptions from '../../assets/images/aurora/general-layout-options.png'
+import highFidelity1 from '../../assets/images/aurora/highfidelity-1.png'
+import highFidelity2 from '../../assets/images/aurora/highfidelity-2.png'
+import highFidelity3 from '../../assets/images/aurora/highfidelity-3.png'
+import highFidelity4 from '../../assets/images/aurora/highfidelity-4.png'
+import highFidelity from '../../assets/images/aurora/highfidelity.png'
+import ia from '../../assets/images/aurora/ia.png'
+import listView from '../../assets/images/aurora/list-view.png'
+import mapDrawerVsPopup from '../../assets/images/aurora/map-drawer-vs-popup.png'
+import mapFinal1 from '../../assets/images/aurora/map-final-1.png'
+import mapFinal2 from '../../assets/images/aurora/map-final-2.png'
+import mapFinal3 from '../../assets/images/aurora/map-final-3.png'
+import nextConcepts from '../../assets/images/aurora/next-concepts.png'
+import persona2 from '../../assets/images/aurora/persona-2.png'
+import persona3 from '../../assets/images/aurora/persona-3.png'
+import persona4 from '../../assets/images/aurora/persona-4.png'
+import persona from '../../assets/images/aurora/persona.png'
+import prototype from '../../assets/images/aurora/prototype.png'
+import prototype2 from '../../assets/images/aurora/protoype2.png'
+import results from '../../assets/images/aurora/results.png'
+import userJourney3 from '../../assets/images/aurora/User journey 3.png'
+import userJourney1 from '../../assets/images/aurora/user-journey-1.png'
+import userJourney2 from '../../assets/images/aurora/user-journey-2.png'
+import visual1 from '../../assets/images/aurora/visual1.png'
+
+import treetesting from '../../assets/images/aurora/tree-testing.png'
+
+
+## About
+
+Aurora Energy supports the electricity infrastructure that provides 1,300 gigawatt hours per year to more than 87,000 customers in Otago, New Zealand. A lines company is responsible for maintaining the safety and reliability of the network, connecting new customers, and upgrading the network to meet the growing needs of the community. Aurora Energy's most critical role is fixing electricity outages and keeping the public informed as this happens. As part of a wider website redesign project, we designed an outages map that serves as a vital public communications tool.
+
+### Design challenge
+
+Aurora Energy is under media and public scrutiny due to their role of providing and supporting critical public infrastructure. The electric lines network requires ongoing and significant maintenance and this inevitably results in planned outages. In addition to this, accidents do happen and power is lost to homes and businesses. It is essential that the public get clear communications about outages - not only is this critical for health and safety and business continuity but it is also essential for Aurora Energy's trust building with the public. Our design challenge was to provide this information to the public quickly, clearly and accessibly to a diverse range of users.
+
+### My role
+
+I was the lead designer, running the discovery and design phases of the project. I worked with a design colleague during the visual identity design, and worked closely with the lead developer, the API developer and the client to create the map solution,
+
+## Discovery
+
+The discovery process included a review of Aurora Energy's customer data and also a large focus on learning from key customers that were part of their customer panel. We talked to about eight different customers, ranging from various walks of life. Whether it was residents affected by the lines company, local businesses, contractors working on the lines themselves or members of an older adults advocacy group, they were a valuable source of information.
+
+### Learnings from the interviews
+
+*   Dealing with a power outage is often the only time the customer deals with Aurora Energy directly, this interaction often determines their opinion of Aurora Energy.
+*   Customers understand that fixing outages or creating connections to the grid can be time consuming or difficult. People are forgiving of this, but get frustrated when the information is inaccurate, not updated, missing or misleading. They want to be able to get the answer without going round in circles.
+*   People want clarity! They want to know if things have changed instead of feeling crazy if an outage alert just disappears.
+*   Knowing planned outages ahead of time allows people to plan and deal with the situation.
+*   Knowing about changes, even bad ones, are important.
+*   Users will most often be checking outages on their phone - because if there is an outage, they can't use their computer.
+
+> "The only time I have interacted with Aurora was when I had a planned outage."
+> 
+> Aurora Energy Customer
+
+### Learning from the data
+
+We were able to get website analytics data, search data and also customer service log data. Overall this data highlighted the importance of outages. Outages represent a third of the pages visited. Outside of the homepage, no other page gets more than 5% of traffic. Towns and suburbs information was heavily visited and we also saw this in the search results. Locally relevant information was important. Faults (outages) were the single highest logged call type from the call center, and these requests overwhelm Aurora Energy's call centre - particularly when there is a wide-spread outage,
+
+<Image class="" src={results} alt="Data visualization showing website analytics and search results for Aurora Energy"/>
+
+### Competitor research
+
+We reviewed a number of other Outage page offerings from competitors within New Zealand. One of the requirements given to us was that the outages information must be displayed as a map, a common tool provided by competitors, with some competitors only showing a list of outages. With the list displays, they were either too large and hard to scroll through or far too dense and not enough descriptive information until you opened the outage. The maps were often opened in a separate link, while this provided the ability to have a full page map and a separate application, it meant that the outage information was not directly accessible on the homepage. Splitting between current and planned outages was common, as was providing notices to customers that there were no active outages.
+
+<Image class="" src={competitors} alt="Comparison of competitor outage map interfaces from various New Zealand energy companies"/>
+
+### Personas
+
+As part of our discovery activities we presented our interview findings to the wider Aurora team and ran a persona workshop, creating six personas, covering a range of members of the public affected by Aurora.
+
+<Image class="" src={persona2} alt="User persona showing Concerned Cathy, a customer who needs certainty about power outages"/>
+
+Some key personas were 'Concerned Cathy' and 'Sally with a small business'. A key theme for both of these users was that they needed certainty - outages could be planned for, but they needed to know when they were happening and if things changed.
+
+<Image class="" src={persona4} alt="User persona showing Sally, a small business owner who needs reliable power for operations"/>
+
+## Information architecture design
+
+After the discovery process, we worked on designing the information architecture, allowing the client to kick-start their content production, and giving us a structure for designing the rest of the site.
+
+### Card sort findings
+
+After the customer interviews, we also ran an open card sort with the panel members. The card sort was a moderated open card sort, allowing us to learn the why behind their groupings. Below are some key themes:
+
+*   Provide easy access to critical tasks and information, many users are just going to the website for the first time for just one job.
+*   A distinct section for the electricity connections process - it was a critical process that could be quite confusing.
+*   A lot of info just isn't relevant to different users. We had three clear groups of homeowners and business owners, contractors and property developers. Meanwhile, the average customer doesn't want to be swamped with industry lingo.
+*   Integrate safety information through the site.
+*   A specific section describing what Aurora Energy was doing to manage the electrical network and why they spent the money that they did.
+
+<Image class="img-half" src={ia} alt="Information architecture diagram showing the site structure and navigation hierarchy"/>
+
+### Tree testing
+
+To test the proposed sitemap we undertook tree testing looking across key websites tasks. The testing didn't review the outages location on the site, as we have heavily designed the site already to give this prominence. We instead focused on some of the site's difficult tasks. 78% of the tasks were completed without backtracking but had overall success rate of 38%. While this does seem a low success rate, many of the results selected were alternative options that would have given them the right information.
+
+Some of the results were highly spiky, with strong successes and failures. The site's planned structure had clear sections for different users (lines contractors versus homeowners), so not all tasks would involve language that would make sense to every user.
+
+
+<Image class="img-half" src={treetesting} alt="Tree testing results showing as various graph types  "/>
+
+
+#### Recommendations
+
+*   'Managing the network' isn't a very clear label because managing could be day to day operations or financial or governance management. We split out financial and governance information useful for the media or the public from contractor specific information for people who work on the network physically.
+    
+*   'Get connected' was successful when it was framed in a simple residential context, but was confusing when it had a context of developing a subdivision. We recommend considering if this phrase is best suited.
+    
+*   'Contractors, trades and developers' could be confusing mainly due to the addition of the 'developer' term. The confusion between 'Get connected' content and 'developer' content could be an issue and we recommend considering whether more separation of these terms is required.
+    
+*   Consider renaming 'Close approach request', 'Building near overhead lines' and 'Working near overhead lines' to make them more distinct pieces of information.
+    
+*   Be clearer in differentiating 'Our safety rules' and 'My safety obligations'.
+    
+*   Consider the use of the term 'Disclosures'. This wasn't necessarily meaningful to users. If we are aiming for the more niche user group of Regulators this is fine but if you are looking for a wider access to the public to this kind of documentation a name change might be helpful.
+    
+*   Add an 'Our values' or 'Our team' to support Aurora Energy's outreach content.
+    
+
+## Designing the outages map
+
+### What the map needs to do
+
+At its core the outages map needed to support customers decision making when an outage happens. It should allow them to plan and make informed decisions. If the outages information is successful, it would free up Aurora Energy's resource to support at risk customers instead of fielding customer complaints.
+
+### User journeys
+
+The experiences of our customer panel formed the requirements for our user journeys. Some examples would be a residential user having an unplanned power outage, a business owner planning for future outages that might affect their business or a farmer noticed a damaged power line on their property and taking safe action.
+<Image class="" src={userJourney1} alt="Wireframe showing mobile interface for checking power outage status"/>
+
+### First concepts
+
+These wireframes show some key steps from the user journey where a residential customer just had an unplanned power outage, so are using their phone to check if the outage applies to their address. We wanted the outages to sit on the home page, so all users would find it with a single page load.
+
+<Image class="" src={userJourney3} alt="User journey diagram showing different customer scenarios during power outages"/>
+
+
+### Detailed wireframes
+
+Following on from the initial mapping of the user journeys, wireframing allowed me to quickly iterate between some key interaction decisions for the UI.
+
+#### Layout
+
+There were a few key parts to decide on UI patterns for such as changing map versus table view, selecting different outage types and then also filters and searching
+
+<Image class="" src={generalLayoutOptions} alt="Wireframe exploring different layout options for the outage map interface"/>
+
+#### Map outages information
+
+When a user found an outage on the map - how should it display? As this was going to be a map embedded into a page on a web browser, we needed to ensure that we didn't make the touch interactions over complicated as often happens with maps on competitor websites.
+
+The map would likely end up being a content block on a page, so the user would need to still scroll the page around it. This influenced our decisions to decide on things such as a drawer interaction when selecting an outage. A user could get a preview and then open it for more information. Other options such as the modal option could be annoying, taking away control of the map or page. The map popup option created lots of nested interactions inside the map that were tricky on a browser.
+
+<Image class="" src={mapDrawerVsPopup} alt="Comparison of drawer versus popup interactions for displaying outage information on the map"/>
+
+#### List view
+
+Accessibility becomes ever more important in a crisis, and embedded maps don't provide an acceptable experience for accessibility. All outage information would also be displayed in a list view, which not only gave an accessible option, it also provided an easily scannable list for all users. We promoted the 'Map/List' toggle to the top of widget, allowing for easy switching between views.
+
+<Image class="" src={listView} alt="List view interface showing power outages in an accessible table format"/>
+
+### **Higher fidelity and internal feedback**
+
+At this stage, some of the visual identity design was more fully ready, so I began incorporating these elements into the map. While we were working directly with the client through the wireframing stage, we set up a review board for the wider team to provide feedback at higher fidelity. We were also able to start designing more edge case features such as displaying polygons for outage areas and also how grouped outages would display (multiple outages as part of the same works).
+
+
+The client provided some key direction on prioritising what information should display with an outage and also what wording should be used in search terms. We moved towards a blue/grey theme for the outages map to be less brand heavy.
+
+<Image class="" src={highFidelity4} alt="High fidelity design of the outage map with blue/grey theme"/>
+
+<div class='img-adjacent'>
+
+<Image class="img-half" src={highFidelity3} alt="High fidelity design showing outage details panel"/>
+
+<Image class="img-half" src={highFidelity2} alt="High fidelity design showing search and filter functionality"/>
+
+
+</div>
+
+
+
+### Moderated user testing
+
+With the original customers we interviewed, we undertook six moderated user tests across a range of key scenarios. We wanted to see how users would understand the division between outage types, what users expect from search, how grouped outages would be understood
+
+<Image class="" src={prototype} alt="Interactive prototype showing the outage map user interface"/><Image class="" src={prototype2} alt="Interactive prototype showing the mobile view of the outage map"/>
+
+#### Testing learnings
+
+*   The list view wasn't as highly used as map. However, it still needed to be there as an alternative.
+    
+*   Users were concerned about zooming in and getting caught too zoomed in. We added a zoom out button.
+    
+*   The list view could become quite an undistinguishable list of street names. Adding suburb fields to each outage provided the user with contextual information if that outage was near them.
+    
+*   When using the drawer, some users didn't realise that they could open it further. We added 'see more' text adjacent to plus icon so users would understand they could expand it. This particularly helped older users that were less familiar with web icons and interactions.
+    
+
+## **Visual design**
+
+Drawing on the direction set by Aurora Energy and the findings from customer interviews we developed a design brief to create a shared vision for the website. Some key factors were:
+
+*   Clear website design to emphasise professionality and access to critical services.
+    
+*   The website needs to communicate the excitement and innovation happening with sustainable energy. It should positively frame the solutions Aurora Energy are coming up with.
+    
+*   Aurora Energy needs to communicate its dynamism, professionality and approachability
+    
+
+### Early concepts
+
+I provided the client with a range of visual directions from friendly and bright to more professional or minimal. The client opted for leaning on a more professional style such as D3 and D5.
+
+<Image class="" src={visual1} alt="Visual design concepts showing different style directions"/><Image class="" src={earlyConcepts} alt="Early visual concepts exploring brand and color options"/>
+
+### Design development
+
+After working on these initial designs, I passed the visual direction onto a design colleague who created concepts for the next level of detailed design. Our direction introduced a navy blue and light grey to form the UI skeleton, with bright orange to provide focus and also tie back to the brand.
+
+<Image class="" src={nextConcepts} alt="Refined visual concepts showing navy blue and orange color scheme"/>
+
+## Outcomes
+
+## Outcomes and reflections
+
+Aurora Energy have had a lot of successful feedback with their customer base following the website re-design and new outages map.Many of the map successes were built on having a strong working relationship with the lead developer, allowing us to iterate on many small UX choices that add up to the whole experience. Additionally, being able to work directly to the requirements of the API ensured design choices reflected the realities of the supporting technology.
+
+### Map designs
+
+<Image class="" src={mapFinal1} alt="Final outage map design showing map view with outage markers"/>
+
+<Image class="" src={mapFinal2} alt="Final outage map design showing detailed outage information panel"/>
+
+<Image class="" src={mapFinal3} alt="Final outage map design showing list view of outages"/>
+
+### Full website designs
+
+<div class='img-adjacent'>
+<Image class="img-half" src={finalHome} alt="Final homepage design featuring the outage map prominently"/>
+
+<Image class="img-half" src={finalStandard} alt="Final standard page template design"/>
+
+
+</div>
+
+<div class='img-adjacent'>
+<Image class="img-half" src={finalMajorProjects} alt="Final major projects page design"/>
+
+<Image class="img-half" src={finalDocumentLibrary} alt="Final document library page design"/>
+
+
+</div>
+
+
+
+
+<Image class="img-half" src={finalGetConnected} alt="Final get connected page design"/>
+

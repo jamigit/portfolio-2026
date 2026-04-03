@@ -1,0 +1,251 @@
+---
+layout: ../../layouts/CaseStudyLayout.astro
+
+title: 'Logistics platform'
+description: 'End to end logistics platform servicing the wine industry in Nelson.'
+image:
+    url: '../images/hero/pelorus-hero.png'
+    alt: 'Dashboard page showing desktop and mobile views'
+projectLink: 'https://quayconnect.co.nz/latest-news/2023/december/innovative-cargo-solutions-re-introducing-pelorus'
+projectLinkCopy: 'Check out the press release'
+id: 'pelorus'
+bgClass: 'pelorus'
+
+
+metaTitle: 'Logistics platform case study'
+metaDescription: 'End to end logistics platform servicing the wine industry in Nelson.'
+author: 'Jamie Barter'
+
+---
+
+
+import { Image } from 'astro:assets';
+
+import bookingfillout from '../../assets/images/pelorus/booking-fillout.png'
+import finaldetention from '../../assets/images/pelorus/final-detention.png'
+import finalnotifications from '../../assets/images/pelorus/final-notifications-1440px-1.png'
+import finalorder1 from '../../assets/images/pelorus/final-order-1.png'
+import finalorder2 from '../../assets/images/pelorus/final-order-2.png'
+import finalorder3 from '../../assets/images/pelorus/final-order-3.png'
+import finalorder4 from '../../assets/images/pelorus/final-order-4.png'
+import finalordertimelineweekly1 from '../../assets/images/pelorus/final-ordertimeline-weekly-1.png'
+import finalvesselreport2 from '../../assets/images/pelorus/final-vessel-report-2.png'
+import navchange from '../../assets/images/pelorus/nav-change.png'
+import navchanges1 from '../../assets/images/pelorus/nav-changes-1.png'
+import ordercreation from '../../assets/images/pelorus/order-creation.png'
+import orderpagewireframe from '../../assets/images/pelorus/order-page-wireframe.png'
+import orderprocess from '../../assets/images/pelorus/order-process.png'
+import overviewwireframe from '../../assets/images/pelorus/overview-wireframe.png'
+import progressindicator from '../../assets/images/pelorus/progress-indicator.png'
+import testingprototype from '../../assets/images/pelorus/testing-prototype.png'
+import orderprototype from '../../assets/images/pelorus/order-prototype.png'
+import actionandtrack from '../../assets/images/pelorus/actionandtrack.png'
+import orderdetail from '../../assets/images/pelorus/order-detail.png'
+import containerinfo from '../../assets/images/pelorus/containerinfo.png'
+import editintransit from '../../assets/images/pelorus/edit-in-transit.png'
+
+## About
+
+### Overview
+
+QuayConnect, a freight-forwarding company owned by Port Nelson, manages the complex logistics of moving goods from point A to point B. This process is far from straightforward. The end-to-end process includes many different parties, such as clients, the freight forwarders such as QuayConnect, warehousing teams, packing staff, truck drivers, customs inspectors, shipping companies, and port authorities, among many others.  
+
+Every shipment includes a web of contractual obligations and accompanying documentation. With cargo being passed through so many hands, there is ample opportunity for error. The port's current system has evolved organically over time — some processes date back to the earliest days of shipping—and lacks a unified digital solution. Orders are tracked using a mix of spreadsheets, clipboards, whiteboard notes, third-party systems, and the knowledge of experienced individuals. In an industry where rapid and unpredictable change is the norm, coordinating freight across the country is incredibly challenging. QuayConnect was seeking a digital solution to centralise, streamline, and oversee this entire process, an important step in their digital maturity. Our web-app solution, Pelorus, was developed to give customers and staff greater visibility over the entire distribution chain.  
+
+### My role  
+
+My role started after Discovery was completed and the web-app was beginning to be designed. I initially worked with the lead designer and development team, then took over design responsibilities, including:  
+
+*   Developing user flows, designing UI components, structuring the app information architecture (IA), navigation and page structures.
+*   Moderated user testing.
+*   Creation and management of a design system.
+
+
+## Discovery  
+
+
+### Background  
+
+Before I joined the team, Effect (my employer) and Augen (a technology partner for the project) had completed a Discovery phase that included contextual inquiries at the port's warehouses. This early research gave us valuable insights into team workflows, operational processes, and the extensive documentation involved.  
+
+Although the Pelorus platform was ultimately intended to support all QuayConnect customers, and tie into wider Port operations, our initial focus was narrowed to the shipment of wine and glass bottles at the national level, specifically for two key clients.  
+
+While QuayConnect handles a variety of goods, the regional wine industry represents a significant market segment. By concentrating on this narrower scope for the first release, we were able to reduce product complexity while laying the groundwork for a scalable, modular system with future expansion in mind.  
+
+### What does a QuayConnect order entail?
+
+To begin untangling this complex question, we mapped the ideal version of a QuayConnect order running smoothly, shown below. This is an example of a domestic shipping order of wine from Nelson to Auckland:  
+
+*   The vineyard (client) contacts QuayConnect to initiate a movement of goods.  
+
+*   QuayConnect plan and book all of the various contractors who will be involved.  
+
+*   The order reaches its go-live date.  
+
+*   Client packs wine into pallets.  
+
+*   Trucking Contractor 1 arrives and loads pallet into a truck and moves to warehousing.  
+
+*   Truck is unpacked.  
+
+*   Trucking Contractor 2 picks up a container from the Port and arrives at the warehouse.  
+
+*   Goods are packed at the warehouse and order slip created.  
+
+*   Container dropped off at the port (within the correct time window). Appropriate documentation required.  
+
+*   Container loaded onto the ship. Ship sails to Auckland.  
+
+*   Ship arrives at Auckland, container unloaded.  
+
+*   Trucking Contractor 3 picks up the container and drops it at the destination warehouse.  
+
+*   Container is unpacked.  
+
+*   Trucking Contractor 3 drops container off at port.  
+
+*   Trucking Contractor 4 picks up the palletised goods and drops it at its final location!  
+
+If you followed that, you’ve essentially managed the shipment of wine from Nelson to Auckland. But with so many steps, there’s a high chance something will go wrong. We’ll address these hiccups next, but first, we focus on making this process more manageable.  
+
+#### What we learnt  
+
+*   There are many steps and parties involved in a single order, creating many opportunities for miscommunication.  
+
+*   Timing is critical - contracts require goods to be moved within strict time windows.  
+
+
+## Making sense out of complexity  
+
+This case study focuses on the order management aspect of Pelorus—tracking an order through the chain of custody. This is where the product provides the most value. Other features, such as viewing lists of orders, creating new inventory items, or generating reports, are more standard SaaS functionalities and do not differentiate Pelorus in the same way.
+
+As Pelorus develops, many third-party applications currently used by contractors will be integrated into Pelorus to enable greater automation. However, at this early stage, our primary goal is to centralise what is currently a highly manual and often physical process — relying on clipboards, paper printouts, and notes on whiteboards  — into a single digital source of truth. The primary user in this case study is the order coordinator, responsible for overseeing the completion of tasks associated with each order. You will notice the designs are optimised for desktop and tablet (1024px and above). We made a deliberate decision not to prioritise mobile views in this early phase, as our primary users are working from desktop setups or tablets in warehouses. In later stages, Pelorus will be rolled out to contractors who are more mobile, and mobile-specific interfaces will be introduced. Our focus was on getting the core experience working well first, while maintaining enough flexibility to scale to mobile when the time is right.
+
+### Chunking the stages  
+
+Despite the many stages involved, the clear and distinct boundaries as to who is responsible for the container at each step help keep the process organised. Driven by liability and insurance, these boundaries provide a natural structure for knowing when one step has stopped and another begins.
+
+Largely, we can chunk these steps into the following stages:
+
+*   Order Creation - high-level details are entered, many of which (such as dates) may shift over time.  
+    
+*   Order Booking - coordinators must book the contracts and logistics across the many different suppliers and ensure it all aligns perfectly.  
+    
+*   Order Management - where the bulk of complexity lies and the order physically moves from origin to destination.  
+    
+<Image class="" src={orderprocess} alt=""/>
+
+
+
+## Design ideation  
+
+
+
+Stage 1: Order Creation was designed as part of this project, but it isn’t the primary focus of this case study. As shown below, we implemented a simple step-by-step wizard for entering key high-level information. Since this area was not identified as a major opportunity for innovation or improvement, our team focused most of our design effort on the more complex and value-driving Stages 2 and 3: Order Booking and Order Management.  
+<Image class="" src={orderprototype} alt=""/>
+
+
+
+### Designing the Order page  
+
+Both the Order Booking and Order Management stages were designed to be managed with a single, bird’s-eye view of the order. Order pages were structured into two key components: Overview and Order Booking/Management.
+
+The Overview section sits at the top of the window and displays essential information about the order, such as locations and dates, to all parties involved in the supply chain. The Order Booking/Management section sits below as a dedicated space where order coordinators can plan and manage tasks across the various stages of the order. In future iterations, the platform is planned to provide contractors with restricted access, allowing them to view and manage only the tasks assigned to them.
+<Image class="" src={overviewwireframe} alt=""/>
+
+
+
+### Booking an order  
+
+Before an order can go live, all required services must be booked and have contracts in place. For a typical coastal shipping order, this could involve managing 6 to 7 separate contracts. The user flow below outlines the process of adding these contracts to an order. Users navigate to the order page, open each service individually, enter the necessary details, and confirm the booking. Each service is managed individually because a co-ordinator might receive information for different contracts sporadically. A user might enter Shipping information one morning, then the next afternoon enter Packing information.  
+<Image class="" src={orderprototype} alt=""/>
+
+
+As a user books in more services, the order gets "Filled in" and this is represented visually. After all services are booked, the order can then be switched to being active.  
+
+#### Communicating status and interactions  
+
+In addition to booking each service, a series of tasks must be completed to progress the order. The images below show a high-level and a more detailed view of the services at four different stages of an order.
+
+At (1), the order is partially booked. The user can click on an unbooked service to open a modal and enter the required details. At (2), the order is fully booked, but the related activities remain inactive (grayed out) since the tasks have not yet started. At (3), the order has become active. This stage shifts focus from managing bookings to tracking the progress of the order and managing the specific tasks involved in each service. Finally, at (4) indicates that the order is completed, with all tasks finished and the service closed out.
+<Image class="" src={bookingfillout} alt=""/>
+
+
+
+### Structuring booking and management  
+
+The team landed on describing this section as 'Action and Track' - an overview of the status of your order and the tasks you need to do to complete it. Each major section such as 'Packing' acted as a tab to provide a detailed view of the subtasks below. This visual model provided an overview of the contracts, but also could be sectioned out as needed. For example, a contractor might only have access to the Shipping section.  
+<Image class="" src={actionandtrack} alt=""/>
+
+
+
+As the designs progressed, we refined this visual interaction, providing a visual language to glance and understand progress, using colour changes, icons and badges to indicate order advancement.  
+<Image class="" src={overviewwireframe} alt=""/>
+
+
+### Structuring the page  
+
+In the initial mockups, we added the key stages of an order to a scaled timeline. However, after reviewing this mockup with client and looking at various orders, there would be too much variability in the length of time for packing vs shipping as an example, resulting in the shipping module scaling to be unusably small. Instead, we used the timeline as a visual indicator of progress, highlighting the next locations coming up and any issues. For example, the red exclamation icons indicate an error occurring.  
+‍  
+Separating the timeline allowed us to present Packing, Shipping and Delivery as simple tabs, with the details underneath. At this stage of design, we started implementing high fidelity designs, the largely blue colours reflective of nautical themes.  
+<Image class="" src={orderdetail} alt=""/>
+
+
+
+### Navigation changes  
+
+You will notice here that a different navigation structure has been introduced. Our assumption had been that a side bar would provide quicker access to navigating between orders and reports. However, user feedback taught us that users would not be jumping quickly between different orders or different report, instead working more deliberately on a single order. The extra horizontal space gave us more room for timelines, tickets and any sidebars.  
+
+We continued to iterate on the nav, moving away from hamburger menus where possible and maintaining all the features as buttons or hidden behind a settings menu. This change can be seen below.  
+<Image class="" src={navchange} alt=""/>
+
+
+
+#### Product and Container information  
+
+All orders consist of products being shipped in containers, and each container is tracked through all the various order stages individually.
+
+The product information was added to the overview section so all users could see the contents. We then added a container information grid to the overview section, showing each container, key details and tickboxes for completion of each status.
+<Image class="" src={containerinfo} alt=""/>
+
+
+The container grid in the order overview matches what users see when editing, ensuring a consistent experience.
+
+At this stage Pelorus was not hooked into any APIs, such as from the shipping companies. So if a container was in transit, the user would need to update this information manually for now, or manually override in the future. This user might be the order coordinator, but it could also be a contractor with access rights to the software.
+
+When this is saved, the order overview page grid will update to reflect the new status. The order itself will not change status to 'in transit' until all containers are ticked. This will also provide visibility to all that a container may not have been loaded.
+<Image class="" src={editintransit} alt=""/>
+
+
+## User testing and refinement  
+
+
+
+"Our testing process involved weekly feedback sessions with key users, as well as remote, moderated usability testing with shipping coordinators: future daily users of the shipped product. Using clickable prototypes, we were testing to see if the overall workflow made sense and fit their conceptual model.  
+<Image class="" src={testingprototype} alt=""/>
+
+
+
+#### Learnings  
+
+*   Edge cases: Packing and transport of an order might happen at the same time of the day and would be easier to tick off at the same time instead of having to run through each one separately. This would be when a user would just use the container grid to update information.  
+    
+*   Ordering of tasks: There was a difference between our ordering of tasks and the users' expectations. Some of the sub-tasks were not in the order that the users expected.  
+    
+*   Expectations of the system: The interface implied that the system would automatically generate a certain document (called the SLI), however this still needed to be done manually. We needed to add prompts to ensure users would complete these tasks.
+
+## Outcomes
+
+<Image class="" src={finalorder1} alt="Finished user interface mockup of the Pelorus web app"/>
+<Image class="" src={finalorder2} alt="Finished user interface mockup of the Pelorus web app"/>
+<Image class="" src={finalorder3} alt="Finished user interface mockup of the Pelorus web app"/>
+<Image class="" src={finalorder4} alt="Finished user interface mockup of the Pelorus web app"/>
+<Image class="" src={finalordertimelineweekly1} alt="Finished user interface mockup of the Pelorus web app"/>
+<Image class="" src={finalvesselreport2} alt="Finished user interface mockup of the Pelorus web app"/>
+
+
+### Reflections
+
+Pelorus was much larger than this initial piece of software, and the version 2 design I have worked on is currently being built. Pelorus has become a unique selling point for Quay Connect.
+
+"There has been nothing like this for the industry to date, so get it off the ground. Get it out as soon as possible so customers can realise the benefits."

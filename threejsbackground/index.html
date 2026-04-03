@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Glitch</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    #c { position: fixed; inset: 0; display: block; width: 100% !important; height: 100% !important; }
+
+    /* ── 8-column layout guide ─────────────────────────────────────────────── */
+    #col-grid {
+      position: fixed; inset: 0; z-index: 5;
+      display: grid; grid-template-columns: repeat(8, 1fr);
+      pointer-events: none;
+    }
+    .col-strip {
+      border-left: 1px solid rgba(255,255,255,var(--col-opa, 0.07));
+      transform-origin: center top;
+      will-change: transform;
+    }
+    .col-strip:last-child { border-right: 1px solid rgba(255,255,255,var(--col-opa, 0.07)); }
+    #col-grid.hidden { display: none; }
+
+    /* ── Controls ──────────────────────────────────────────────────────────── */
+    #controls {
+      position: fixed; top: 16px; right: 16px; z-index: 10;
+      font-family: ui-monospace, 'SF Mono', monospace;
+      font-size: 11px; color: #fff; user-select: none;
+    }
+    #ctrl-toggle {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 8px; cursor: pointer;
+      background: rgba(0,0,0,.5); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+      padding: 6px 12px; transition: background .2s;
+    }
+    #ctrl-toggle:hover { background: rgba(0,0,0,.7); }
+    #ctrl-panel {
+      margin-top: 6px; background: rgba(0,0,0,.65); backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 10px;
+      padding: 12px 14px 14px; width: 252px;
+      display: none; flex-direction: column;
+      max-height: 82vh; overflow-y: auto;
+    }
+    #ctrl-panel::-webkit-scrollbar { width: 3px; }
+    #ctrl-panel::-webkit-scrollbar-track { background: transparent; }
+    #ctrl-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 2px; }
+    #ctrl-panel.open { display: flex; }
+    .sect {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 9px; letter-spacing: .13em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin: 11px 0 5px;
+    }
+    .sect:first-child { margin-top: 0; }
+    .tog { position: relative; width: 28px; height: 15px; flex-shrink: 0; cursor: pointer; }
+    .tog input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .tog-track {
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+      border-radius: 15px; transition: background .2s, border-color .2s;
+    }
+    .tog-track::after {
+      content: ''; position: absolute;
+      width: 9px; height: 9px; left: 2px; top: 2px;
+      background: rgba(255,255,255,.3); border-radius: 50%;
+      transition: transform .18s, background .18s;
+    }
+    .tog input:checked ~ .tog-track { background: rgba(255,255,255,.3); border-color: rgba(255,255,255,.45); }
+    .tog input:checked ~ .tog-track::after { transform: translateX(13px); background: #fff; }
+    .sect-body { transition: opacity .25s; }
+    .sect-body.off { opacity: 0.28; pointer-events: none; }
+    .row {
+      display: grid; grid-template-columns: 102px 1fr 40px;
+      align-items: center; gap: 6px; margin-bottom: 5px;
+    }
+    .row label { color: rgba(255,255,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row input[type=range] {
+      -webkit-appearance: none; width: 100%; height: 3px;
+      background: rgba(255,255,255,.18); border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .row input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 11px; height: 11px;
+      border-radius: 50%; background: #fff; box-shadow: 0 0 4px rgba(0,0,0,.5);
+    }
+    .val { color: rgba(255,255,255,.38); text-align: right; font-variant-numeric: tabular-nums; }
+    #btn-export {
+      margin-top: 12px; width: 100%; padding: 7px 0;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+      border-radius: 6px; color: rgba(255,255,255,.7);
+      font-family: ui-monospace, 'SF Mono', monospace; font-size: 10px;
+      letter-spacing: .06em; cursor: pointer; transition: background .15s, color .15s;
+    }
+    #btn-export:hover  { background: rgba(255,255,255,.15); color: #fff; }
+    #btn-export.copied { background: rgba(80,220,120,.2); border-color: rgba(80,220,120,.45); color: rgba(80,220,120,.9); }
+  </style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<!-- 8-column layout guide -->
+<div id="col-grid">
+  <div class="col-strip"></div><div class="col-strip"></div>
+  <div class="col-strip"></div><div class="col-strip"></div>
+  <div class="col-strip"></div><div class="col-strip"></div>
+  <div class="col-strip"></div><div class="col-strip"></div>
+</div>
+
+<div id="controls">
+  <div id="ctrl-toggle">
+    <span>controls</span>
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5" stroke-linecap="round">
+      <line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="10" x2="12" y2="10"/>
+    </svg>
+  </div>
+  <div id="ctrl-panel">
+
+    <!-- GLITCH -->
+    <div class="sect"><span>glitch</span>
+      <label class="tog"><input type="checkbox" id="t-glitch" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-glitch">
+      <div class="row"><label>idle intensity</label><input type="range" id="s-idle"  min="0"   max="1"   step="0.01"  value="0.28"><span class="val" id="v-idle">0.28</span></div>
+      <div class="row"><label>mouse force</label>   <input type="range" id="s-force" min="0"   max="2"   step="0.05"  value="0.5"> <span class="val" id="v-force">0.50</span></div>
+      <div class="row"><label>mouse ease</label>    <input type="range" id="s-ease"  min="0"   max="1"   step="0.01"  value="0.7"> <span class="val" id="v-ease">0.70</span></div>
+      <div class="row"><label>ripple</label>        <input type="range" id="s-rip"   min="0"   max="3"   step="0.05"  value="1.25"><span class="val" id="v-rip">1.25</span></div>
+    </div>
+
+    <!-- BLOCK -->
+    <div class="sect"><span>block glitch</span>
+      <label class="tog"><input type="checkbox" id="t-block"><span class="tog-track"></span></label></div>
+    <div class="sect-body off" id="b-block">
+      <div class="row"><label>chaos</label><input type="range" id="s-block" min="0" max="1" step="0.01" value="0.5"><span class="val" id="v-block">0.50</span></div>
+    </div>
+
+    <!-- ABERRATION -->
+    <div class="sect"><span>aberration</span>
+      <label class="tog"><input type="checkbox" id="t-aberr" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-aberr">
+      <div class="row"><label>scale</label>       <input type="range" id="s-ascale" min="0" max="4"    step="0.05"  value="0.55"> <span class="val" id="v-ascale">0.55</span></div>
+      <div class="row"><label>idle spread</label> <input type="range" id="s-aidle"  min="0" max="0.04" step="0.001" value="0.001"><span class="val" id="v-aidle">0.001</span></div>
+      <div class="row"><label>mouse force</label> <input type="range" id="s-amouse" min="0" max="2"    step="0.05"  value="2.0">  <span class="val" id="v-amouse">2.00</span></div>
+      <div class="row"><label>animation</label>   <input type="range" id="s-aanim"  min="0" max="1"    step="0.01"  value="0.66"> <span class="val" id="v-aanim">0.66</span></div>
+    </div>
+
+    <!-- GRID / CRT -->
+    <div class="sect"><span>grid</span>
+      <label class="tog"><input type="checkbox" id="t-grid"><span class="tog-track"></span></label></div>
+    <div class="sect-body off" id="b-grid">
+      <div class="row"><label>cell size (px)</label><input type="range" id="s-grid" min="2" max="20" step="0.5"  value="5">  <span class="val" id="v-grid">5.0</span></div>
+      <div class="row"><label>opacity</label>       <input type="range" id="s-gopa" min="0" max="1"  step="0.01" value="0.5"><span class="val" id="v-gopa">0.50</span></div>
+    </div>
+
+    <!-- PIXELATION -->
+    <div class="sect"><span>pixelation</span>
+      <label class="tog"><input type="checkbox" id="t-pixel" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-pixel">
+      <div class="row"><label>base size</label>    <input type="range" id="s-pxbase" min="1" max="24" step="0.5" value="4.5"><span class="val" id="v-pxbase">4.5</span></div>
+      <div class="row"><label>max (glitch)</label> <input type="range" id="s-px"     min="1" max="24" step="0.5" value="8">  <span class="val" id="v-px">8.0</span></div>
+    </div>
+
+    <!-- FLOW -->
+    <div class="sect"><span>flow</span>
+      <label class="tog"><input type="checkbox" id="t-flow" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-flow">
+      <div class="row"><label>speed</label>    <input type="range" id="s-fspd" min="0" max="0.3" step="0.002" value="0.2"> <span class="val" id="v-fspd">0.200</span></div>
+      <div class="row"><label>strength</label> <input type="range" id="s-fstr" min="0" max="0.1" step="0.001" value="0.03"><span class="val" id="v-fstr">0.030</span></div>
+    </div>
+
+    <!-- SATURATION -->
+    <div class="sect"><span>saturation</span>
+      <label class="tog"><input type="checkbox" id="t-sat" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-sat">
+      <div class="row"><label>amount</label><input type="range" id="s-sat" min="0" max="3" step="0.05" value="1.5"><span class="val" id="v-sat">1.50</span></div>
+    </div>
+
+    <!-- EXPOSURE -->
+    <div class="sect"><span>exposure</span>
+      <label class="tog"><input type="checkbox" id="t-exp" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-exp">
+      <div class="row"><label>breathe amount</label><input type="range" id="s-expamp" min="0"    max="0.5"  step="0.01"  value="0.08"><span class="val" id="v-expamp">0.08</span></div>
+      <div class="row"><label>breathe speed</label> <input type="range" id="s-expspd" min="0.01" max="0.15" step="0.005" value="0.045"><span class="val" id="v-expspd">0.045</span></div>
+    </div>
+
+    <!-- BLOOM -->
+    <div class="sect"><span>bloom</span>
+      <label class="tog"><input type="checkbox" id="t-bloom" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-bloom">
+      <div class="row"><label>threshold</label><input type="range" id="s-bthresh" min="0.2" max="0.95" step="0.01" value="0.51"><span class="val" id="v-bthresh">0.51</span></div>
+      <div class="row"><label>strength</label> <input type="range" id="s-bstr"    min="0"   max="2"    step="0.05" value="0.25"><span class="val" id="v-bstr">0.25</span></div>
+      <div class="row"><label>radius</label>   <input type="range" id="s-brad"    min="0.5" max="10"   step="0.25" value="3.25"><span class="val" id="v-brad">3.25</span></div>
+    </div>
+
+    <!-- GOD RAYS -->
+    <div class="sect"><span>god rays</span>
+      <label class="tog"><input type="checkbox" id="t-gr"><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-gr">
+      <div class="row"><label>strength</label>  <input type="range" id="s-grstr"    min="0"   max="2"    step="0.05"  value="0.5">   <span class="val" id="v-grstr">0.50</span></div>
+      <div class="row"><label>decay</label>     <input type="range" id="s-grdecay"  min="0.9" max="0.999" step="0.002" value="0.966"> <span class="val" id="v-grdecay">0.966</span></div>
+      <div class="row"><label>density</label>   <input type="range" id="s-grweight" min="0.1" max="1"    step="0.05"  value="0.4">   <span class="val" id="v-grweight">0.40</span></div>
+      <div class="row"><label>sun height</label><input type="range" id="s-grsunY"   min="0.3" max="1"    step="0.01"  value="0.72">  <span class="val" id="v-grsunY">0.72</span></div>
+      <div class="row"><label>drift amount</label><input type="range" id="s-grdrift" min="0"  max="0.5"  step="0.01"  value="0.28">  <span class="val" id="v-grdrift">0.28</span></div>
+      <div class="row"><label>drift speed</label><input type="range" id="s-grspd"   min="0"   max="0.15" step="0.005" value="0.04">  <span class="val" id="v-grspd">0.040</span></div>
+    </div>
+
+    <!-- CLOUD LAYERS -->
+    <div class="sect"><span>cloud layers</span>
+      <label class="tog"><input type="checkbox" id="t-layers" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-layers">
+      <div class="row"><label>bob amount</label><input type="range" id="s-lmove" min="0" max="1" step="0.01" value="0.3"><span class="val" id="v-lmove">0.30</span></div>
+    </div>
+
+    <!-- COLUMN GUIDE -->
+    <div class="sect"><span>column guide</span>
+      <label class="tog"><input type="checkbox" id="t-colg" checked><span class="tog-track"></span></label></div>
+    <div class="sect-body" id="b-colg">
+      <div class="row"><label>opacity</label><input type="range" id="s-colopa" min="0" max="0.25" step="0.005" value="0.07"><span class="val" id="v-colopa">0.070</span></div>
+    </div>
+
+    <button id="btn-export">export settings  (json)</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+// ── Params ────────────────────────────────────────────────────────────────────
+const P = {
+  idle: 0.28,  force: 0.5,   ease: 0.7,   ripple: 1.25,
+  block: 0.5,
+  aberrScale: 0.55, aberrIdle: 0.001, aberrMouse: 2.0, aberrAnim: 0.66,
+  grid: 5.0,   gopa: 0.5,
+  pxBase: 4.5, px: 8.0,
+  fspd: 0.2,   fstr: 0.03,
+  sat: 1.5,
+  expAmp: 0.08, expSpd: 0.045,
+  bloomThresh: 0.51, bloomStr: 0.25,
+  grStr: 0.5,  grDecay: 0.966, grWeight: 0.4, grSunY: 0.72, grDrift: 0.28, grSpd: 0.04,
+  bloomRad: 3.25,
+  layerMove: 0.3, layersOn: 1,
+  colOpa: 0.07, colOn: 1,
+};
+
+// ── Flow map ──────────────────────────────────────────────────────────────────
+function makeFlowMap(size = 256) {
+  const data = new Uint8Array(size * size * 4);
+  const TAU  = Math.PI * 2;
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const u = x / size, v = y / size;
+      const fx =
+        Math.sin(v * TAU)              * 0.38 +
+        Math.sin(u * TAU - v * TAU)    * 0.22 +
+        Math.sin(u * TAU * 2 + v * TAU)* 0.12 +
+        Math.sin(v * TAU * 3 - 1.2)    * 0.07 + 0.22;
+      const fy =
+        Math.cos(u * TAU + 1.0)        * 0.32 +
+        Math.cos(v * TAU + u * TAU)    * 0.20 +
+        Math.cos(u * TAU - v * TAU * 2)* 0.10 +
+        Math.cos(u * TAU * 2 + 2.1)    * 0.06 + 0.10;
+      const i = (y * size + x) * 4;
+      data[i]   = Math.round(Math.min(1, Math.max(0, fx*.5+.5)) * 255);
+      data[i+1] = Math.round(Math.min(1, Math.max(0, fy*.5+.5)) * 255);
+      data[i+2] = 128; data[i+3] = 255;
+    }
+  }
+  const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.minFilter = tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+// ── Renderer ──────────────────────────────────────────────────────────────────
+const canvas   = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+const scene    = new THREE.Scene();
+const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const clock    = new THREE.Clock();
+
+// Single full-screen quad — material is swapped per pass
+const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
+scene.add(quad);
+
+// ── Layer scene ───────────────────────────────────────────────────────────────
+const IMAGE_ASPECT = 2412 / 1447;
+const layerScene   = new THREE.Scene();
+const layerCamera  = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+function makeRT(w, h) {
+  return new THREE.WebGLRenderTarget(w, h, {
+    minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+  });
+}
+
+let layerRT  = makeRT(innerWidth, innerHeight);
+let glitchRT = makeRT(innerWidth, innerHeight);
+let brightRT = makeRT(Math.floor(innerWidth/2), Math.floor(innerHeight/2));
+let blurART  = makeRT(Math.floor(innerWidth/2), Math.floor(innerHeight/2));
+let bloomRT  = makeRT(Math.floor(innerWidth/2), Math.floor(innerHeight/2));
+let godRayRT = makeRT(Math.floor(innerWidth/2), Math.floor(innerHeight/2));
+let halfW = Math.floor(innerWidth/2), halfH = Math.floor(innerHeight/2);
+
+// ── Layer loading ─────────────────────────────────────────────────────────────
+const BOB_PARAMS = [
+  { amp: 0.008, spd: 0.30, phase: 0.00 },
+  { amp: 0.018, spd: 0.52, phase: 2.09 },
+  { amp: 0.028, spd: 0.71, phase: 4.19 },
+  { amp: 0.040, spd: 0.95, phase: 1.05 },
+];
+const DRIFT_PARAMS = [
+  { amp: 0.003, spd: 0.21, phase: 0.5 },
+  { amp: 0.006, spd: 0.38, phase: 1.3 },
+  { amp: 0.009, spd: 0.55, phase: 2.8 },
+  { amp: 0.013, spd: 0.75, phase: 0.2 },
+];
+const layers = [];
+
+function calcCoverFit(w, h) {
+  const sAsp = w / h;
+  if (sAsp > IMAGE_ASPECT) {
+    const ry = IMAGE_ASPECT / sAsp;
+    return { rx: 1, ry, ox: 0, oy: (1 - ry) * 0.5 };
+  } else {
+    const rx = sAsp / IMAGE_ASPECT;
+    return { rx, ry: 1, ox: (1 - rx) * 0.5, oy: 0 };
+  }
+}
+function applyCoverFit(tex, cf) {
+  tex.repeat.set(cf.rx, cf.ry);
+  tex.offset.set(cf.ox, cf.oy);
+}
+
+const texLoader = new THREE.TextureLoader();
+for (let i = 0; i < 4; i++) {
+  texLoader.load(`cloud_layer/${i}.png`, tex => {
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+    const cf = calcCoverFit(innerWidth, innerHeight);
+    applyCoverFit(tex, cf);
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(2, 2),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, premultipliedAlpha: false })
+    );
+    mesh.renderOrder = i;
+    layerScene.add(mesh);
+    layers[i] = { tex, baseOX: cf.ox, baseOY: cf.oy, bob: BOB_PARAMS[i], drift: DRIFT_PARAMS[i] };
+  });
+}
+
+// ── Shared vertex shader ──────────────────────────────────────────────────────
+const VS = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.); }`;
+
+// ── Pass 1: Glitch shader ─────────────────────────────────────────────────────
+const glitchMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTexture:     { value: layerRT.texture },
+    uResolution:  { value: new THREE.Vector2(innerWidth, innerHeight) },
+    uTime:        { value: 0 },
+    uMouse:       { value: new THREE.Vector2(.5, .5) },
+    uMouseGlitch: { value: 0 },
+    uGlitchOn:    { value: 1. },
+    uBlockOn:     { value: 0. },
+    uAberrOn:     { value: 1. },
+    uGridOn:      { value: 0. },
+    uPixelOn:     { value: 1. },
+    uFlowOn:      { value: 1. },
+    uIdleBase:    { value: P.idle    },
+    uMouseForce:  { value: P.force   },
+    uRipple:      { value: P.ripple  },
+    uBlockChaos:  { value: P.block   },
+    uAberrScale:  { value: P.aberrScale },
+    uAberrIdle:   { value: P.aberrIdle  },
+    uAberrMouse:  { value: P.aberrMouse },
+    uAberrAnim:   { value: P.aberrAnim  },
+    uGridSize:    { value: P.grid    },
+    uGridOpacity: { value: P.gopa    },
+    uPixelBase:   { value: P.pxBase  },
+    uPixelMax:    { value: P.px      },
+    uFlowMap:     { value: makeFlowMap() },
+    uFlowSpeed:   { value: P.fspd    },
+    uFlowStrength:{ value: P.fstr    },
+    uImageAspect: { value: innerWidth / innerHeight },
+    uSaturation:  { value: P.sat     },
+    uSatOn:       { value: 1.        },
+    uExpOn:       { value: 1.        },
+    uExpAmp:      { value: P.expAmp  },
+    uExpSpd:      { value: P.expSpd  },
+  },
+  vertexShader: VS,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D uTexture;
+    uniform vec2  uResolution;
+    uniform float uTime;
+    uniform vec2  uMouse;
+    uniform float uMouseGlitch;
+    uniform float uGlitchOn, uBlockOn, uAberrOn, uGridOn, uPixelOn, uFlowOn;
+    uniform float uIdleBase, uMouseForce, uRipple;
+    uniform float uBlockChaos;
+    uniform float uAberrScale, uAberrIdle, uAberrMouse, uAberrAnim;
+    uniform float uGridSize, uGridOpacity;
+    uniform float uPixelBase, uPixelMax;
+    uniform sampler2D uFlowMap;
+    uniform float uFlowSpeed, uFlowStrength;
+    uniform float uImageAspect;
+    uniform float uSaturation, uSatOn;
+    uniform float uExpOn, uExpAmp, uExpSpd;
+    varying vec2 vUv;
+
+    float h11(float p) { p=fract(p*.1031); p*=p+33.33; p*=p+p; return fract(p); }
+    float h12(vec2 p)  { vec3 q=fract(vec3(p.xyx)*.1031); q+=dot(q,q.yzx+33.33); return fract((q.x+q.y)*q.z); }
+
+    vec2 coverUv(vec2 uv) {
+      float s  = uResolution.x / uResolution.y;
+      float fw = step(uImageAspect, s);
+      return mix(
+        vec2(uv.x*(s/uImageAspect)+(1.-(s/uImageAspect))*.5, uv.y),
+        vec2(uv.x, uv.y*(uImageAspect/s)+(1.-(uImageAspect/s))*.5), fw);
+    }
+
+    void main() {
+      vec2  uv     = vUv;
+      float aspect = uResolution.x / uResolution.y;
+
+      float pulse  = .5 + .5*sin(uTime*.4);
+      float spike  = step(.97, h11(floor(uTime*3.1)*11.7));
+      float idle   = uIdleBase*(.6+.4*pulse) + spike*.28;
+      float mg     = uMouseGlitch * uMouseForce;
+      float glitch = clamp((idle + mg) * uGlitchOn, 0., 1.);
+
+      vec2  toMouse = uv - uMouse;
+      toMouse.x    *= aspect;
+      float md      = length(toMouse);
+      float ripW    = sin(md*20. - uTime*9.) * exp(-md*5.);
+      uv += toMouse/(md+.001)/aspect * ripW * uMouseGlitch * uMouseForce * uRipple * .028 * uGlitchOn;
+
+      float bh   = .038 - glitch*.018;
+      float band = floor(vUv.y / bh);
+      float ts   = floor(uTime*13.);
+      float ba   = step(1. - glitch*uBlockChaos*.5, h11(band*19.1+ts*.67)) * uBlockOn;
+      uv.x += (h11(band*4.3+ts*2.1)-.5) * .09 * ba;
+
+      float tts = floor(uTime*6.);
+      float tOn = step(.91, h11(tts*5.3)) * glitch;
+      uv.x += step(abs(vUv.y - h11(tts+77.)), .0022) * tOn * (h11(vUv.y*600.+uTime)-.5) * .2;
+
+      float mouseProx = exp(-md * 2.8);
+      float glitchPx  = mix(1., uPixelMax, clamp(glitch*glitch*1.2 + mouseProx*mg*.8, 0., 1.));
+      float pxScale   = mix(1., max(uPixelBase, glitchPx), uPixelOn);
+      vec2  pxStep    = max(vec2(1.), vec2(pxScale)) / uResolution;
+      vec2  pixUv     = floor(uv/pxStep)*pxStep + pxStep*.5;
+
+      float breath = 1.
+        + sin(uTime*.52)*.45*uAberrAnim
+        + sin(uTime*1.31+2.1)*.2*uAberrAnim
+        + h11(floor(uTime*.8)*5.7)*.3*uAberrAnim;
+      float idleAberr  = uAberrIdle * breath * uAberrScale;
+      float mouseAberr = mg * uAberrMouse * .018 * uAberrScale;
+      float aberrTotal = (idleAberr + mouseAberr + glitch*.007*uAberrScale) * uAberrOn;
+
+      vec2 fromCenter = pixUv - vec2(.5);
+      vec2 aberrBase  = normalize(mix(fromCenter, pixUv - uMouse, mg*.6) + vec2(.0001));
+      float angleWander = sin(uTime*.28)*1.8*uAberrAnim + sin(uTime*.71+1.2)*.6*uAberrAnim;
+      float baseAngle   = atan(aberrBase.y, aberrBase.x) + angleWander;
+      float radialMag   = length(fromCenter)*1.2 + .3;
+
+      vec2 offR = vec2(cos(baseAngle),          sin(baseAngle))          * aberrTotal * radialMag;
+      vec2 offG = vec2(cos(baseAngle+2.094395), sin(baseAngle+2.094395)) * aberrTotal * radialMag * .65;
+      vec2 offB = vec2(cos(baseAngle+4.188790), sin(baseAngle+4.188790)) * aberrTotal * radialMag;
+
+      vec2 flowDir = (texture2D(uFlowMap, vUv*.7).rg * 2.-1.) * uFlowStrength;
+      float cA  = fract(uTime * uFlowSpeed);
+      float cB  = fract(uTime * uFlowSpeed + .5);
+      float wAB = .5 + .5*cos(cA * 6.28318530);
+      vec2 totalFlow = mix(flowDir * cA, flowDir * cB, wAB);
+
+      vec2 flowDir2 = (texture2D(uFlowMap, vUv*.42 + vec2(.5,.31)).rg * 2.-1.) * uFlowStrength * .5;
+      float speedC  = uFlowSpeed * 1.61803;
+      float cC  = fract(uTime * speedC + .37);
+      float cD  = fract(uTime * speedC + .87);
+      float wCD = .5 + .5*cos(cC * 6.28318530);
+      totalFlow += mix(flowDir2 * cC, flowDir2 * cD, wCD);
+      totalFlow *= uFlowOn;
+      totalFlow += (uMouse - vec2(.5)) * uMouseGlitch * uFlowStrength * .6 * uFlowOn;
+
+      float r = texture2D(uTexture, coverUv(pixUv + totalFlow + offR)).r;
+      float g = texture2D(uTexture, coverUv(pixUv + totalFlow + offG)).g;
+      float b = texture2D(uTexture, coverUv(pixUv + totalFlow + offB)).b;
+      vec3 col = vec3(r, g, b);
+
+      vec2  gc   = fract(vUv * uResolution / uGridSize);
+      float line = max(step(gc.x, 1./uGridSize), step(gc.y, 1./uGridSize));
+      col *= 1. - line * uGridOpacity * uGridOn;
+
+      col += h12(pixUv*7. + fract(uTime*.3)) * glitch * .12 * vec3(1.,.65,1.4);
+      col  = (col-.5)*1.08+.5;
+      col += glitch*.04;
+      col -= sin(vUv.y * uResolution.y * 2.) * .018;
+
+      vec2 vv = vUv*2.-1.;
+      col *= clamp(pow(1.-dot(vv*.45,vv*.5), 1.1), 0., 1.);
+      col += mouseProx * mg * .1;
+
+      float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      float sat  = mix(1., uSaturation, uSatOn);
+      col = mix(vec3(luma), col, sat);
+
+      // Dynamic exposure — slow breathing light shift
+      float expFactor = 1.0 + sin(uTime * uExpSpd * 6.28318) * uExpAmp * uExpOn;
+      col *= expFactor;
+
+      gl_FragColor = vec4(clamp(col,0.,1.), 1.);
+    }
+  `,
+});
+
+// ── Pass 2: Bright threshold (feeds bloom + god rays) ─────────────────────────
+const brightMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTex:       { value: null },
+    uThreshold: { value: P.bloomThresh },
+  },
+  vertexShader: VS,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D uTex;
+    uniform float uThreshold;
+    varying vec2 vUv;
+    void main() {
+      vec3 c   = texture2D(uTex, vUv).rgb;
+      float lum = dot(c, vec3(0.2126, 0.7152, 0.0722));
+      float b   = smoothstep(uThreshold, uThreshold + 0.15, lum);
+      gl_FragColor = vec4(c * b, 1.0);
+    }
+  `,
+});
+
+// ── Pass 3+4: Separable gaussian blur (H then V) ──────────────────────────────
+const blurMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTex: { value: null },
+    uDir: { value: new THREE.Vector2() },
+  },
+  vertexShader: VS,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D uTex;
+    uniform vec2 uDir;
+    varying vec2 vUv;
+    void main() {
+      vec3 c = vec3(0.);
+      c += texture2D(uTex, vUv - uDir*4.).rgb * 0.054;
+      c += texture2D(uTex, vUv - uDir*3.).rgb * 0.089;
+      c += texture2D(uTex, vUv - uDir*2.).rgb * 0.122;
+      c += texture2D(uTex, vUv - uDir*1.).rgb * 0.149;
+      c += texture2D(uTex, vUv           ).rgb * 0.172;
+      c += texture2D(uTex, vUv + uDir*1.).rgb * 0.149;
+      c += texture2D(uTex, vUv + uDir*2.).rgb * 0.122;
+      c += texture2D(uTex, vUv + uDir*3.).rgb * 0.089;
+      c += texture2D(uTex, vUv + uDir*4.).rgb * 0.054;
+      gl_FragColor = vec4(c, 1.);
+    }
+  `,
+});
+
+// ── Pass 5: God rays (radial blur from animated sun) ──────────────────────────
+const godRayMat = new THREE.ShaderMaterial({
+  defines: { NUM_SAMPLES: 50 },
+  uniforms: {
+    uTex:    { value: null },
+    uSunPos: { value: new THREE.Vector2(0.5, 0.72) },
+    uDecay:  { value: P.grDecay },
+    uWeight: { value: 0.4 },
+  },
+  vertexShader: VS,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D uTex;
+    uniform vec2  uSunPos;
+    uniform float uDecay;
+    uniform float uWeight;
+    varying vec2 vUv;
+    void main() {
+      vec2  delta = (vUv - uSunPos) * 0.97 / float(NUM_SAMPLES);
+      vec2  uv    = vUv;
+      float decay = 1.0;
+      vec3  acc   = vec3(0.0);
+      for (int i = 0; i < NUM_SAMPLES; i++) {
+        uv   -= delta;
+        acc  += texture2D(uTex, clamp(uv, 0.001, 0.999)).rgb * decay * uWeight;
+        decay *= uDecay;
+      }
+      gl_FragColor = vec4(acc / float(NUM_SAMPLES) * 4.0, 1.0);
+    }
+  `,
+});
+
+// ── Pass 6: Final composite ───────────────────────────────────────────────────
+const finalMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uBase:      { value: glitchRT.texture },
+    uBloom:     { value: bloomRT.texture  },
+    uGodRay:    { value: godRayRT.texture },
+    uBloomStr:  { value: P.bloomStr },
+    uGodRayStr: { value: P.grStr    },
+    uBloomOn:   { value: 1.         },
+    uGodRayOn:  { value: 0.         },
+  },
+  vertexShader: VS,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D uBase, uBloom, uGodRay;
+    uniform float uBloomStr, uGodRayStr, uBloomOn, uGodRayOn;
+    varying vec2 vUv;
+    void main() {
+      vec3 base   = texture2D(uBase,   vUv).rgb;
+      vec3 bloom  = texture2D(uBloom,  vUv).rgb;
+      vec3 rays   = texture2D(uGodRay, vUv).rgb;
+      vec3 col    = base
+        + bloom * uBloomStr  * uBloomOn
+        + rays  * uGodRayStr * uGodRayOn;
+      gl_FragColor = vec4(clamp(col, 0., 1.), 1.);
+    }
+  `,
+});
+
+// ── Mouse / Touch ─────────────────────────────────────────────────────────────
+const mouse = { x:.5, y:.5 }, prev = { x:.5, y:.5 };
+let smoothGlitch = 0;
+const setMouse = (x, y) => { mouse.x = x; mouse.y = y; };
+window.addEventListener('mousemove',  e => setMouse(e.clientX/innerWidth, 1-e.clientY/innerHeight));
+window.addEventListener('touchmove',  e => { const t=e.touches[0]; setMouse(t.clientX/innerWidth, 1-t.clientY/innerHeight); }, { passive: true });
+window.addEventListener('touchstart', e => { const t=e.touches[0]; setMouse(t.clientX/innerWidth, 1-t.clientY/innerHeight); }, { passive: true });
+
+// ── Column guide references ───────────────────────────────────────────────────
+const colStrips = Array.from(document.querySelectorAll('.col-strip'));
+
+// ── Resize ────────────────────────────────────────────────────────────────────
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  halfW = Math.max(1, Math.floor(w/2)); halfH = Math.max(1, Math.floor(h/2));
+  const hw = halfW, hh = halfH;
+  renderer.setSize(w, h);
+  glitchMat.uniforms.uResolution.value.set(w, h);
+  glitchMat.uniforms.uImageAspect.value = w / h;
+  layerRT.setSize(w, h);
+  glitchRT.setSize(w, h);
+  brightRT.setSize(hw, hh);
+  blurART.setSize(hw, hh);
+  bloomRT.setSize(hw, hh);
+  godRayRT.setSize(hw, hh);
+  const cf = calcCoverFit(w, h);
+  layers.forEach(layer => {
+    if (!layer) return;
+    applyCoverFit(layer.tex, cf);
+    layer.baseOX = cf.ox;
+    layer.baseOY = cf.oy;
+  });
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ── Render loop ───────────────────────────────────────────────────────────────
+let pageVisible = true;
+document.addEventListener('visibilitychange', () => {
+  pageVisible = !document.hidden;
+  if (pageVisible) clock.getDelta(); // discard elapsed time while hidden
+});
+
+(function loop() {
+  requestAnimationFrame(loop);
+  if (!pageVisible) return;
+  const t   = clock.getElapsedTime();
+  const dx  = (mouse.x - prev.x) * innerWidth;
+  const dy  = (mouse.y - prev.y) * innerHeight;
+  const spd = Math.min(Math.hypot(dx, dy) / 22, 1.0);
+  prev.x = mouse.x; prev.y = mouse.y;
+
+  const lerpRate = (1 - P.ease) * 0.2 + 0.005;
+  smoothGlitch += (spd - smoothGlitch) * lerpRate;
+
+  // Layer bob
+  layers.forEach((layer) => {
+    if (!layer) return;
+    const sc = P.layerMove * P.layersOn;
+    layer.tex.offset.x = layer.baseOX + Math.sin(t * layer.drift.spd + layer.drift.phase) * layer.drift.amp * sc;
+    layer.tex.offset.y = layer.baseOY + Math.sin(t * layer.bob.spd   + layer.bob.phase)   * layer.bob.amp   * sc;
+  });
+
+  // Pass 1: layers → layerRT
+  renderer.setRenderTarget(layerRT);
+  renderer.setClearColor(0x000000, 1);
+  renderer.clear();
+  renderer.render(layerScene, layerCamera);
+
+  // Pass 2: glitch → glitchRT
+  glitchMat.uniforms.uTime.value        = t;
+  glitchMat.uniforms.uMouse.value.set(mouse.x, mouse.y);
+  glitchMat.uniforms.uMouseGlitch.value = smoothGlitch;
+  glitchMat.uniforms.uTexture.value     = layerRT.texture;
+  quad.material = glitchMat;
+  renderer.setRenderTarget(glitchRT);
+  renderer.setClearColor(0x000000, 1);
+  renderer.clear();
+  renderer.render(scene, camera);
+
+  const bloomOn  = finalMat.uniforms.uBloomOn.value  > 0.5;
+  const godRayOn = finalMat.uniforms.uGodRayOn.value > 0.5;
+
+  // Pass 3+4: bloom — skip entirely when toggled off
+  if (bloomOn || godRayOn) {
+    // Pass 3: bright threshold → brightRT (shared input for bloom + god rays)
+    brightMat.uniforms.uTex.value = glitchRT.texture;
+    quad.material = brightMat;
+    renderer.setRenderTarget(brightRT);
+    renderer.clear();
+    renderer.render(scene, camera);
+  }
+
+  if (bloomOn) {
+    // Pass 4a: horizontal blur
+    blurMat.uniforms.uTex.value = brightRT.texture;
+    blurMat.uniforms.uDir.value.set(P.bloomRad / halfW, 0);
+    quad.material = blurMat;
+    renderer.setRenderTarget(blurART);
+    renderer.clear();
+    renderer.render(scene, camera);
+
+    // Pass 4b: vertical blur → bloomRT
+    blurMat.uniforms.uTex.value = blurART.texture;
+    blurMat.uniforms.uDir.value.set(0, P.bloomRad / halfH);
+    renderer.setRenderTarget(bloomRT);
+    renderer.clear();
+    renderer.render(scene, camera);
+  }
+
+  // Pass 5: god rays — skip when toggled off
+  if (godRayOn) {
+    const sunX = 0.5      + Math.sin(t * P.grSpd) * P.grDrift + (mouse.x - 0.5) * 0.06;
+    const sunY = P.grSunY + Math.sin(t * P.grSpd * 0.67 + 1.3) * P.grDrift * 0.32;
+    godRayMat.uniforms.uTex.value = brightRT.texture;
+    godRayMat.uniforms.uSunPos.value.set(sunX, sunY);
+    quad.material = godRayMat;
+    renderer.setRenderTarget(godRayRT);
+    renderer.clear();
+    renderer.render(scene, camera);
+  }
+
+  // Pass 6: final composite → screen
+  finalMat.uniforms.uBase.value   = glitchRT.texture;
+  finalMat.uniforms.uBloom.value  = bloomRT.texture;
+  finalMat.uniforms.uGodRay.value = godRayRT.texture;
+  quad.material = finalMat;
+  renderer.setRenderTarget(null);
+  renderer.render(scene, camera);
+
+  // CSS column guide glitch
+  if (P.colOn) {
+    const g = smoothGlitch * P.force;
+    // Idle drift — slow sinusoidal sway even at rest
+    const idleDrift = P.idle * 0.18;
+    colStrips.forEach((col, i) => {
+      const p1 = i * 1.1 + t * 3.7;
+      const p2 = i * 0.7 + t * 2.3 + 1.5;
+      const p3 = i * 1.6 + t * 5.1 + 0.8;
+      const tx    = (g * Math.sin(p1) * 9.0)  + (idleDrift * Math.sin(p2) * 4.0);
+      const skew  = (g * Math.sin(p2) * 4.5)  + (idleDrift * Math.sin(p1) * 1.8);
+      const scaleY= 1 + g * Math.sin(p3) * 0.04;
+      col.style.transform = `translateX(${tx}px) skewX(${skew}deg) scaleY(${scaleY})`;
+    });
+    document.documentElement.style.setProperty('--col-opa', P.colOpa.toFixed(3));
+  }
+})();
+
+// ── Controls ──────────────────────────────────────────────────────────────────
+document.getElementById('ctrl-toggle').addEventListener('click', () => {
+  document.getElementById('ctrl-panel').classList.toggle('open');
+});
+
+[
+  ['s-idle',    'v-idle',    v => glitchMat.uniforms.uIdleBase.value    = v, 2],
+  ['s-force',   'v-force',   v => { glitchMat.uniforms.uMouseForce.value = v; P.force = v; }, 2],
+  ['s-ease',    'v-ease',    v => P.ease = v,                                2],
+  ['s-rip',     'v-rip',     v => glitchMat.uniforms.uRipple.value      = v, 2],
+  ['s-block',   'v-block',   v => glitchMat.uniforms.uBlockChaos.value  = v, 2],
+  ['s-ascale',  'v-ascale',  v => glitchMat.uniforms.uAberrScale.value  = v, 2],
+  ['s-aidle',   'v-aidle',   v => glitchMat.uniforms.uAberrIdle.value   = v, 3],
+  ['s-amouse',  'v-amouse',  v => glitchMat.uniforms.uAberrMouse.value  = v, 2],
+  ['s-aanim',   'v-aanim',   v => glitchMat.uniforms.uAberrAnim.value   = v, 2],
+  ['s-grid',    'v-grid',    v => glitchMat.uniforms.uGridSize.value    = v, 1],
+  ['s-gopa',    'v-gopa',    v => glitchMat.uniforms.uGridOpacity.value = v, 2],
+  ['s-pxbase',  'v-pxbase',  v => glitchMat.uniforms.uPixelBase.value   = v, 1],
+  ['s-px',      'v-px',      v => glitchMat.uniforms.uPixelMax.value    = v, 1],
+  ['s-fspd',    'v-fspd',    v => glitchMat.uniforms.uFlowSpeed.value   = v, 3],
+  ['s-fstr',    'v-fstr',    v => glitchMat.uniforms.uFlowStrength.value= v, 3],
+  ['s-sat',     'v-sat',     v => glitchMat.uniforms.uSaturation.value  = v, 2],
+  ['s-expamp',  'v-expamp',  v => glitchMat.uniforms.uExpAmp.value      = v, 2],
+  ['s-expspd',  'v-expspd',  v => glitchMat.uniforms.uExpSpd.value      = v, 3],
+  ['s-bthresh', 'v-bthresh', v => brightMat.uniforms.uThreshold.value   = v, 2],
+  ['s-bstr',    'v-bstr',    v => finalMat.uniforms.uBloomStr.value      = v, 2],
+  ['s-grstr',   'v-grstr',   v => finalMat.uniforms.uGodRayStr.value     = v, 2],
+  ['s-grdecay',  'v-grdecay',  v => godRayMat.uniforms.uDecay.value   = v,     3],
+  ['s-grweight', 'v-grweight', v => { godRayMat.uniforms.uWeight.value = v; P.grWeight = v; }, 2],
+  ['s-grsunY',   'v-grsunY',   v => P.grSunY  = v,                            2],
+  ['s-grdrift',  'v-grdrift',  v => P.grDrift  = v,                            2],
+  ['s-grspd',    'v-grspd',    v => P.grSpd    = v,                            3],
+  ['s-brad',     'v-brad',     v => P.bloomRad = v,                            2],
+  ['s-lmove',   'v-lmove',   v => P.layerMove = v,                           2],
+  ['s-colopa',  'v-colopa',  v => P.colOpa = v,                              3],
+].forEach(([id, vid, fn, dp]) => {
+  const el = document.getElementById(id), vEl = document.getElementById(vid);
+  const fmt = v => parseFloat(v).toFixed(dp);
+  vEl.textContent = fmt(el.value);
+  el.addEventListener('input', () => { vEl.textContent = fmt(el.value); fn(+el.value); });
+});
+
+// Shader toggles
+[
+  ['t-glitch', 'b-glitch', 'uGlitchOn',  glitchMat],
+  ['t-block',  'b-block',  'uBlockOn',   glitchMat],
+  ['t-aberr',  'b-aberr',  'uAberrOn',   glitchMat],
+  ['t-grid',   'b-grid',   'uGridOn',    glitchMat],
+  ['t-pixel',  'b-pixel',  'uPixelOn',   glitchMat],
+  ['t-flow',   'b-flow',   'uFlowOn',    glitchMat],
+  ['t-sat',    'b-sat',    'uSatOn',     glitchMat],
+  ['t-exp',    'b-exp',    'uExpOn',     glitchMat],
+  ['t-bloom',  'b-bloom',  'uBloomOn',   finalMat ],
+  ['t-gr',     'b-gr',     'uGodRayOn',  finalMat ],
+].forEach(([tid, bid, uni, mat]) => {
+  const tog  = document.getElementById(tid);
+  const body = document.getElementById(bid);
+  body.classList.toggle('off', !tog.checked);
+  tog.addEventListener('change', () => {
+    mat.uniforms[uni].value = tog.checked ? 1. : 0.;
+    body.classList.toggle('off', !tog.checked);
+  });
+});
+
+// JS-only toggles
+const layersTog = document.getElementById('t-layers');
+const layersBody = document.getElementById('b-layers');
+layersBody.classList.toggle('off', !layersTog.checked);
+layersTog.addEventListener('change', () => {
+  P.layersOn = layersTog.checked ? 1 : 0;
+  layersBody.classList.toggle('off', !layersTog.checked);
+});
+
+const colGTog  = document.getElementById('t-colg');
+const colGBody = document.getElementById('b-colg');
+const colGrid  = document.getElementById('col-grid');
+colGBody.classList.toggle('off', !colGTog.checked);
+colGTog.addEventListener('change', () => {
+  P.colOn = colGTog.checked ? 1 : 0;
+  colGrid.classList.toggle('hidden', !colGTog.checked);
+  colGBody.classList.toggle('off', !colGTog.checked);
+  if (!colGTog.checked) colStrips.forEach(c => c.style.transform = '');
+});
+
+// ── Export ────────────────────────────────────────────────────────────────────
+document.getElementById('btn-export').addEventListener('click', function () {
+  const on  = id => document.getElementById(id).checked;
+  const val = id => +document.getElementById(id).value;
+  const settings = {
+    glitch:     { enabled: on('t-glitch'), idle_intensity: val('s-idle'), mouse_force: val('s-force'), mouse_ease: val('s-ease'), ripple: val('s-rip') },
+    block_glitch:{ enabled: on('t-block'), chaos: val('s-block') },
+    aberration: { enabled: on('t-aberr'), scale: val('s-ascale'), idle_spread: val('s-aidle'), mouse_force: val('s-amouse'), animation: val('s-aanim') },
+    grid:       { enabled: on('t-grid'),  cell_size_px: val('s-grid'), opacity: val('s-gopa') },
+    pixelation: { enabled: on('t-pixel'), base_size: val('s-pxbase'), max_glitch: val('s-px') },
+    flow:       { enabled: on('t-flow'),  speed: val('s-fspd'), strength: val('s-fstr') },
+    saturation: { enabled: on('t-sat'),   amount: val('s-sat') },
+    exposure:   { enabled: on('t-exp'),   breathe_amount: val('s-expamp'), breathe_speed: val('s-expspd') },
+    bloom:      { enabled: on('t-bloom'), threshold: val('s-bthresh'), strength: val('s-bstr'), radius: val('s-brad') },
+    god_rays:   { enabled: on('t-gr'),    strength: val('s-grstr'), decay: val('s-grdecay'), density: val('s-grweight'), sun_height: val('s-grsunY'), drift_amount: val('s-grdrift'), drift_speed: val('s-grspd') },
+    cloud_layers:{ enabled: on('t-layers'), bob_amount: val('s-lmove') },
+    column_guide:{ enabled: on('t-colg'),  opacity: val('s-colopa') },
+  };
+  const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'cloud-glitch-settings.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  this.textContent = '✓  downloaded!';
+  this.classList.add('copied');
+  setTimeout(() => { this.textContent = 'export settings  (json)'; this.classList.remove('copied'); }, 2000);
+});
+</script>
+</body>
+</html>

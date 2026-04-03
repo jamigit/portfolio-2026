@@ -1,0 +1,148 @@
+---
+const { frontmatter } = Astro.props;
+
+import BaseLayout from "./BaseLayout.astro";
+import { Image } from 'astro:assets';
+import { Sidebar } from '../components/Sidebar.astro'
+
+// Import all your hero images here
+import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
+import folHomeShadow from '../assets/images/hero/FoL-Home-shadow.png';
+import gbagHomeShadow from '../assets/images/hero/Gbag-home-shadow.png';
+import healthywaterwaysHero from '../assets/images/hero/healthywaterways-hero.png';
+import jfnHomeShadow from '../assets/images/hero/JFN-home-shadow.png';
+import keplaHero from '../assets/images/hero/kepla-hero.png';
+import npdcHero from '../assets/images/hero/npdc-hero.png';
+import pelorusHero from '../assets/images/hero/pelorus-hero.png';
+import quinovicShadow from '../assets/images/hero/quinovic-shadow.png';
+import rmssHero from '../assets/images/hero/rmss-hero.png';
+import sitesafeHero from '../assets/images/hero/sitesafe-hero.png';
+import times7HomeShadow from '../assets/images/hero/times7-home-shadow.png';
+import vocalHomeShadow from '../assets/images/hero/vocal-home-shadow.png';
+import Sidebar from "../components/Sidebar.astro";
+
+const { image, customData, title, metaTitle, metaDescription, author} = frontmatter;
+
+// Create a mapping object that connects filename to imported image
+const heroImages = {
+  'Aurora-home-shadow.png': auroraHomeShadow,
+  'FoL-Home-shadow.png': folHomeShadow,
+  'Gbag-home-shadow.png': gbagHomeShadow,
+  'healthywaterways-hero.png': healthywaterwaysHero,
+  'JFN-home-shadow.png': jfnHomeShadow,
+  'kepla-hero.png': keplaHero,
+  'npdc-hero.png': npdcHero,
+  'pelorus-hero.png': pelorusHero,
+  'quinovic-shadow.png': quinovicShadow,
+  'rmss-hero.png': rmssHero,
+  'sitesafe-hero.png': sitesafeHero,
+  'times7-home-shadow.png': times7HomeShadow,
+  'vocal-home-shadow.png': vocalHomeShadow,
+};
+
+// Extract just the filename from your frontmatter path
+// This handles paths like '../images/hero/sitesafe-hero.png'
+const getImageFilename = (path) => {
+  return path.split('/').pop(); // Gets the last part after the final '/'
+};
+
+const imageFilename = getImageFilename(image.url);
+const heroImageSrc = heroImages[imageFilename];
+
+// Pulls through case study background colour and saves it as a variable to pass through below
+const heroClasses = `hero hero-casestudy ${frontmatter.bgClass}`.trim();
+---
+
+<BaseLayout 
+
+customData={customData}
+title={title}
+metaTitle={metaTitle ?? title}
+metaDescription={metaDescription ?? frontmatter.description} 
+author={author}
+image={image}
+
+
+>
+
+
+  <section class={heroClasses} >
+    <div class="hero-content hero-content-casestudy">
+    <p>Case Study</p>
+    <h1 class="banner-text">{frontmatter.title}</h1>
+    <p class="overview-text-small">{frontmatter.overview}</p>
+
+    <!-- 
+    <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
+-->
+
+
+      {heroImageSrc ? (
+        <Image 
+          src={heroImageSrc} 
+          alt={frontmatter.image.alt}
+          width={1200}
+          height={800}
+          format="webp"
+          loading="eager"
+          class="hero-image"
+          quality={85}
+          densities={[1, 2]}
+        />
+      ) : (
+        <!-- Fallback for images not in the mapping -->
+        <div class="image-error">
+          <p>Hero image not found: {imageFilename}</p>
+          <p>Please add it to the heroImages mapping in CaseStudyLayout.astro</p>
+        </div>
+      )}
+
+
+
+<div class="info">
+
+  <div class="info-item">
+    <p><h5>Client</h5></p>
+    <p>{frontmatter.client}</p>
+  </div>
+    <div class="info-item">
+    <p><h5>Project Type</h5></p>
+    <p>{frontmatter.projectType}</p>
+  </div>
+    <div class="info-item">
+    <p><h5>Role</h5></p>
+    <p>{frontmatter.role}</p>
+  </div>
+    <div class="info-item">
+    <p><h5>Timeframe</h5></p>
+    <p>{frontmatter.timeframe}</p>
+  </div>
+    <div class="info-item">
+    <p><h5>Team</h5></p>
+    <p>{frontmatter.team}</p>
+  </div>
+    <div class="info-item">
+    <p><h5>Skills</h5></p>
+    <p>{frontmatter.skills}</p>
+  </div>
+
+</div>
+
+   {
+   frontmatter.projectLinkCopy ? 
+   <a target="_blank" class="link-large" href={frontmatter.projectLink}>{frontmatter.projectLinkCopy}</a>
+   : <a target="_blank" class="link-large" href={frontmatter.projectLink}>See more</a>
+   
+   }
+   </div>
+  </section>
+  
+
+  <section class="content content-case-study">
+<!--  <Sidebar/> -->
+  
+
+
+    <slot />
+  </section>
+</BaseLayout>

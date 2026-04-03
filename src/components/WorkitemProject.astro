@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  title: string;
+  description: string;
+  url: string;
+  image: {
+    url: string;
+    alt: string;
+  };
+  optimizedImage?: any; // The imported image from the parent
+}
+
+const { title, description, url, image, optimizedImage } = Astro.props;
+---
+
+<li class="workitem-container">
+  <a class="workitem workitem-project" href={url}> 
+    <div class="workitem-content">
+      <h3 class="workitem-title-project">{title}</h3>
+        <p class="overview-text-small">{description}</p>
+    </div>
+
+
+      {optimizedImage ? (
+        <Image 
+          src={optimizedImage} 
+          alt={image.alt}
+          width={600}
+          height={400}
+          format="webp"
+          loading="lazy"
+          class="workitem-img-project"
+          quality={80}
+        />
+      ) : (
+        <img src={image.url} alt={image.alt} class="workitem-img-project" />
+      )}
+    </div>
+
+
+
+  </a>
+</li>
+

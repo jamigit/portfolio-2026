@@ -1,0 +1,47 @@
+---
+import Social from "../components/Social.astro";
+import WorkitemSimple from "../components/WorkitemSimple.astro";
+import Logo from "./Logo.astro";
+
+const allCaseStudies = Object.values(
+  import.meta.glob("../pages/case-study/*.mdx", { eager: true })
+);
+const allProjects = Object.values(
+  import.meta.glob("../pages/projects/*.mdx", { eager: true })
+);
+---
+
+
+
+<footer>
+  <Logo />
+
+  <div class="footer-links">
+    <div>
+      <h4 class="small-title">Case studies</h4>
+      <ul>
+        {
+          allCaseStudies.map((post: any) => (
+            <WorkitemSimple url={post.url} title={post.frontmatter.titleShort} />
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h4 class="small-title">Projects</h4>
+
+      <ul>
+        {
+          allProjects.map((post: any) => (
+            <WorkitemSimple url={post.url} title={post.frontmatter.title} />
+          ))
+        }
+      </ul>
+    </div>
+    <!--  
+      <a href="/about">About</a>
+      -->
+   
+    </div>
+
+</footer>

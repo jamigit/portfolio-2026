@@ -1,0 +1,211 @@
+---
+layout: ../../layouts/CaseStudyLayout.astro
+
+title: 'Digital Marketing SaaS Product'
+description: 'Designing a digital marketing agency that fits in your pocket.'
+image:
+    url: '..\src\assets\images\hero\kepla-hero.png'
+    alt: 'The Astro logo on a dark background with a pink glow.'
+tags: ["astro", "blogging", "learning in public"]
+projectLink: 'https://kepla.io/'
+projectLinkCopy: 'Take a look at the product'
+id: 'kepla'
+bgClass: 'kepla'
+
+
+metaTitle: 'Kepla case study'
+metaDescription: 'Designing a digital marketing agency that fits in your pocket.'
+author: 'Jamie Barter'
+
+customData: 'test'
+
+
+
+
+---
+
+
+## About
+
+<Logo/>
+
+Kepla is a digital advertising agency in your pocket. This marketing SaaS web application is designed to simplify the process of running digital marketing campaigns across multiple channels.  
+
+### My role  
+
+As an early-stage, bootstrapped startup, the team at Kepla needed the design resources to help structure their greenfield product. I was lucky to work with a highly knowledgeable team who had deep domain knowledge of digital advertising and a strong product vision.  Working with Kepla, I was responsible for developing the core user experience and the platform's UI (based on brand guidelines that were to be provided).
+
+### Design challenge  
+
+Running effective digital advertising can get complex quickly. For small business owners, they want to focus on their core business and not running digital advertising.
+
+A business owner may have a staff member doing marketing as a secondary part of their job description or no one at all, instead fitting it into an already busy schedule. Kepla’s goal was to help time limited and non-technical users create and run effective digital marketing campaigns by automating much of the process and allowing them to run ad campaigns across multiple platforms.
+
+My agency was brought in as an external partner to help with two key tasks;
+
+*   Task 1: Design the ad campaign creation process - this is the fundamental task users need to do.
+*   Task 2: Provide a core structure to the product in terms of IA, UI patterns and visual design.
+
+## A change in direction and structure  
+
+--------------------------------------
+
+Early in the project, when I first joined the team, Kepla was envisioned as a tool for digital marketing agencies. It would allow users to centralise the complexity that arises from having multiple campaigns across many clients.
+
+These initial concepts below show how ad agency users would first view a range of client accounts and then dive deeper into campaigns when needed. Clients themselves would also be able to log in and access their campaigns, thus allowing both parties to have visibility and work cooperatively.
+
+
+
+![Wireframe](/src/assets/images/kepla/wireframe-02.png)
+
+
+![](/src/assets/images/kepla/wireframe-01.png)
+
+
+The Kepla founders had a deep market knowledge from running their own digital marketing agencies. This initially pushed the product direction towards other digital marketing agencies as the customers. However, the core value proposition of the MVP was simplifying campaign creation and management across platforms. This value proposition aligned more strongly with a much larger market: small to medium businesses who were not currently leveraging digital marketing effectively but couldn't afford to hire a full agency. To further support this pivot, this approach wouldn't require the complex scaffolding needed for sharing data and access rights across various accounts, thus allowing us to go to market earlier.  
+
+### The new user base  
+
+Due to their background, the product founders had a large network of potential customers that fit our ideal profile. The target users were either staff members tasked with running the digital marketing as a secondary part of their role, or the business owners themselves.
+
+From initial market scoping conversations, we identified the following user needs:
+
+*   Users are time limited; marketing is a secondary part of their business or job.
+*   Digital marketing is quite a new skill to many of these users, even if they have traditional marketing knowledge.
+*   With so many channels (Google, Meta, LinkedIn, etc.), each with their own digital marketing options - it can be confusing and overwhelming to navigate.
+*   Users may be capable of building a single digital ad campaign, but they don't know how to run them effectively over time.
+
+### Structuring the product for single company accounts  
+
+We moved our focus to designing a structure for a single company account. The structure had four high level areas: Campaigns, Templates, Reporting, and Account Management.  
+
+<div class='img-adjacent'>
+<img src="/src/assets/images/kepla/wireframe-09.png" alt="Wireframe" class="img-half" />
+<img src="/src/assets/images/kepla/wireframe-06.png" alt="Wireframe" class="img-half" />
+
+</div>
+
+At this stage, we were still looking into wider features such as templating, a way of running repeat campaigns.  
+User research, however, was revealing that small businesses wouldn't create enough campaigns to need repeatable templates. For users trying to get a job done, templates complicated the user experience.
+
+Removing templating allowed us to prioritise our design and development efforts on the core experience of creating campaigns.
+
+![](/src/assets/images/kepla/wireframe-08.png)
+
+## Design Task 1: The ad campaign creation process  
+
+This part of the case study will focus on the product's core offering of creating ad campaigns, while the second part of the case study explains the wider app structure and implemented designs.  
+
+### The process
+
+We knew that we wanted to provide a platform where a user could create a campaign once and run it across multiple channels, allowing us to simplify the process of digital marketing. Across the many platforms, several overlapping data inputs are required for the user. Our system aimed to reduce this complexity and repeat work, allowing users to focus on the global direction of the campaign and add details where necessary.
+
+Our first designs looked to simplify the decision making, creating a linear process for the user as shown below.
+
+![](/src/assets/images/kepla/Process-1.png)
+
+### All-in-one option
+
+Below, you can see the core user flow for creating a campaign. With the intent of simplifying the actions and decision making required to make a campaign, we initially aimed to put all the campaign specific information for each platform on one page.  
+
+![](/src/assets/images/kepla/wireframe-05.png)
+
+Each platform's API submissions would require a different set of data inputs. As a result, we would need to submit the data separately, resulting in us requiring a page for each platform.  
+
+### Multi-step
+
+In response to this technical requirement, we broke up the pages required for campaign information into a linear process. At the start of the process, a user would select platforms (Meta, Google, plus more in the future), enter general information and then enter each specific platforms information. Note that at this stage we had developed the UI visual design, but this will be covered in a later section.  
+
+![](/src/assets/images/kepla/Process-2.png)
+![](/src/assets/images/kepla/process-wizard.png)
+
+#### User feedback
+
+Informal user testing was taking place with customers who were viewing the prototype. Some key feedback was that first the process felt quite long, but most importantly you lost track of where you were. By the time a user had navigated through the pages, they weren't sure what platforms they had selected and what had been filled out.
+
+### Change to hub system
+
+To fix this user confusion, we kept the first two steps (Campaign goals and Global information) and then grouped the platform specific pages into a 'hub'.
+
+Instead of trying to remember the platforms you had initially chosen, then run through all of them in one go, the user could add and manage each platform in one central location. The hub gives an overview of all the platforms you have selected, and all the ads you have created for that platform. 
+
+![](/src/assets/images/kepla/Process-3.png)
+
+As a result users had a clear system overview, and the tasks were chunked into manageable pieces.  
+‍  
+The campaign creation process was designed as a full screen wizard, to focus users on completing the campaign information. At this stage of development, we didn't have the ability to save progress, so we would need users to run through the full wizard process. To differentiate the platform specific campaigns from the wizard, each platform's page would open as a modal. This also allowed users to see that they were still in the 'hub' but were completing a specific action. Users could then jump in and out of each campaign from the hub.
+
+Once a user was satisfied with their overall campaign, they could finish the process. Note that depending on your campaign goal, Kepla would suggest what specific ads you should make, so the user wasn’t paralyzed by deciding if they had done enough work or where to start.  
+‍
+
+![](/src/assets/images/kepla/hub-system.png)
+
+### Platform specific creation
+
+Each platform has many different ad types - we created a largely standardized ad creation page that worked across all of them. A user may need to set up 5-6 different platform specific ads depending on their overall campaign goals. The platform specific pages shared a similar structure, with different fields and minor setup changes depending on the platform's quirks. This system effectively allowed users to learn the ad creation system once instead of many different times for different platforms and ad types.  
+
+![](/src/assets/images/kepla/campaign-2.png)
+
+### Dynamic ad previews
+
+A key feature was enabling users to view the ad being created for the platforms. This experience was consistent across ad creation platforms, the user always knowing that on the right hand side they can see how their ad will look, and trust that the system was creating the intended ad.  
+
+![](/src/assets/images/kepla/campaign-3.png)
+
+## Design Task 2: App structure and design  
+
+In addition to designing the core user flow for campaign creation, I was tasked with developing the structure and UI of the rest of the app. As a design team of one, I needed to wireframe, prototype and document quickly, ensuring the development team could keep building features.  
+
+### Interaction modes
+
+To manage the front-end development load, I needed to ensure the number of interaction modes and page types were kept consistent. This also built a structure for the app that created a consistent user experience. Below are some of the key interaction modes:  
+
+#### Tabbed page
+
+Informational page with tabs to explore more. This was a core way of displaying information that would then lead users to take action.  
+
+![](/src/assets/images/kepla/Interaction-tabbed.png)
+
+#### Wizards
+
+These are used for more complicated step-by-step processes and focus the user on that task.  
+
+![](/src/assets/images/kepla/Interaction-wizard.png)
+
+#### Modals
+
+For smaller tasks within a larger process. This allows users to reduce the visual noise of the background content but still quickly return to it.
+
+![](/src/assets/images/kepla/Interaction%20-%20modal.png)
+
+#### On page hints
+
+Throughout the site there are several places where Kepla will be able to guide the user. These could be error detection or guidance for campaigns suggested by Kepla.  
+
+![](/src/assets/images/kepla/Interaction-info.png)
+
+### Visual design
+
+At the start of this project, Kepla did not even have its product name, let alone branding. The brand design was developed externally in parallel, but I needed to get started on the UI as early as possible. The designs needed to be suitable for development early on, but also provide flexibility as we introduced the brand design into the UI. While the very early conceptual works were done as wireframes, I chose the 'UI Prep' Design library to give myself easy access to basic elements such as inputs, buttons and cards. We could then focus on custom user experience elements or new components where needed. As the branding was developed, I could easily update key colours, logos and patterns.  
+
+The brand concept was inspired by connections, crystal patterning and space. It is a bright but innovative look. The brand provided a strong base with dark blue and white but also the green gradient which could be used to draw the user’s eye.  
+
+![](/src/assets/images/kepla/brand-all.png)
+
+The UI system allowed an easy one-to-one swap of the core brand colours in. In addition, the ‘technical’ hexagonal elements were used in the header of the wizard to give visual focus.  
+
+![](/src/assets/images/kepla/brand%20elements.png)
+
+## Outcomes
+
+My design work provided Kepla with solutions to their immediate challenges, but also set them up with a structure to develop features at their own pace later. In the boom or bust world of startups, Kepla is still a thriving bootstrapped business expanding into other markets internationally such as Australia.
+‍
+As Kepla has grown, it has gained the resources needed to develop for the initial customer base of agencies, building on the initial campaign creation flows and the design work initially undertaken for multi-account users.
+
+[Check it out](https://kepla.io/)
+
+![](/src/assets/images/kepla/final-desktop6.png)
+![](/src/assets/images/kepla/final-desktop3.png)
+![](/src/assets/images/kepla/final-desktop2.png)
+![](/src/assets/images/kepla/final-mob2.png)
+![](/src/assets/images/kepla/final-mob1.png)

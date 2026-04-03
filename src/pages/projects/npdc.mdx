@@ -1,0 +1,250 @@
+---
+layout: ../../layouts/ProjectLayout.astro
+
+title: 'Local Council Website'
+description: 'Designing an authentic and approachable digital home for the New Plymouth District Council.'
+image:
+    url: '/images/hero/npdc-hero.png'
+    alt: 'Mockup of the New Plymouth District Council website'
+projectLink: 'https://www.npdc.govt.nz/'
+projectLinkCopy: 'Visit the website'
+id: 'npdc'
+bgClass: 'npdc'
+
+
+metaTitle: 'Local Council Website re-design case study'
+metaDescription: 'Designing an authentic and approachable digital home for the New Plymouth District Council.'
+author: 'Jamie Barter'
+
+customData: 'test'
+
+client: 'New Plymouth District Council'
+projectType: 'Website re-design'
+role: 'User Experience Designer'
+timeframe: '6 months'
+team: 'Project Manager, Lead Developer, Client team'
+skills: 'Discovery, Research, Wireframing, Prototyping, UI design, Brand Design'
+
+order: 4
+---
+
+import { Image } from "astro:assets";
+
+import brand from '../../assets/images/npdc/brand.jpeg'
+import brochures from '../../assets/images/npdc/brochures.jpg'
+import components from '../../assets/images/npdc/components.png'
+import contentMob from '../../assets/images/npdc/content-mob.png'
+import content from '../../assets/images/npdc/content.png'
+import content2 from '../../assets/images/npdc/content2.png'
+import homeDesktop from '../../assets/images/npdc/home-desktop.png'
+import homeMob from '../../assets/images/npdc/home-mob.png'
+import ia from '../../assets/images/npdc/ia.png'
+import iaGraph from '../../assets/images/npdc/ia-graph.png'
+import kureitanga from '../../assets/images/npdc/kureitanga.png'
+import logo from '../../assets/images/npdc/logo.png'
+import mobFinal from '../../assets/images/npdc/mob-final.png'
+import motifs1 from '../../assets/images/npdc/motifs-1.png'
+import motifs2 from '../../assets/images/npdc/motifs-2.png'
+import navDesktopFinal from '../../assets/images/npdc/nav-desktop-final.png'
+import navMobileFinal from '../../assets/images/npdc/nav-mobile-final.png'
+import navigationDesktop from '../../assets/images/npdc/navigation-desktop.png'
+import physicalLogo from '../../assets/images/npdc/physical-logo.jpeg'
+import process from '../../assets/images/npdc/process.png'
+import subpage from '../../assets/images/npdc/subpage.jpg'
+import workshop from '../../assets/images/npdc/workshop.png'
+
+
+
+
+
+
+## About
+
+The existing New Plymouth District Council's (NPDC) website was outdated, unintuitive, and failed to effectively communicate vital public information. It needed more than a visual update—it needed a fundamental rethink of how content, services, and identity were presented to the people of New Plymouth. As with many large councils, NPDC operates a wide variety of services managed by many internal teams. The challenge wasn't just designing a better website—it was creating a flexible, structured platform that could bring all of this complexity together in a way that made sense to the public. Built on the Umbraco CMS, our design also needed to be sustainable and manageable by internal editors.
+
+### Design challenge
+
+Design and build a content-managed website that could surface a vast range of services and information from across the council. The new experience needed to balance easy access to critical information with an identity that resonated with the region and its people.
+
+### Role and contributions
+
+- Shared responsibility for discovery and business analysis.
+- Lead designer for user experience and visual design.
+
+## Discovery
+
+
+We began with existing materials: NPDC staff had already conducted Voice of the Customer (VoC) research and drafted some early user stories. To gain a deeper understanding, we spent a week onsite at NPDC conducting interviews with council staff and members of the public.
+
+### Stakeholder interviews and requirements workshops
+
+We spoke with 7–8 core departments—including front desk and call centre staff—and shadowed customer service calls to observe the issues in real time. These frontline staff helped us understand both the functional pain points and the human side of civic service.
+
+#### What we learnt
+
+- The reception staff and the call centre staff are the frontline to the public. It wasn't just the problems they were solving that was important but also their attitude and warmth.
+- Inside the council there is a non-stop process of uploading documents and updating webpages for critical council processes such as hearings.
+- Need to simplify complex processes for the public and reduce jargon.
+- Users need to trust the content is relevant or up to date.
+
+### Existing research, strategic documents and competitor analysis
+
+In the lead up to the project, NPDC staff had undertaken Voice of the Customer surveys. We also reviewed the main strategic documents for the council and also undertook a competitor analysis of other councils.
+
+#### What we learnt
+
+- Users loved the existing A-Z search bar.
+- Other websites did a great job of interlinking content in various formats: menu, sidebar, related links and wanted this for future websites.
+
+## Design: IA and navigation
+
+
+
+NPDC need to communicate and engage with the public effectively, success lay in being able to structure this information meaningfully. Councils, with their many business units and services, are both broad in scope but also deep in detail.
+
+To build the publics trust in the websites content, the editors needed a system that allows them to control its complexity over time. Large content management websites undergo content drift as things get added or removed, become irrelevant or people leave the organisation.
+
+### Old website issues
+
+- The navigation only has 3 top level categories but the actual content is very vast and deep. As a result, users had to click through many layers of navigation or load too many pages.
+- NPDC has many separate subsites with their own branding. We need a way of both navigating to them and controlling them. They also need their own content pages and thus add more sitemap complexity.
+
+### Our IA approach
+
+Using the findings from VoC research, NPDC members had pulled together an initial IA, using desktop research of other national and internationally located councils. Effect then also worked on grouping these topics.
+
+A key decision we made was a category called 'Services' which holds the vast majority of day to day actions people undertake. We then separated content into 5 other major categories grouped by themes relevant to the user and not by any specific business unit.
+
+Home and Property for example contains not only all the building and planning units but also information relating to homeowners' properties such as rates or water infrastructure.
+
+The council is promoting New Plymouth as the 'sustainable lifestyle capital'. The category of 'Leisure and Culture' incorporates all the lifestyle things the council supports including running parks, events and museums.  
+‍  
+'Our focus' was more of an informational section allowing the members of the public to understand what the council is doing and why they are spending money. 'Council' in contrast is more operational about how it is run and how you can engage with council.
+
+#### IA testing
+
+Our developers built a navigation / IA hybrid tool that would allow the visualisation of the IA and the navigation to be toggled. Content administrators could test using content into the back end and we can also easily copy different versions of the IA out to test them.
+
+<Image class="" src={ia} alt="Subpage navigation component showing how child pages are automatically displayed"/>
+<Image class="" src={iaGraph} alt="Subpage navigation component showing how child pages are automatically displayed"/>
+
+An NPDC staff member then undertook guerilla testing at council with members from various teams who would effectively act as members of the public.
+
+We ended up making minor changes to 2nd level items. 'Our focus' was renamed to 'Planning our future' as it wasn't clear what was inside this category.
+
+With the sitemap established, we then needed to structure the website to navigate this broad and deep content. The sitemap could be up to 5 levels deep, this information needed to be discoverable. We adopted a multi-pronged approach to navigating and finding information consisting of multiple navigation options, search and A-Z finding linked to tagging pages, and on-page quick links of various sorts to create connections through the content.
+
+#### Subpages and page template management
+
+A challenge with content managing these deep and wide websites is that new content is being removed and added continuously. A user might make a page and then another admin later will want to add sub-pages. We needed a structure that wasn't strictly defined by landing page or content page type and instead made a single hybrid page type.   
+‍  
+The top level pages such as 'Services' or 'Council' were fixed and are their own specific landing page type. The vast majority of content pages are added as a 'standard content page', which simplifies content creation for editors. We had the option of creating landing page templates and then content templates, however many pages are a mix of both. We wanted to avoid confusion and lack of flexibility in the future if a content page has been added and then needs sub-pages and thus becomes a landing page also. Editors can add or remove pages as they see fit.  
+‍  
+ A user can add content and also sub-pages to any standard content page. The standard content page has a sub-page navigation block which automatically adds to the page if there are any child pages.
+
+<Image class="" src={subpage} alt="Subpage navigation component showing how child pages are automatically displayed"/>
+
+It is set up that the sub-page component is a requirement  page. An editor can change its location if needed to fit the flow of content but cannot remove it from page. This feature is even more essential on our mobile screens where we don't have room for a full sidebar. This ensures that on each page a user visits that they will always be able to see any subpages. A trade off is that these subpage links can take up extra space on the page.  
+‍  
+We discussed whether sub-page links should have images or icons to assist with visual identification on page. However due to the large number of pages  and many pages not having a related image we opted not to create a system with a large amount of mess.
+
+#### Sidebar
+
+Our desktop designs have a sidebar showing your position in the nested structure of a first level navigation element. So if a user is on the 'Services' section it will show how they are sitting within the 'Services' sitemap but not any of the other top level items. This focuses the user on the depth of information within that specific category and aims to not overwhelm them.  
+‍  
+We have set this up to be links only, and not an expanding accordion that a user can navigate to. Many opening and closing accordions can be confusing, the clickable structure serves to quickly highlight their current position, acting as a guide post. As some structures are four levels deep with many pages, being able to open and close all of these becomes very messy.
+
+#### Desktop mega nav
+
+A mega menu style for desktop was decided on, giving access to 1st level links when closed and then 2nd level links when opened. We decided to focus the experience and not show 3rd level links, allowing for a wider information architecture at second level.  
+‍  
+From the second level users can navigate on page to deeper content with either on page links or the side bar menu allows deeper navigation options.
+
+<Image class="" src={navigationDesktop} alt="Desktop mega navigation menu showing two-level navigation structure"/>
+
+## Visual design as public communication
+
+
+In addition to an information structure that shapes and delivers information and services, the visual design strategy was part of how we aimed to create a more engaging civic experience. There is no point in a new IA  if people don't want to be on the site.
+
+### NPDC's communication goals
+
+As a result of our Discovery phase we were able to summarise NPDC's communications goals as the following:
+
+- Lifestyle capital - The council needs to tell the story of the great community and lifestyle on offer in New Plymouth, a city with rapid and exciting development.
+- Real people in the community - NPDC is not the blank face of bureaucracy, instead it is real people, with real engagement who participate in and are members of the community.
+- Building a better city together - NPDC is not a fuddy-duddy stuffy institution, instead it is a team of citizens, professionals and high achievers driven to make New Plymouth a great place to live and work.
+- A framework and backbone for New Plymouth - The council provides a framework and backbone for everyone to live better lives, whether it is a building a house, running a business or participating in the community.
+
+### Visual design brief
+
+<Image class="" src={brand} alt="Brand personality workshop showing desired attributes of friendly, approachable, and professional"/>
+
+Our brand identity workshop expressed a desire to friendly, approachable but still professional.
+
+<Image class="" src={physicalLogo} alt="NPDC logo displayed on physical infrastructure in New Plymouth"/><Image class="" src={logo} alt="NPDC council logo in blue and white"/>
+
+As we walked about New Plymouth we found that NPDC logo and NPDC blue are the most consistent piece of branding, physically adorning the city and even its pamphlets. It will be a solid starting point for our visual identity design.
+
+<Image class="" src={brochures} alt="Collection of NPDC brochures showing consistent blue branding and logo usage"/>
+
+### Our visual design success criteria
+
+Based on our discussions with the client our reverse brief we had written had 2 essential pillars: be unique to the region's environment and heritage and to enhance and strengthen the existing logo that is embedded into the built infrastructure of the city.  
+‍  
+These goals were further clarified by the following:
+
+- Is approachable and welcoming to all and represents the NPDC as a professional, and forward-thinking organisation.
+- Builds on the brand continuity stemming from the ubiquitous NPDC logo
+- Is 'clear' - uncluttered and easy to read, with jargon free content
+- Is unique to New Plymouth's environment and heritage
+
+### Visual design workshop
+
+In spirit with NPDC's aims to work with the community, we proposed running a co-design workshop with local New Plymouth artists.  Artists work visually to understand, contextualise and express their thoughts and feelings of their world. By co-creating with artists we could develop a visual language that is authentic to the region.   
+‍  
+Our two day workshop consisted of some really robust debate about what was important and how to depict it. Starting with strong imagery embedded in an artwork gifted to the council, we explored similar visual motifs that expressed connection to New Plymouth. The talented group we worked with were also supportive of keeping the identity of the council's logo in the designs.
+
+<Image class="" src={workshop} alt="Visual design workshop with local artists co-creating authentic regional design language"/>
+
+### From visual concepts to design language
+
+Based on the proposal put forward by the artists, we created a shape language that symbolized the region. The conceptual shape, the 'Kureitanga' holds and protects all that is important within it. Instead of making a whole new icon for the region we imbued the existing icons with meaning and then developed our own language to express it.
+
+<Image class="" src={kureitanga} alt="Kureitanga conceptual shape showing curved forms that hold and protect"/>
+
+<Image class="" src={motifs1} alt="Visual motifs featuring horizontal lines and swooping curves inspired by the region"/><Image class="" src={motifs2} alt="Additional visual motifs showing variations of curved and horizontal design elements"/>
+
+Post workshop, my role was to synthesize a lot of these great ideas into a singular visual language. The common motifs were starting to pull on a similar visual language of strong horizontals offset with swooping curves.
+
+From there these core shapes were part of every visual design decision to build the visual elements of the website. We aimed to embed this visual language into the design instead of decorating the design.
+
+<Image class="" src={process} alt="Design process sketches showing evolution from concepts to final visual elements"/><Image class="" src={components} alt="Component designs incorporating the curved visual language into UI elements"/>
+
+## Solution
+
+With the wireframes and visual language in place, we built out the key pages and released components to editors incrementally. This allowed us to test content workflows and make iterative improvements based on real use. Our flexible system of components and templates helped the content team stay on top of complexity and create clarity for end users.
+
+[Visit the website](https://www.npdc.govt.nz/)
+
+##### Homepage mockups
+
+<Image class="" src={homeDesktop} alt="Final homepage design for desktop showing hero section and navigation"/><Image class="" src={homeMob} alt="Final homepage design for mobile showing responsive layout"/>
+
+##### Navigation
+
+<Image class="" src={navDesktopFinal} alt="Final desktop navigation design with mega menu expanded"/><Image class="" src={navMobileFinal} alt="Final mobile navigation design with hamburger menu"/>
+
+##### Content page
+
+<Image class="" src={content} alt="Content page design for desktop showing sidebar navigation and main content area"/><Image class="" src={contentMob} alt="Content page design for mobile showing responsive content layout"/>
+
+<Image class="" src={content2} alt="Additional content components on desktop showing various page elements"/><Image class="" src={mobFinal} alt="Mobile view of content components showing responsive design"/>
+
+## Impact and reflections
+
+Overall this was a really rewarding project. The focus on the citizens that NPDC staff brought was really inspiring and they allowed us to work through a process that was aimed at making a great experience for serving the people of New Plymouth. Working with the artist team to develop a visual language was a huge part of this.
+
+As a result of this work the website won the ALGIM (Association of Local Government Information Management) 2022 "Supreme Website" award.
+
+I would like to have run more testing, particularly user testing some of the search and filtering functionality. Particularly search itself but also things like Hearings, Meetings and Public Notices where users need to find critical legal information.

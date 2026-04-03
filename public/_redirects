@@ -1,0 +1,44 @@
+# Netlify redirects file
+# Place this file in your public/ directory
+
+/test-redirect /case-study/sitesmart 301
+
+
+# Specific project redirects (based on your current files)
+/projects/getvocal /projects/getvocal 301
+/projects/healthywaterways /projects/healthywaterways 301
+/projects/maritime /projects/maritime 301
+/projects/npdc /projects/npdc 301
+/projects/quinovic /projects/quinovic 301
+/projects/times7 /projects/times7 301
+
+# Specific case study redirects
+/case-study/aurora /aurora 301
+/case-study/kepla /kepla 301
+/case-study/pelorus /pelorus 301
+/case-study/sitesmart /sitesmart 301
+
+# If you previously had numbered versions, redirect them
+/projects/project-1-getvocal /projects/getvocal 301
+/projects/prjoect-4-healthywaterways /projects/healthywaterways 301
+/projects/project-3-maritime /projects/maritime 301
+/projects/project-2-npdc /projects/npdc 301
+/projects/project-5-quinovic /projects/quinovic 301
+/projects/prjoect-6-times7 /projects/times7 301
+
+/case-study/case-study-3-aurora /case-study/aurora 301
+/case-study/case-study-2-kepla /case-study/kepla 301
+/case-study/case-study-3-pelorus /case-study/pelorus 301
+/case-study/case-study-1-sitemart /case-study/sitesmart 301
+
+
+
+
+# Common alternative paths
+/work /projects 301
+/portfolio /projects 301
+/case-studies /case-study 301
+
+# Catch-all for any other numbered patterns
+/projects/*[0-9][0-9]-* /projects/:splat 301
+/case-study/*[0-9][0-9]-* /case-study/:splat 301

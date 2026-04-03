@@ -1,0 +1,19 @@
+{
+  "name": "strong-shell",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.3",
+    "@astrojs/netlify": "^6.5.6",
+    "@astrojs/sitemap": "^3.4.2",
+    "@fontsource-variable/inconsolata": "^5.2.6",
+    "@fontsource-variable/work-sans": "^5.2.6",
+    "astro": "^5.12.8"
+  }
+}
