@@ -77,6 +77,24 @@
 }
 */
 
+/* Skip to content — accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background-color: var(--midnight-blue);
+  color: var(--white);
+  font-family: var(--font-work-sans);
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+}
+.skip-link:focus {
+  top: 0;
+}
+
 html {
   background-color: var(--white);
   font-family: var(--font-work-sans);

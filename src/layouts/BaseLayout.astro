@@ -5,29 +5,38 @@ import '../styles/global.css';
 
 const { title, metaTitle, metaDescription, author, customData } = Astro.props;
 
-import '@fontsource-variable/work-sans';
-import '@fontsource-variable/inconsolata';
-
+const resolvedTitle = metaTitle ?? title ?? 'Jamie Barter — UX & Product Design';
+const resolvedDescription = metaDescription ?? 'UX and Product Design Lead with 5+ years experience designing B2B SaaS products and web applications.';
+const siteUrl = 'https://yourdomain.com'; // TODO: update to production domain
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{metaTitle ?? title}</title>
-    <meta name="description" content={metaDescription ?? ""} />
-    <meta name="author" content={author ?? ""} />
+    <title>{resolvedTitle}</title>
+    <meta name="description" content={resolvedDescription} />
+    <meta name="author" content={author ?? "Jamie Barter"} />
 
-     <link rel="alternate icon" type="image/png" href="/favicon-32.png" />
+    <!-- Open Graph -->
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jamie Barter" />
 
-      <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" href="/favicon-32.png" />
 
+    <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <Header />
+    <main id="main-content">
       <slot />
+    </main>
     <Footer />
     <script>
       import "../scripts/menu.js";
