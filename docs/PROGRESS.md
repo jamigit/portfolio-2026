@@ -100,20 +100,22 @@
 - Grid lines hidden on mobile (`display: none` base, shown at 768px) — no horizontal scroll risk
 - `has-canvas-hero` on a parent element switches grid lines to dark colour (for ThreeJS hero)
 
-### Phase 4 — ThreeJS Integration [ ] IN PROGRESS
+### Phase 4 — ThreeJS Integration [x] COMPLETE
 - [x] `npm install three@0.134.0` — installed
 - [x] Copy cloud layer PNGs → `public/images/cloud_layer/0-3.png`
-- [ ] Create `ThreeBackground.astro` — JS verbatim from `index.html`, then adjust
-- [ ] Add mobile fallback (disable canvas below 768px)
-- [ ] Add `prefers-reduced-motion` fallback
-- [ ] Dev-only controls guard (`import.meta.env.DEV`)
-- [ ] Add `ThreeBackground` to `index.astro` homepage hero
+- [x] Create `ThreeBackground.astro` — ported from `index.html`; dev controls stripped
+- [x] Add mobile fallback (canvas hidden below 768px, `--color-dark-bg` solid fallback)
+- [x] Add `prefers-reduced-motion` fallback (loop skipped, canvas hidden via CSS)
+- [x] Dev-only controls stripped entirely — dev env (`threejsbackground/index.html`) remains source of truth
+- [x] Created `IndexLayout.astro` inheriting `BaseLayout` — owns hero section structure
+- [x] Add `ThreeBackground` to `IndexLayout.astro` homepage hero
+- [x] Updated `index.astro` to use `IndexLayout` with named `hero` slot
 - [ ] `/phase-gate phase-4`
 
-#### Phase 4 approach
-- Using `import * as THREE from 'three'` (npm, not CDN) inside a standard Astro `<script>` block (Vite-processed)
-- JS moved verbatim first, then minimal adjustments: asset paths, canvas ID, mobile guard, reduced-motion, dev controls
-- `threejsbackground/index.html` is untouched (source of truth)
+#### Phase 4 notes
+- CDN approach used (not npm `three` import) — dynamic script injection guarantees load order
+- Canvas sizing reads from `canvas.parentElement` dimensions, not `window`, so it fills the hero section not the viewport
+- `threejsbackground/index.html` is untouched (source of truth for shader tweaks)
 
 ### Phase 5 — Navigation [ ] NOT STARTED
 - [ ] Dark pill nav, centred, transparent over ThreeJS hero

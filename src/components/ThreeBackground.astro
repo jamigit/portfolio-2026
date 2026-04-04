@@ -475,6 +475,10 @@
   resize();
   window.addEventListener('resize', resize);
 
+  // ── Reduced motion guard ───────────────────────────────────────────────────
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
   // ── Render loop ────────────────────────────────────────────────────────────
   var pageVisible = true;
   document.addEventListener('visibilitychange', function () {
