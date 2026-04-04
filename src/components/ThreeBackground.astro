@@ -1,0 +1,579 @@
+---
+// ThreeJS cloud glitch hero background
+// Ported from threejsbackground/index.html — do not modify shaders here, edit the source first
+---
+<canvas id="threejs-hero"></canvas>
+
+<script is:inline>
+(function () {
+  function loadThree(cb) {
+    if (window.THREE) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+
+  function init() {
+  const canvas = document.getElementById('threejs-hero');
+  if (!canvas) return;
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function getSize() {
+    const el = canvas.parentElement;
+    return {
+      w: el.clientWidth  || window.innerWidth,
+      h: el.clientHeight || window.innerHeight,
+    };
+  }
+
+  // ── Params ─────────────────────────────────────────────────────────────────
+  const P = {
+    idle: 0.28,  force: 0.5,   ease: 0.7,   ripple: 1.25,
+    block: 0.5,
+    aberrScale: 0.55, aberrIdle: 0.001, aberrMouse: 2.0, aberrAnim: 0.66,
+    grid: 5.0,   gopa: 0.5,
+    pxBase: 4.5, px: 8.0,
+    fspd: 0.2,   fstr: 0.03,
+    sat: 1.5,
+    expAmp: 0.08, expSpd: 0.045,
+    bloomThresh: 0.51, bloomStr: 0.25,
+    grStr: 0.5,  grDecay: 0.966, grWeight: 0.4, grSunY: 0.72, grDrift: 0.28, grSpd: 0.04,
+    bloomRad: 3.25,
+    layerMove: 0.3, layersOn: 1,
+  };
+
+  // ── Flow map ───────────────────────────────────────────────────────────────
+  function makeFlowMap(size) {
+    size = size || 256;
+    const data = new Uint8Array(size * size * 4);
+    const TAU  = Math.PI * 2;
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const u = x / size, v = y / size;
+        const fx =
+          Math.sin(v * TAU)              * 0.38 +
+          Math.sin(u * TAU - v * TAU)    * 0.22 +
+          Math.sin(u * TAU * 2 + v * TAU)* 0.12 +
+          Math.sin(v * TAU * 3 - 1.2)    * 0.07 + 0.22;
+        const fy =
+          Math.cos(u * TAU + 1.0)        * 0.32 +
+          Math.cos(v * TAU + u * TAU)    * 0.20 +
+          Math.cos(u * TAU - v * TAU * 2)* 0.10 +
+          Math.cos(u * TAU * 2 + 2.1)    * 0.06 + 0.10;
+        const i = (y * size + x) * 4;
+        data[i]   = Math.round(Math.min(1, Math.max(0, fx*.5+.5)) * 255);
+        data[i+1] = Math.round(Math.min(1, Math.max(0, fy*.5+.5)) * 255);
+        data[i+2] = 128; data[i+3] = 255;
+      }
+    }
+    const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.minFilter = tex.magFilter = THREE.LinearFilter;
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  // ── Renderer ───────────────────────────────────────────────────────────────
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+  renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+  const scene  = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const clock  = new THREE.Clock();
+
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
+  scene.add(quad);
+
+  // ── Layer scene ────────────────────────────────────────────────────────────
+  const IMAGE_ASPECT = 2412 / 1447;
+  const layerScene  = new THREE.Scene();
+  const layerCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  function makeRT(w, h) {
+    return new THREE.WebGLRenderTarget(w, h, {
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat,
+    });
+  }
+
+  let { w: W, h: H } = getSize();
+  let halfW = Math.max(1, Math.floor(W / 2));
+  let halfH = Math.max(1, Math.floor(H / 2));
+
+  let layerRT  = makeRT(W, H);
+  let glitchRT = makeRT(W, H);
+  let brightRT = makeRT(halfW, halfH);
+  let blurART  = makeRT(halfW, halfH);
+  let bloomRT  = makeRT(halfW, halfH);
+  let godRayRT = makeRT(halfW, halfH);
+
+  // ── Layer loading ──────────────────────────────────────────────────────────
+  const BOB_PARAMS = [
+    { amp: 0.008, spd: 0.30, phase: 0.00 },
+    { amp: 0.018, spd: 0.52, phase: 2.09 },
+    { amp: 0.028, spd: 0.71, phase: 4.19 },
+    { amp: 0.040, spd: 0.95, phase: 1.05 },
+  ];
+  const DRIFT_PARAMS = [
+    { amp: 0.003, spd: 0.21, phase: 0.5 },
+    { amp: 0.006, spd: 0.38, phase: 1.3 },
+    { amp: 0.009, spd: 0.55, phase: 2.8 },
+    { amp: 0.013, spd: 0.75, phase: 0.2 },
+  ];
+  const layers = [];
+
+  function calcCoverFit(w, h) {
+    const sAsp = w / h;
+    if (sAsp > IMAGE_ASPECT) {
+      const ry = IMAGE_ASPECT / sAsp;
+      return { rx: 1, ry, ox: 0, oy: (1 - ry) * 0.5 };
+    } else {
+      const rx = sAsp / IMAGE_ASPECT;
+      return { rx, ry: 1, ox: (1 - rx) * 0.5, oy: 0 };
+    }
+  }
+  function applyCoverFit(tex, cf) {
+    tex.repeat.set(cf.rx, cf.ry);
+    tex.offset.set(cf.ox, cf.oy);
+  }
+
+  const texLoader = new THREE.TextureLoader();
+  for (let i = 0; i < 4; i++) {
+    texLoader.load('/images/cloud_layer/' + i + '.png', function (i) {
+      return function (tex) {
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+        const cf = calcCoverFit(W, H);
+        applyCoverFit(tex, cf);
+        const mesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(2, 2),
+          new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, premultipliedAlpha: false })
+        );
+        mesh.renderOrder = i;
+        layerScene.add(mesh);
+        layers[i] = { tex, baseOX: cf.ox, baseOY: cf.oy, bob: BOB_PARAMS[i], drift: DRIFT_PARAMS[i] };
+      };
+    }(i));
+  }
+
+  // ── Shared vertex shader ───────────────────────────────────────────────────
+  const VS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.); }';
+
+  // ── Pass 1: Glitch shader ──────────────────────────────────────────────────
+  const glitchMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTexture:     { value: layerRT.texture },
+      uResolution:  { value: new THREE.Vector2(W, H) },
+      uTime:        { value: 0 },
+      uMouse:       { value: new THREE.Vector2(.5, .5) },
+      uMouseGlitch: { value: 0 },
+      uGlitchOn:    { value: 1. },
+      uBlockOn:     { value: 0. },
+      uAberrOn:     { value: 1. },
+      uGridOn:      { value: 0. },
+      uPixelOn:     { value: 1. },
+      uFlowOn:      { value: 1. },
+      uIdleBase:    { value: P.idle    },
+      uMouseForce:  { value: P.force   },
+      uRipple:      { value: P.ripple  },
+      uBlockChaos:  { value: P.block   },
+      uAberrScale:  { value: P.aberrScale },
+      uAberrIdle:   { value: P.aberrIdle  },
+      uAberrMouse:  { value: P.aberrMouse },
+      uAberrAnim:   { value: P.aberrAnim  },
+      uGridSize:    { value: P.grid    },
+      uGridOpacity: { value: P.gopa    },
+      uPixelBase:   { value: P.pxBase  },
+      uPixelMax:    { value: P.px      },
+      uFlowMap:     { value: makeFlowMap() },
+      uFlowSpeed:   { value: P.fspd    },
+      uFlowStrength:{ value: P.fstr    },
+      uImageAspect: { value: W / H },
+      uSaturation:  { value: P.sat     },
+      uSatOn:       { value: 1.        },
+      uExpOn:       { value: 1.        },
+      uExpAmp:      { value: P.expAmp  },
+      uExpSpd:      { value: P.expSpd  },
+    },
+    vertexShader: VS,
+    fragmentShader: [
+      'precision highp float;',
+      'uniform sampler2D uTexture;',
+      'uniform vec2  uResolution;',
+      'uniform float uTime;',
+      'uniform vec2  uMouse;',
+      'uniform float uMouseGlitch;',
+      'uniform float uGlitchOn, uBlockOn, uAberrOn, uGridOn, uPixelOn, uFlowOn;',
+      'uniform float uIdleBase, uMouseForce, uRipple;',
+      'uniform float uBlockChaos;',
+      'uniform float uAberrScale, uAberrIdle, uAberrMouse, uAberrAnim;',
+      'uniform float uGridSize, uGridOpacity;',
+      'uniform float uPixelBase, uPixelMax;',
+      'uniform sampler2D uFlowMap;',
+      'uniform float uFlowSpeed, uFlowStrength;',
+      'uniform float uImageAspect;',
+      'uniform float uSaturation, uSatOn;',
+      'uniform float uExpOn, uExpAmp, uExpSpd;',
+      'varying vec2 vUv;',
+
+      'float h11(float p) { p=fract(p*.1031); p*=p+33.33; p*=p+p; return fract(p); }',
+      'float h12(vec2 p)  { vec3 q=fract(vec3(p.xyx)*.1031); q+=dot(q,q.yzx+33.33); return fract((q.x+q.y)*q.z); }',
+
+      'vec2 coverUv(vec2 uv) {',
+      '  float s  = uResolution.x / uResolution.y;',
+      '  float fw = step(uImageAspect, s);',
+      '  return mix(',
+      '    vec2(uv.x*(s/uImageAspect)+(1.-(s/uImageAspect))*.5, uv.y),',
+      '    vec2(uv.x, uv.y*(uImageAspect/s)+(1.-(uImageAspect/s))*.5), fw);',
+      '}',
+
+      'void main() {',
+      '  vec2  uv     = vUv;',
+      '  float aspect = uResolution.x / uResolution.y;',
+
+      '  float pulse  = .5 + .5*sin(uTime*.4);',
+      '  float spike  = step(.97, h11(floor(uTime*3.1)*11.7));',
+      '  float idle   = uIdleBase*(.6+.4*pulse) + spike*.28;',
+      '  float mg     = uMouseGlitch * uMouseForce;',
+      '  float glitch = clamp((idle + mg) * uGlitchOn, 0., 1.);',
+
+      '  vec2  toMouse = uv - uMouse;',
+      '  toMouse.x    *= aspect;',
+      '  float md      = length(toMouse);',
+      '  float ripW    = sin(md*20. - uTime*9.) * exp(-md*5.);',
+      '  uv += toMouse/(md+.001)/aspect * ripW * uMouseGlitch * uMouseForce * uRipple * .028 * uGlitchOn;',
+
+      '  float bh   = .038 - glitch*.018;',
+      '  float band = floor(vUv.y / bh);',
+      '  float ts   = floor(uTime*13.);',
+      '  float ba   = step(1. - glitch*uBlockChaos*.5, h11(band*19.1+ts*.67)) * uBlockOn;',
+      '  uv.x += (h11(band*4.3+ts*2.1)-.5) * .09 * ba;',
+
+      '  float tts = floor(uTime*6.);',
+      '  float tOn = step(.91, h11(tts*5.3)) * glitch;',
+      '  uv.x += step(abs(vUv.y - h11(tts+77.)), .0022) * tOn * (h11(vUv.y*600.+uTime)-.5) * .2;',
+
+      '  float mouseProx = exp(-md * 2.8);',
+      '  float glitchPx  = mix(1., uPixelMax, clamp(glitch*glitch*1.2 + mouseProx*mg*.8, 0., 1.));',
+      '  float pxScale   = mix(1., max(uPixelBase, glitchPx), uPixelOn);',
+      '  vec2  pxStep    = max(vec2(1.), vec2(pxScale)) / uResolution;',
+      '  vec2  pixUv     = floor(uv/pxStep)*pxStep + pxStep*.5;',
+
+      '  float breath = 1.',
+      '    + sin(uTime*.52)*.45*uAberrAnim',
+      '    + sin(uTime*1.31+2.1)*.2*uAberrAnim',
+      '    + h11(floor(uTime*.8)*5.7)*.3*uAberrAnim;',
+      '  float idleAberr  = uAberrIdle * breath * uAberrScale;',
+      '  float mouseAberr = mg * uAberrMouse * .018 * uAberrScale;',
+      '  float aberrTotal = (idleAberr + mouseAberr + glitch*.007*uAberrScale) * uAberrOn;',
+
+      '  vec2 fromCenter = pixUv - vec2(.5);',
+      '  vec2 aberrBase  = normalize(mix(fromCenter, pixUv - uMouse, mg*.6) + vec2(.0001));',
+      '  float angleWander = sin(uTime*.28)*1.8*uAberrAnim + sin(uTime*.71+1.2)*.6*uAberrAnim;',
+      '  float baseAngle   = atan(aberrBase.y, aberrBase.x) + angleWander;',
+      '  float radialMag   = length(fromCenter)*1.2 + .3;',
+
+      '  vec2 offR = vec2(cos(baseAngle),          sin(baseAngle))          * aberrTotal * radialMag;',
+      '  vec2 offG = vec2(cos(baseAngle+2.094395), sin(baseAngle+2.094395)) * aberrTotal * radialMag * .65;',
+      '  vec2 offB = vec2(cos(baseAngle+4.188790), sin(baseAngle+4.188790)) * aberrTotal * radialMag;',
+
+      '  vec2 flowDir = (texture2D(uFlowMap, vUv*.7).rg * 2.-1.) * uFlowStrength;',
+      '  float cA  = fract(uTime * uFlowSpeed);',
+      '  float cB  = fract(uTime * uFlowSpeed + .5);',
+      '  float wAB = .5 + .5*cos(cA * 6.28318530);',
+      '  vec2 totalFlow = mix(flowDir * cA, flowDir * cB, wAB);',
+
+      '  vec2 flowDir2 = (texture2D(uFlowMap, vUv*.42 + vec2(.5,.31)).rg * 2.-1.) * uFlowStrength * .5;',
+      '  float speedC  = uFlowSpeed * 1.61803;',
+      '  float cC  = fract(uTime * speedC + .37);',
+      '  float cD  = fract(uTime * speedC + .87);',
+      '  float wCD = .5 + .5*cos(cC * 6.28318530);',
+      '  totalFlow += mix(flowDir2 * cC, flowDir2 * cD, wCD);',
+      '  totalFlow *= uFlowOn;',
+      '  totalFlow += (uMouse - vec2(.5)) * uMouseGlitch * uFlowStrength * .6 * uFlowOn;',
+
+      '  float r = texture2D(uTexture, coverUv(pixUv + totalFlow + offR)).r;',
+      '  float g = texture2D(uTexture, coverUv(pixUv + totalFlow + offG)).g;',
+      '  float b = texture2D(uTexture, coverUv(pixUv + totalFlow + offB)).b;',
+      '  vec3 col = vec3(r, g, b);',
+
+      '  vec2  gc   = fract(vUv * uResolution / uGridSize);',
+      '  float line = max(step(gc.x, 1./uGridSize), step(gc.y, 1./uGridSize));',
+      '  col *= 1. - line * uGridOpacity * uGridOn;',
+
+      '  col += h12(pixUv*7. + fract(uTime*.3)) * glitch * .12 * vec3(1.,.65,1.4);',
+      '  col  = (col-.5)*1.08+.5;',
+      '  col += glitch*.04;',
+      '  col -= sin(vUv.y * uResolution.y * 2.) * .018;',
+
+      '  vec2 vv = vUv*2.-1.;',
+      '  col *= clamp(pow(1.-dot(vv*.45,vv*.5), 1.1), 0., 1.);',
+      '  col += mouseProx * mg * .1;',
+
+      '  float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));',
+      '  float sat  = mix(1., uSaturation, uSatOn);',
+      '  col = mix(vec3(luma), col, sat);',
+
+      '  float expFactor = 1.0 + sin(uTime * uExpSpd * 6.28318) * uExpAmp * uExpOn;',
+      '  col *= expFactor;',
+
+      '  gl_FragColor = vec4(clamp(col,0.,1.), 1.);',
+      '}',
+    ].join('\n'),
+  });
+
+  // ── Pass 2: Bright threshold ───────────────────────────────────────────────
+  const brightMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTex:       { value: null },
+      uThreshold: { value: P.bloomThresh },
+    },
+    vertexShader: VS,
+    fragmentShader: [
+      'precision highp float;',
+      'uniform sampler2D uTex;',
+      'uniform float uThreshold;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vec3 c   = texture2D(uTex, vUv).rgb;',
+      '  float lum = dot(c, vec3(0.2126, 0.7152, 0.0722));',
+      '  float b   = smoothstep(uThreshold, uThreshold + 0.15, lum);',
+      '  gl_FragColor = vec4(c * b, 1.0);',
+      '}',
+    ].join('\n'),
+  });
+
+  // ── Pass 3+4: Separable gaussian blur ─────────────────────────────────────
+  const blurMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTex: { value: null },
+      uDir: { value: new THREE.Vector2() },
+    },
+    vertexShader: VS,
+    fragmentShader: [
+      'precision highp float;',
+      'uniform sampler2D uTex;',
+      'uniform vec2 uDir;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vec3 c = vec3(0.);',
+      '  c += texture2D(uTex, vUv - uDir*4.).rgb * 0.054;',
+      '  c += texture2D(uTex, vUv - uDir*3.).rgb * 0.089;',
+      '  c += texture2D(uTex, vUv - uDir*2.).rgb * 0.122;',
+      '  c += texture2D(uTex, vUv - uDir*1.).rgb * 0.149;',
+      '  c += texture2D(uTex, vUv           ).rgb * 0.172;',
+      '  c += texture2D(uTex, vUv + uDir*1.).rgb * 0.149;',
+      '  c += texture2D(uTex, vUv + uDir*2.).rgb * 0.122;',
+      '  c += texture2D(uTex, vUv + uDir*3.).rgb * 0.089;',
+      '  c += texture2D(uTex, vUv + uDir*4.).rgb * 0.054;',
+      '  gl_FragColor = vec4(c, 1.);',
+      '}',
+    ].join('\n'),
+  });
+
+  // ── Pass 5: God rays ───────────────────────────────────────────────────────
+  const godRayMat = new THREE.ShaderMaterial({
+    defines: { NUM_SAMPLES: 50 },
+    uniforms: {
+      uTex:    { value: null },
+      uSunPos: { value: new THREE.Vector2(0.5, 0.72) },
+      uDecay:  { value: P.grDecay },
+      uWeight: { value: 0.4 },
+    },
+    vertexShader: VS,
+    fragmentShader: [
+      'precision highp float;',
+      '#define NUM_SAMPLES 50',
+      'uniform sampler2D uTex;',
+      'uniform vec2  uSunPos;',
+      'uniform float uDecay;',
+      'uniform float uWeight;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vec2  delta = (vUv - uSunPos) * 0.97 / float(NUM_SAMPLES);',
+      '  vec2  uv    = vUv;',
+      '  float decay = 1.0;',
+      '  vec3  acc   = vec3(0.0);',
+      '  for (int i = 0; i < NUM_SAMPLES; i++) {',
+      '    uv   -= delta;',
+      '    acc  += texture2D(uTex, clamp(uv, 0.001, 0.999)).rgb * decay * uWeight;',
+      '    decay *= uDecay;',
+      '  }',
+      '  gl_FragColor = vec4(acc / float(NUM_SAMPLES) * 4.0, 1.0);',
+      '}',
+    ].join('\n'),
+  });
+
+  // ── Pass 6: Final composite ────────────────────────────────────────────────
+  const finalMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uBase:      { value: glitchRT.texture },
+      uBloom:     { value: bloomRT.texture  },
+      uGodRay:    { value: godRayRT.texture },
+      uBloomStr:  { value: P.bloomStr },
+      uGodRayStr: { value: P.grStr    },
+      uBloomOn:   { value: 1.         },
+      uGodRayOn:  { value: 0.         },
+    },
+    vertexShader: VS,
+    fragmentShader: [
+      'precision highp float;',
+      'uniform sampler2D uBase, uBloom, uGodRay;',
+      'uniform float uBloomStr, uGodRayStr, uBloomOn, uGodRayOn;',
+      'varying vec2 vUv;',
+      'void main() {',
+      '  vec3 base   = texture2D(uBase,   vUv).rgb;',
+      '  vec3 bloom  = texture2D(uBloom,  vUv).rgb;',
+      '  vec3 rays   = texture2D(uGodRay, vUv).rgb;',
+      '  vec3 col    = base',
+      '    + bloom * uBloomStr  * uBloomOn',
+      '    + rays  * uGodRayStr * uGodRayOn;',
+      '  gl_FragColor = vec4(clamp(col, 0., 1.), 1.);',
+      '}',
+    ].join('\n'),
+  });
+
+  // ── Mouse / Touch ──────────────────────────────────────────────────────────
+  const mouse = { x: .5, y: .5 }, prev = { x: .5, y: .5 };
+  let smoothGlitch = 0;
+
+  function setMouse(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = (clientX - rect.left) / rect.width;
+    mouse.y = 1 - (clientY - rect.top) / rect.height;
+  }
+
+  window.addEventListener('mousemove',  function (e) { setMouse(e.clientX, e.clientY); });
+  window.addEventListener('touchmove',  function (e) { var t = e.touches[0]; setMouse(t.clientX, t.clientY); }, { passive: true });
+  window.addEventListener('touchstart', function (e) { var t = e.touches[0]; setMouse(t.clientX, t.clientY); }, { passive: true });
+
+  // ── Resize ─────────────────────────────────────────────────────────────────
+  function resize() {
+    var size = getSize();
+    W = size.w; H = size.h;
+    halfW = Math.max(1, Math.floor(W / 2));
+    halfH = Math.max(1, Math.floor(H / 2));
+    renderer.setSize(W, H);
+    glitchMat.uniforms.uResolution.value.set(W, H);
+    glitchMat.uniforms.uImageAspect.value = W / H;
+    layerRT.setSize(W, H);
+    glitchRT.setSize(W, H);
+    brightRT.setSize(halfW, halfH);
+    blurART.setSize(halfW, halfH);
+    bloomRT.setSize(halfW, halfH);
+    godRayRT.setSize(halfW, halfH);
+    var cf = calcCoverFit(W, H);
+    layers.forEach(function (layer) {
+      if (!layer) return;
+      applyCoverFit(layer.tex, cf);
+      layer.baseOX = cf.ox;
+      layer.baseOY = cf.oy;
+    });
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── Render loop ────────────────────────────────────────────────────────────
+  var pageVisible = true;
+  document.addEventListener('visibilitychange', function () {
+    pageVisible = !document.hidden;
+    if (pageVisible) clock.getDelta();
+  });
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!pageVisible) return;
+    var t   = clock.getElapsedTime();
+    var dx  = (mouse.x - prev.x) * W;
+    var dy  = (mouse.y - prev.y) * H;
+    var spd = Math.min(Math.hypot(dx, dy) / 22, 1.0);
+    prev.x = mouse.x; prev.y = mouse.y;
+
+    var lerpRate = (1 - P.ease) * 0.2 + 0.005;
+    smoothGlitch += (spd - smoothGlitch) * lerpRate;
+
+    // Layer bob
+    layers.forEach(function (layer) {
+      if (!layer) return;
+      var sc = P.layerMove * P.layersOn;
+      layer.tex.offset.x = layer.baseOX + Math.sin(t * layer.drift.spd + layer.drift.phase) * layer.drift.amp * sc;
+      layer.tex.offset.y = layer.baseOY + Math.sin(t * layer.bob.spd   + layer.bob.phase)   * layer.bob.amp   * sc;
+    });
+
+    // Pass 1: layers → layerRT
+    renderer.setRenderTarget(layerRT);
+    renderer.setClearColor(0x000000, 1);
+    renderer.clear();
+    renderer.render(layerScene, layerCamera);
+
+    // Pass 2: glitch → glitchRT
+    glitchMat.uniforms.uTime.value        = t;
+    glitchMat.uniforms.uMouse.value.set(mouse.x, mouse.y);
+    glitchMat.uniforms.uMouseGlitch.value = smoothGlitch;
+    glitchMat.uniforms.uTexture.value     = layerRT.texture;
+    quad.material = glitchMat;
+    renderer.setRenderTarget(glitchRT);
+    renderer.setClearColor(0x000000, 1);
+    renderer.clear();
+    renderer.render(scene, camera);
+
+    var bloomOn  = finalMat.uniforms.uBloomOn.value  > 0.5;
+    var godRayOn = finalMat.uniforms.uGodRayOn.value > 0.5;
+
+    if (bloomOn || godRayOn) {
+      brightMat.uniforms.uTex.value = glitchRT.texture;
+      quad.material = brightMat;
+      renderer.setRenderTarget(brightRT);
+      renderer.clear();
+      renderer.render(scene, camera);
+    }
+
+    if (bloomOn) {
+      blurMat.uniforms.uTex.value = brightRT.texture;
+      blurMat.uniforms.uDir.value.set(P.bloomRad / halfW, 0);
+      quad.material = blurMat;
+      renderer.setRenderTarget(blurART);
+      renderer.clear();
+      renderer.render(scene, camera);
+
+      blurMat.uniforms.uTex.value = blurART.texture;
+      blurMat.uniforms.uDir.value.set(0, P.bloomRad / halfH);
+      renderer.setRenderTarget(bloomRT);
+      renderer.clear();
+      renderer.render(scene, camera);
+    }
+
+    if (godRayOn) {
+      var sunX = 0.5      + Math.sin(t * P.grSpd) * P.grDrift + (mouse.x - 0.5) * 0.06;
+      var sunY = P.grSunY + Math.sin(t * P.grSpd * 0.67 + 1.3) * P.grDrift * 0.32;
+      godRayMat.uniforms.uTex.value = brightRT.texture;
+      godRayMat.uniforms.uSunPos.value.set(sunX, sunY);
+      quad.material = godRayMat;
+      renderer.setRenderTarget(godRayRT);
+      renderer.clear();
+      renderer.render(scene, camera);
+    }
+
+    // Pass 6: final composite → screen
+    finalMat.uniforms.uBase.value   = glitchRT.texture;
+    finalMat.uniforms.uBloom.value  = bloomRT.texture;
+    finalMat.uniforms.uGodRay.value = godRayRT.texture;
+    quad.material = finalMat;
+    renderer.setRenderTarget(null);
+    renderer.render(scene, camera);
+  })();
+  } // end init
+
+  function run() {
+    loadThree(init);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+</script>

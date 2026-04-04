@@ -1,0 +1,20 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ThreeBackground from '../components/ThreeBackground.astro';
+
+const { title, metaTitle, metaDescription, author } = Astro.props;
+---
+<BaseLayout title={title} metaTitle={metaTitle} metaDescription={metaDescription} author={author}>
+  <section class="hero hero-home has-canvas-hero">
+    <ThreeBackground />
+    <div class="hero-content hero-content-home">
+      <slot name="hero" />
+    </div>
+  </section>
+
+  <section>
+    <div class="content content-home">
+      <slot />
+    </div>
+  </section>
+</BaseLayout>

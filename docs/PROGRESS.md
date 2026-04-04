@@ -100,13 +100,20 @@
 - Grid lines hidden on mobile (`display: none` base, shown at 768px) — no horizontal scroll risk
 - `has-canvas-hero` on a parent element switches grid lines to dark colour (for ThreeJS hero)
 
-### Phase 4 — ThreeJS Integration [ ] NOT STARTED
-- [ ] Create `ThreeBackground.astro` wrapping existing `threejsbackground/index.html` JS verbatim
-- [ ] Replace CDN `<script>` with `npm install three@0.134.0`
+### Phase 4 — ThreeJS Integration [ ] IN PROGRESS
+- [x] `npm install three@0.134.0` — installed
+- [x] Copy cloud layer PNGs → `public/images/cloud_layer/0-3.png`
+- [ ] Create `ThreeBackground.astro` — JS verbatim from `index.html`, then adjust
 - [ ] Add mobile fallback (disable canvas below 768px)
 - [ ] Add `prefers-reduced-motion` fallback
-- [ ] Dev-only controls guard
+- [ ] Dev-only controls guard (`import.meta.env.DEV`)
+- [ ] Add `ThreeBackground` to `index.astro` homepage hero
 - [ ] `/phase-gate phase-4`
+
+#### Phase 4 approach
+- Using `import * as THREE from 'three'` (npm, not CDN) inside a standard Astro `<script>` block (Vite-processed)
+- JS moved verbatim first, then minimal adjustments: asset paths, canvas ID, mobile guard, reduced-motion, dev controls
+- `threejsbackground/index.html` is untouched (source of truth)
 
 ### Phase 5 — Navigation [ ] NOT STARTED
 - [ ] Dark pill nav, centred, transparent over ThreeJS hero

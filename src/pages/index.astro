@@ -1,11 +1,9 @@
-
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import IndexLayout from '../layouts/IndexLayout.astro';
 import Workitem from '../components/Workitem.astro';
 import WorkitemProject from '../components/WorkitemProject.astro';
 
-
-// Import all your hero images (same as in CaseStudyLayout)
+// Import all hero images
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
 import folHomeShadow from '../assets/images/hero/FoL-Home-shadow.png';
 import gbagHomeShadow from '../assets/images/hero/Gbag-home-shadow.png';
@@ -20,8 +18,6 @@ import sitesafeHero from '../assets/images/hero/sitesafe-hero.png';
 import times7HomeShadow from '../assets/images/hero/times7-home-shadow.png';
 import vocalHomeShadow from '../assets/images/hero/vocal-home-shadow.png';
 
-
-// Create the same mapping as in CaseStudyLayout
 const heroImages = {
   'Aurora-home-shadow.png': auroraHomeShadow,
   'FoL-Home-shadow.png': folHomeShadow,
@@ -41,77 +37,54 @@ const heroImages = {
 const allPosts = Object.values(import.meta.glob('../pages/case-study/*.mdx', { eager: true }));
 const allProjects = Object.values(import.meta.glob('../pages/projects/*.mdx', { eager: true }));
 
-// Helper function to get optimized image
 const getOptimizedImage = (imagePath) => {
   if (!imagePath || !imagePath.url) return null;
-  
   const filename = imagePath.url.split('/').pop();
   return heroImages[filename] || null;
 };
 
-// Process and sort case studies with optimized images
 const processedCaseStudies = allPosts
-  .map((post: any) => ({
-    ...post,
-    optimizedImage: getOptimizedImage(post.frontmatter.image)
-  }))
+  .map((post: any) => ({ ...post, optimizedImage: getOptimizedImage(post.frontmatter.image) }))
   .sort((a, b) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
 
-// Process and sort projects with optimized images
 const processedProjects = allProjects
-  .map((post: any) => ({
-    ...post,
-    optimizedImage: getOptimizedImage(post.frontmatter.image)
-  }))
+  .map((post: any) => ({ ...post, optimizedImage: getOptimizedImage(post.frontmatter.image) }))
   .sort((a, b) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
 ---
-<BaseLayout >
-
-  
-<section class="hero hero-home">
-  <div class="hero-content hero-content-home">
+<IndexLayout>
+  <Fragment slot="hero">
     <h1>Jamie Barter</h1>
     <p class="overview-text">
       UX and Product Design Lead with 5+ years experience designing B2B SaaS products and web applications that deliver user and business impact.
     </p>
-     <p class="overview-text">
-       Whether it's shaping strategy or hands on execution, I thrive collaborating on complex design challenges.
+    <p class="overview-text">
+      Whether it's shaping strategy or hands on execution, I thrive collaborating on complex design challenges.
     </p>
-  </div>
-</section>
+  </Fragment>
 
+  <h2 class="small-title" id="case-studies">Case studies</h2>
+  <ul class="list-workitems">
+    {processedCaseStudies.map((post: any) => (
+      <Workitem
+        url={post.url}
+        title={post.frontmatter.title}
+        description={post.frontmatter.description}
+        image={post.frontmatter.image}
+        optimizedImage={post.optimizedImage}
+      />
+    ))}
+  </ul>
 
-  <section>
-    <div class="content content-home">
-    <h2 class="small-title" id="case-studies">Case studies</h2>
-    <ul class="list-workitems">
-      {
-        processedCaseStudies.map((post: any) => (
-            <Workitem
-              url={post.url}
-              title={post.frontmatter.title}
-              description={post.frontmatter.description}
-              image={post.frontmatter.image}
-              optimizedImage={post.optimizedImage}
-          />
-        ))
-      }
-    </ul>
-    <h2 class="small-title" id="projects">Projects</h2>
-
-    <ul class="list-workitems">
-      {
-  processedProjects.map((post: any) => (
-            <WorkitemProject
-              url={post.url}
-              title={post.frontmatter.title}
-              description={post.frontmatter.description}
-              image={post.frontmatter.image}
-              optimizedImage={post.optimizedImage}
-          />
-        ))
-      }
-    </ul>
-    </div>
-  </section>
-</BaseLayout>
+  <h2 class="small-title" id="projects">Projects</h2>
+  <ul class="list-workitems">
+    {processedProjects.map((post: any) => (
+      <WorkitemProject
+        url={post.url}
+        title={post.frontmatter.title}
+        description={post.frontmatter.description}
+        image={post.frontmatter.image}
+        optimizedImage={post.optimizedImage}
+      />
+    ))}
+  </ul>
+</IndexLayout>
