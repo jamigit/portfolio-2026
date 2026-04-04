@@ -58,16 +58,24 @@
 
 ## Phase checklist
 
-### Phase 1 — Design Tokens & Typography [ ] NOT STARTED
-- [ ] Create `src/styles/fonts.css` with `@font-face` declarations for PP Paloma and PP Neue Montreal
-- [ ] Import `fonts.css` into `global.css`
-- [ ] Rewrite token block in `global.css` — full grey scale, accent, secondary, tertiary, semantic aliases
-- [ ] Replace old token names throughout `global.css` (find/replace pass)
-- [ ] Update skip-link styles to use new tokens
-- [ ] Set `font-family` base to PP Neue Montreal
-- [ ] Apply PP Paloma to headings
+### Phase 1 — Design Tokens & Typography [x] IN PROGRESS
+- [x] Create `src/styles/fonts.css` with `@font-face` declarations for PP Paloma and PP Neue Montreal
+- [x] Import `fonts.css` into `global.css` via `@import`
+- [x] Rewrite token block in `global.css` — full grey scale, accent, secondary, tertiary, semantic aliases
+- [x] Replace old token names throughout `global.css` (find/replace pass)
+- [x] Update skip-link styles to use new tokens
+- [x] Set `font-family` base to PP Neue Montreal (`--font-body`)
+- [x] Apply PP Paloma to headings (`--font-heading`)
+- [x] Add new flat bgClass palette entries (slate, sage, rust, sand, indigo, midnight, accent)
 - [ ] `/mobile-review` pass
 - [ ] `/phase-gate phase-1` check — must PASS before Phase 2
+
+#### Phase 1 notes
+- PP Paloma has no Bold weight — mapped Heavy (`PPPaloma-Heavy.woff2`) to `font-weight: 700`
+- Font files are in `src/assets/fonts/` (not `public/fonts/` as PRD specified); `fonts.css` uses relative paths — Vite processes these correctly
+- `--white` replaced with `var(--grey-0)`; `--midnight-blue` replaced with `var(--color-text-strong)`
+- Legacy gradient bgClasses (kepla, pelorus, aurora, npdc, sitesmart) preserved unchanged
+- `html` background updated to `var(--color-bg)` (#f2f2f2)
 
 ### Phase 2 — Button & TagBadge Components [ ] NOT STARTED
 - [ ] Audit all existing button/link patterns (`.link-large`, ad-hoc CTAs)

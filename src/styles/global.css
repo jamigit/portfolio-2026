@@ -1,48 +1,111 @@
+@import './fonts.css';
+
 :root {
+  /* Breakpoints */
   --media-mob: 540px;
   --media-mob-med: 768px;
   --media-tablet: 1024px;
   --media-desktop: 1280px;
 
+  /* Layout */
   --max-width: 1600px;
   --max-width-content-narrow: 800px;
   --max-width-content: 900px;
   --max-width-content-wide: 1200px;
 
-  --gradient-standard: linear-gradient(#b7beff, #f0dcff);
-  --grad-blue: #b7beff;
-  --grad-pink: #f0dcff;
+  /* Nav */
+  --nav-height-mob: 58px;
+  --nav-height-desktop: 80px;
 
-  --note: #ffd6b4;
-
-  --midnight-blue: #08122c;
-
-
-  --black: black;
-  --white: white;
-  --0b0b0b: #0b0b0b;
-  --dark-gray: #272727;
-
-  --primary-800:rgb(64, 37, 144);
-  --primary-600: #7142ff;
-  --primary-300: #cec5ff;
-  --primary-100: #ece8ff;
-
-  --secondary-600: #2661fa;
-
+  /* Transitions */
   --transition-1-fast: all 0.15s ease-out;
   --transition-2: all 0.3s ease-out;
   --transition-3: all 0.45s ease-out;
   --transition-4: all 0.6s ease-out;
 
-  --nav-height-mob: 58px;
-  --nav-height-desktop: 80px;
+  /* Fonts */
+  --font-heading: 'PP Paloma', Georgia, serif;
+  --font-body: 'PP Neue Montreal', Helvetica, Arial, sans-serif;
 
-  --font-work-sans: 'Work Sans Variable', 'Work Sans', Helvetica, Arial, sans-serif;
-  --font-inconsolata: 'Inconsolata Variable', 'Inconsolata', 'Courier New', monospace;
+  /* Grey scale */
+  --grey-0:   #ffffff;
+  --grey-5:   #f2f2f2;
+  --grey-10:  #e8e8e7;
+  --grey-20:  #d2d1d0;
+  --grey-30:  #bcbab9;
+  --grey-40:  #a5a3a2;
+  --grey-50:  #8f8d8b;
+  --grey-60:  #797674;
+  --grey-70:  #625f5d;
+  --grey-80:  #4d4a48;
+  --grey-90:  #3e3b39;
+  --grey-100: #343230;
 
+  /* Accent scale — Peach */
+  --accent-0:   #ffffff;
+  --accent-10:  #fef6ef;
+  --accent-20:  #fdecdf;
+  --accent-30:  #fce3cf;
+  --accent-40:  #fad9be;
+  --accent-50:  #f7c099;
+  --accent-60:  #e8a87a;
+  --accent-70:  #d6905c;
+  --accent-80:  #b8733e;
+  --accent-90:  #8f5628;
+  --accent-100: #5e3312;
 
-  --box-shadow-underline:  #08122c;
+  /* Secondary scale — Slate */
+  --secondary-0:   #ffffff;
+  --secondary-10:  #f2f5f7;
+  --secondary-20:  #dce4ea;
+  --secondary-30:  #c5d2db;
+  --secondary-40:  #afc0cc;
+  --secondary-50:  #7b93a8;
+  --secondary-60:  #627886;
+  --secondary-70:  #4c5e69;
+  --secondary-80:  #37444d;
+  --secondary-90:  #243039;
+  --secondary-100: #141d24;
+
+  /* Tertiary scale — Rust */
+  --tertiary-0:   #ffffff;
+  --tertiary-10:  #faf4f0;
+  --tertiary-20:  #f3e4d9;
+  --tertiary-30:  #ead0bc;
+  --tertiary-40:  #dab99d;
+  --tertiary-50:  #c17a5a;
+  --tertiary-60:  #a86248;
+  --tertiary-70:  #8c4d37;
+  --tertiary-80:  #6e3926;
+  --tertiary-90:  #4f2618;
+  --tertiary-100: #30140a;
+
+  /* Semantic aliases — use these in components */
+  --color-bg:             var(--grey-5);
+  --color-surface:        var(--grey-10);
+  --color-dark-bg:        var(--grey-100);
+
+  --color-text:           var(--grey-80);
+  --color-text-muted:     var(--grey-50);
+  --color-text-strong:    var(--grey-100);
+  --color-text-on-dark:   var(--grey-0);
+
+  --color-border:         var(--grey-20);
+  --color-border-strong:  var(--grey-40);
+
+  --color-accent:         var(--accent-50);
+  --color-accent-subtle:  var(--accent-10);
+  --color-accent-border:  var(--accent-60);
+  --color-accent-hover:   var(--accent-70);
+
+  --color-secondary:        var(--secondary-50);
+  --color-secondary-subtle: var(--secondary-10);
+
+  --color-tertiary:        var(--tertiary-50);
+  --color-tertiary-subtle: var(--tertiary-10);
+
+  --color-grid-line:      rgba(52, 50, 48, 0.08);
+  --color-grid-line-dark: rgba(255, 255, 255, 0.10);
 }
 
 /*
@@ -84,9 +147,9 @@
   left: 1rem;
   z-index: 9999;
   padding: 0.5rem 1rem;
-  background-color: var(--midnight-blue);
-  color: var(--white);
-  font-family: var(--font-work-sans);
+  background-color: var(--color-dark-bg);
+  color: var(--color-text-on-dark);
+  font-family: var(--font-body);
   font-size: 0.875rem;
   text-decoration: none;
   border-radius: 0 0 4px 4px;
@@ -96,8 +159,8 @@
 }
 
 html {
-  background-color: var(--white);
-  font-family: var(--font-work-sans);
+  background-color: var(--color-bg);
+  font-family: var(--font-body);
   /* Improve text rendering */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -115,11 +178,12 @@ html {
 
 body {
   width: 100%;
-  font-family: var(--font-work-sans);
+  font-family: var(--font-body);
   font-weight: 300;
   margin: 0;
   padding: 0;
-  color: var(--midnight-blue);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   /* Improve text rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -149,7 +213,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: var(--font-inconsolata);
+  font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.2;
@@ -394,7 +458,7 @@ footer {
 
 .footer-link-item {
   text-decoration: none;
-  color: var(--midnight-blue);
+  color: var(--color-text-strong);
   font-weight: 300;
 }
 
@@ -451,7 +515,7 @@ footer {
 
 /* Logo styles */
 .logo {
-  font-family: var(--font-inconsolata);
+  font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1rem;
   text-decoration: none;
@@ -500,12 +564,12 @@ padding-bottom:2px;
 
 .logo:hover,
 .logo:focus {
-  box-shadow: 0 3px 0 0 var(--box-shadow-underline);
+  box-shadow: 0 3px 0 0 var(--grey-100);
 }
 
 .logo p:nth-child(2) {
   font-weight: 300;
-  font-family: var(--font-work-sans);
+  font-family: var(--font-body);
 }
 
 .logo p {
@@ -516,7 +580,7 @@ header {
 }
 
 nav {
-  background-color: var(--white);
+  background-color: var(--grey-0);
   /* Remove max-width to allow full width background */
   padding: 0.75rem 1rem;
   height: var(--nav-height-mob);
@@ -569,7 +633,7 @@ nav.scrolled {
 
 .hamburger:hover,
 .hamburger:focus {
-  background-color: var(--primary-100);
+  background-color: var(--color-accent-subtle);
 }
 
 /*
@@ -578,7 +642,7 @@ nav.scrolled {
   width: 24px;
   height: 3px;
   margin-bottom: 4px;
-  background-color: var(--midnight-blue);
+  background-color: var(--color-text-strong);
   border-radius: 2px;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
@@ -615,7 +679,7 @@ nav.scrolled {
 .nav-links {
   width: 100vw;
   top: var(--nav-height-mob);
-  background-color: var(--white);
+  background-color: var(--grey-0);
   display: none;
   position: absolute;
   left: 0;
@@ -648,7 +712,7 @@ nav.scrolled {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 300;
-  color: var(--midnight-blue);
+  color: var(--color-text-strong);
   border-bottom: 1px solid rgba(8, 18, 44, 0.05);
   -webkit-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
@@ -664,8 +728,8 @@ nav.scrolled {
 
 .nav-links a:hover,
 .nav-links a:focus {
-  background-color: var(--primary-100);
-  color: var(--primary-800);
+  background-color: var(--color-accent-subtle);
+  color: var(--color-text-strong);
 }
 
 /* Desktop navigation styles */
@@ -704,10 +768,10 @@ nav.scrolled {
 
   .nav-links a:hover,
   .nav-links a:focus {
-    background-color: var(--white);
-    color: var(--midnight-blue);
+    background-color: var(--grey-0);
+    color: var(--color-text-strong);
 
-     box-shadow: 0 3px 0 0 var(--box-shadow-underline);
+     box-shadow: 0 3px 0 0 var(--grey-100);
     
   }
 
@@ -719,7 +783,7 @@ nav.scrolled {
     left: 50%;
     width: 0;
     height: 2px;
-    background-color: var(--primary-800);
+    background-color: var(--color-text-strong);
     -webkit-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -743,11 +807,11 @@ nav.scrolled {
 }
 
 .hero-home {
-  background-color: rgb(255, 255, 255);
+  background-color: var(--color-bg);
 }
 
 .hero-casestudy {
-  background-color: rgb(168, 170, 20);
+  background-color: var(--color-dark-bg);
 }
 
 .kepla {
@@ -779,6 +843,15 @@ nav.scrolled {
   background-image: -o-linear-gradient(#b7ddef, #4cadde);
   background-image: linear-gradient(#b7ddef, #4cadde);
 }
+
+/* Flat palette bgClass entries — new case studies */
+.hero-casestudy.slate    { background-color: #7b93a8; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.sage     { background-color: #8fa68b; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.rust     { background-color: #c17a5a; --cs-text: #ffffff; --cs-accent: var(--grey-5); }
+.hero-casestudy.sand     { background-color: #d4bc94; --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
+.hero-casestudy.indigo   { background-color: #4a5580; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.midnight { background-color: #1a1a2e; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.accent   { background-color: var(--color-accent); --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
 
 .hero-content {
   padding: 7rem 1rem 4rem 1rem;
@@ -872,21 +945,21 @@ nav.scrolled {
 
 /* Links */
 a {
-  color: var(--midnight-blue);
+  color: var(--color-text-strong);
 }
 
 .link-large {
   font-size: 1.2rem;
   font-weight: 700;
-  font-family: var(--font-inconsolata);
+  font-family: var(--font-heading);
   padding: 0.25rem 0.25rem;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   text-decoration: none;
   text-underline-offset: 4px;
-  color: var(--midnight-blue);
-  box-shadow: 0 1px 0 0 var(--box-shadow-underline);
+  color: var(--color-text-strong);
+  box-shadow: 0 1px 0 0 var(--grey-100);
 
     -webkit-transition: var(--transition-1-fast);
   -o-transition: var(--transition-1-fast);
@@ -895,8 +968,8 @@ a {
 }
 
 .link-large:hover, .link-large:focus {
-  color: var(--midnight-blue);
-    box-shadow: 0 3px 0 0 var(--box-shadow-underline);
+  color: var(--color-text-strong);
+    box-shadow: 0 3px 0 0 var(--grey-100);
   -webkit-transition: var(--transition-1-fast);
   -o-transition: var(--transition-1-fast);
   transition: var(--transition-1-fast);
@@ -945,11 +1018,11 @@ a {
   text-decoration: none;
   -ms-flex-line-pack: left;
   align-content: left;
-  color: var(--midnight-blue);
+  color: var(--color-text-strong);
 }
 
 .workitem:visited {
-  color: var(--midnight-blue);
+  color: var(--color-text-strong);
 }
 
 .workitem:hover,
