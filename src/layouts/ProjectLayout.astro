@@ -4,8 +4,9 @@ const { frontmatter } = Astro.props;
 import BaseLayout from "./BaseLayout.astro";
 import { Image } from 'astro:assets';
 import Button from '../components/Button.astro';
+import TagBadge from '../components/TagBadge.astro';
 
-// Import all your hero images here
+// Import all hero images
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
 import folHomeShadow from '../assets/images/hero/FoL-Home-shadow.png';
 import gbagHomeShadow from '../assets/images/hero/Gbag-home-shadow.png';
@@ -20,9 +21,8 @@ import sitesafeHero from '../assets/images/hero/sitesafe-hero.png';
 import times7HomeShadow from '../assets/images/hero/times7-home-shadow.png';
 import vocalHomeShadow from '../assets/images/hero/vocal-home-shadow.png';
 
-const { image, customData, title, metaTitle, metaDescription, author} = frontmatter;
+const { image, customData, title, metaTitle, metaDescription, author } = frontmatter;
 
-// Create a mapping object that connects filename to imported image
 const heroImages = {
   'Aurora-home-shadow.png': auroraHomeShadow,
   'FoL-Home-shadow.png': folHomeShadow,
@@ -39,48 +39,26 @@ const heroImages = {
   'vocal-home-shadow.png': vocalHomeShadow,
 };
 
-// Extract just the filename from your frontmatter path
-// This handles paths like '../images/hero/sitesafe-hero.png'
-const getImageFilename = (path) => {
-  return path.split('/').pop(); // Gets the last part after the final '/'
-};
-
-const imageFilename = getImageFilename(image.url);
+const imageFilename = image.url.split('/').pop();
 const heroImageSrc = heroImages[imageFilename];
-
-
+const heroClasses = `hero hero-casestudy ${frontmatter.bgClass ?? ''}`.trim();
 ---
 
-<BaseLayout 
-
-customData={customData}
-title={title}
-metaTitle={metaTitle ?? title}
-metaDescription={metaDescription ?? frontmatter.description} 
-author={author}
-image={image}
-
-
+<BaseLayout
+  customData={customData}
+  title={title}
+  metaTitle={metaTitle ?? title}
+  metaDescription={metaDescription ?? frontmatter.description}
+  author={author}
+  image={image}
 >
-
-
-  <section >
+  <section class={heroClasses}>
     <div class="hero-content hero-content-project">
+      <TagBadge label="Project" variant="accent" />
+      <h1 class="banner-text">{frontmatter.title}</h1>
+      <p class="overview-text-small">{frontmatter.description}</p>
 
-      <!-- 
-    <a class="home-link" href="/">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-      <p>Home</p>
-    </a>
-
--->
-    <p>Project</p>
-    <h1 class="banner-text">{frontmatter.title}</h1>
-    <p class="overview-text-small">{frontmatter.description}</p>
-  
-
-
-{heroImageSrc ? (
+      {heroImageSrc ? (
         <Image
           src={heroImageSrc}
           alt={frontmatter.image.alt}
@@ -92,61 +70,56 @@ image={image}
           quality={85}
           densities={[1, 2]}
         />
-      ) : (
-        <!-- Fallback for images not in the mapping -->
-        <div class="image-error">
-          <p>Hero image not found: {imageFilename}</p>
-          <p>Please add it to the heroImages mapping in CaseStudyLayout.astro</p>
-        </div>
+      ) : null}
+
+      <div class="info">
+        {frontmatter.client && (
+          <div class="info-item">
+            <h5>Client</h5>
+            <p>{frontmatter.client}</p>
+          </div>
+        )}
+        {frontmatter.projectType && (
+          <div class="info-item">
+            <h5>Project Type</h5>
+            <p>{frontmatter.projectType}</p>
+          </div>
+        )}
+        {frontmatter.role && (
+          <div class="info-item">
+            <h5>Role</h5>
+            <p>{frontmatter.role}</p>
+          </div>
+        )}
+        {frontmatter.timeframe && (
+          <div class="info-item">
+            <h5>Timeframe</h5>
+            <p>{frontmatter.timeframe}</p>
+          </div>
+        )}
+        {frontmatter.team && (
+          <div class="info-item">
+            <h5>Team</h5>
+            <p>{frontmatter.team}</p>
+          </div>
+        )}
+        {frontmatter.skills && (
+          <div class="info-item">
+            <h5>Skills</h5>
+            <p>{frontmatter.skills}</p>
+          </div>
+        )}
+      </div>
+
+      {frontmatter.projectLink && (
+        <Button href={frontmatter.projectLink} variant="outline" external>
+          {frontmatter.projectLinkCopy ?? 'See more'}
+        </Button>
       )}
-    
-    <!-- 
-    <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
- -->
-
-    
-
- <div class="info">
-
-  <div class="info-item">
-    <p><h5>Client</h5></p>
-    <p>{frontmatter.client}</p>
-  </div>
-    <div class="info-item">
-    <p><h5>Project Type</h5></p>
-    <p>{frontmatter.projectType}</p>
-  </div>
-    <div class="info-item">
-    <p><h5>Role</h5></p>
-    <p>{frontmatter.role}</p>
-  </div>
-    <div class="info-item">
-    <p><h5>Timeframe</h5></p>
-    <p>{frontmatter.timeframe}</p>
-  </div>
-    <div class="info-item">
-    <p><h5>Team</h5></p>
-    <p>{frontmatter.team}</p>
-  </div>
-    <div class="info-item">
-    <p><h5>Skills</h5></p>
-    <p>{frontmatter.skills}</p>
-  </div>
-
-</div>
-
-  {frontmatter.projectLink && (
-    <Button href={frontmatter.projectLink} variant="outline" external>
-      {frontmatter.projectLinkCopy ?? 'See more'}
-    </Button>
-  )}
-
-   </div>
+    </div>
   </section>
-  
 
-  <section class="content content-case-study">
+  <section class="content content-case-study grid">
     <slot />
   </section>
 </BaseLayout>
-

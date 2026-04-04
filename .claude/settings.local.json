@@ -7,7 +7,8 @@
       "Bash(grep -h \"order:\\\\|accentColor:\\\\|title:\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/case-study/*.mdx /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/projects/*.mdx)",
       "Bash(grep -h \"accentColor:\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/case-study/*.mdx /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/projects/*.mdx)",
       "Bash(grep -E \"^\\(title|order|bgClass|accentColor\\):\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/projects/*.mdx)",
-      "Bash(grep -A1 \"accentColor\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/case-study/*.mdx)"
+      "Bash(grep -A1 \"accentColor\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/pages/case-study/*.mdx)",
+      "Bash(grep -n \"hardcoded\\\\|#[0-9a-fA-F]\\\\{3,6\\\\}\\\\|--midnight\\\\|--primary\\\\|--font-work\\\\|--font-inconsolata\" /Users/jamiebarter/Documents/myrepos/portfolio-2026/src/styles/global.css)"
     ]
   }
 }
