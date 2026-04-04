@@ -1,0 +1,23 @@
+---
+export interface Props {
+  variant?: 'primary' | 'outline' | 'ghost';
+  href?: string;
+  size?: 'sm' | 'md' | 'lg';
+  external?: boolean;
+}
+
+const { variant = 'primary', href, size = 'md', external = false } = Astro.props;
+
+const classes = `btn btn--${variant} btn--${size}`;
+const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+{href ? (
+  <a href={href} class={classes} {...externalProps}>
+    <slot />
+  </a>
+) : (
+  <button class={classes}>
+    <slot />
+  </button>
+)}

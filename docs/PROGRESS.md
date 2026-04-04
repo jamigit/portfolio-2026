@@ -77,20 +77,28 @@
 - Legacy gradient bgClasses (kepla, pelorus, aurora, npdc, sitesmart) preserved unchanged
 - `html` background updated to `var(--color-bg)` (#f2f2f2)
 
-### Phase 2 — Button & TagBadge Components [ ] NOT STARTED
-- [ ] Audit all existing button/link patterns (`.link-large`, ad-hoc CTAs)
-- [ ] Build `Button.astro` (primary / outline / ghost, min-height 44px)
-- [ ] Update `TagBadge.astro` if needed
-- [ ] Replace ad-hoc patterns across all pages and layouts
-- [ ] `/phase-gate phase-2`
+### Phase 2 — Button & TagBadge Components [x] COMPLETE
+- [x] Audit all existing button/link patterns (`.link-large`, ad-hoc CTAs)
+- [x] Build `Button.astro` (primary / outline / ghost, min-height 44px)
+- [x] Build `TagBadge.astro` (default / accent variants)
+- [x] Add `.case-number` CSS class
+- [x] Replace `.link-large` in `CaseStudyLayout.astro` and `ProjectLayout.astro` with `<Button>`
+- [x] `/phase-gate phase-2` — PASS
 
-### Phase 3 — Grid System [ ] NOT STARTED
-- [ ] Add `.grid`, `.col-*` utilities to `global.css`
-- [ ] Apply grid to homepage layout
-- [ ] Apply grid to case study layout
-- [ ] Apply grid to project layout
-- [ ] GridOverlay component (dev-only visual grid)
-- [ ] `/mobile-review` + `/phase-gate phase-3`
+### Phase 3 — Grid System [x] COMPLETE
+- [x] Add `--grid-gutter` + `--grid-margin` tokens to `:root`
+- [x] Add `.grid` class — mobile-first (`display: block` base, `display: grid` at 768px)
+- [x] Add all `.col-*` placement utilities (desktop-only, inside `min-width: 768px`)
+- [x] Add `.grid-lines` + `.has-canvas-hero` overlay CSS
+- [x] Add `.grid-bracket` corner mark CSS
+- [x] Create `GridOverlay.astro` — 8 `<span>` columns, `aria-hidden`
+- [x] Add `GridOverlay` to `BaseLayout.astro`
+- [x] `/phase-gate phase-3` — PASS
+
+#### Phase 3 notes
+- Applying `.grid` to page content (homepage cards, case study body) is deferred to Phases 6–8 where those components are redesigned — avoids breaking existing content structure prematurely
+- Grid lines hidden on mobile (`display: none` base, shown at 768px) — no horizontal scroll risk
+- `has-canvas-hero` on a parent element switches grid lines to dark colour (for ThreeJS hero)
 
 ### Phase 4 — ThreeJS Integration [ ] NOT STARTED
 - [ ] Create `ThreeBackground.astro` wrapping existing `threejsbackground/index.html` JS verbatim

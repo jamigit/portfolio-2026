@@ -1,0 +1,10 @@
+---
+export interface Props {
+  label: string;
+  variant?: 'default' | 'accent';
+}
+
+const { label, variant = 'default' } = Astro.props;
+---
+
+<span class={`tag-badge tag-badge--${variant}`}>{label}</span>

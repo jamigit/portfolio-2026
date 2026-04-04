@@ -3,6 +3,7 @@ const { frontmatter } = Astro.props;
 
 import BaseLayout from "./BaseLayout.astro";
 import { Image } from 'astro:assets';
+import Button from '../components/Button.astro';
 
 // Import all your hero images here
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
@@ -134,12 +135,11 @@ image={image}
 
 </div>
 
-  {
-   frontmatter.projectLink ? 
-   <a target="_blank" class="link-large" href={frontmatter.projectLink}>{frontmatter.projectLinkCopy}</a>
-   : null
-   
-   }
+  {frontmatter.projectLink && (
+    <Button href={frontmatter.projectLink} variant="outline" external>
+      {frontmatter.projectLinkCopy ?? 'See more'}
+    </Button>
+  )}
 
    </div>
   </section>
