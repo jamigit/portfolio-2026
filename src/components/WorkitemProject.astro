@@ -8,18 +8,15 @@ export interface Props {
   url: string;
   image: { url: string; alt: string; };
   optimizedImage?: any;
-  order: number;
 }
 
-const { title, description, url, image, optimizedImage, order } = Astro.props;
-const orderLabel = String(order).padStart(2, '0') + '.';
+const { title, description, url, image, optimizedImage } = Astro.props;
 ---
 
 <li class="workitem-container workitem-container--project">
   <a class="workitem workitem--project" href={url}>
     <div class="workitem-inner">
       <div class="workitem-text">
-        <span class="case-number case-number--sm">{orderLabel}</span>
         <TagBadge label="Project" variant="accent" />
         <h3 class="workitem-title workitem-title--project">{title}</h3>
         <p class="overview-text-small">{description}</p>

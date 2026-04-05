@@ -32,7 +32,7 @@
     idle: 0.28,  force: 0.5,   ease: 0.7,   ripple: 1.25,
     block: 0.5,
     aberrScale: 0.55, aberrIdle: 0.001, aberrMouse: 2.0, aberrAnim: 0.66,
-    grid: 5.0,   gopa: 0.5,
+    grid: 5.0,   gopa: 0.15,
     pxBase: 4.5, px: 8.0,
     fspd: 0.2,   fstr: 0.03,
     sat: 1.5,
@@ -172,7 +172,7 @@
       uGlitchOn:    { value: 1. },
       uBlockOn:     { value: 0. },
       uAberrOn:     { value: 1. },
-      uGridOn:      { value: 0. },
+      uGridOn:      { value: 1. },
       uPixelOn:     { value: 1. },
       uFlowOn:      { value: 1. },
       uIdleBase:    { value: P.idle    },
@@ -180,6 +180,7 @@
       uRipple:      { value: P.ripple  },
       uBlockChaos:  { value: P.block   },
       uAberrScale:  { value: P.aberrScale },
+      uGridCols:    { value: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1] },
       uAberrIdle:   { value: P.aberrIdle  },
       uAberrMouse:  { value: P.aberrMouse },
       uAberrAnim:   { value: P.aberrAnim  },
@@ -216,10 +217,24 @@
       'uniform float uImageAspect;',
       'uniform float uSaturation, uSatOn;',
       'uniform float uExpOn, uExpAmp, uExpSpd;',
+      'uniform float uGridCols[9];',
       'varying vec2 vUv;',
 
       'float h11(float p) { p=fract(p*.1031); p*=p+33.33; p*=p+p; return fract(p); }',
       'float h12(vec2 p)  { vec3 q=fract(vec3(p.xyx)*.1031); q+=dot(q,q.yzx+33.33); return fract((q.x+q.y)*q.z); }',
+
+      'float getColOff(float x, float t) {',
+      '  float o = 0.0;',
+      '  if (x > uGridCols[0] && x < uGridCols[1]) o = h11(0.1 + t);',
+      '  else if (x > uGridCols[1] && x < uGridCols[2]) o = h11(0.2 + t);',
+      '  else if (x > uGridCols[2] && x < uGridCols[3]) o = h11(0.3 + t);',
+      '  else if (x > uGridCols[3] && x < uGridCols[4]) o = h11(0.4 + t);',
+      '  else if (x > uGridCols[4] && x < uGridCols[5]) o = h11(0.5 + t);',
+      '  else if (x > uGridCols[5] && x < uGridCols[6]) o = h11(0.6 + t);',
+      '  else if (x > uGridCols[6] && x < uGridCols[7]) o = h11(0.7 + t);',
+      '  else if (x > uGridCols[7] && x <= uGridCols[8]) o = h11(0.8 + t);',
+      '  return (o - 0.5) * 0.1;',
+      '}',
 
       'vec2 coverUv(vec2 uv) {',
       '  float s  = uResolution.x / uResolution.y;',
@@ -250,6 +265,8 @@
       '  float ts   = floor(uTime*13.);',
       '  float ba   = step(1. - glitch*uBlockChaos*.5, h11(band*19.1+ts*.67)) * uBlockOn;',
       '  uv.x += (h11(band*4.3+ts*2.1)-.5) * .09 * ba;',
+      '  float cOff = getColOff(vUv.x, floor(uTime*7.));',
+      '  uv.y += cOff * glitch * uBlockOn * 3.0;',
 
       '  float tts = floor(uTime*6.);',
       '  float tOn = step(.91, h11(tts*5.3)) * glitch;',
@@ -299,9 +316,28 @@
       '  float b = texture2D(uTexture, coverUv(pixUv + totalFlow + offB)).b;',
       '  vec3 col = vec3(r, g, b);',
 
-      '  vec2  gc   = fract(vUv * uResolution / uGridSize);',
-      '  float line = max(step(gc.x, 1./uGridSize), step(gc.y, 1./uGridSize));',
-      '  col *= 1. - line * uGridOpacity * uGridOn;',
+      '  float cIdx = 0.0;',
+      '  if (vUv.x > uGridCols[0] && vUv.x < uGridCols[1]) cIdx = 1.0;',
+      '  else if (vUv.x > uGridCols[1] && vUv.x < uGridCols[2]) cIdx = 2.0;',
+      '  else if (vUv.x > uGridCols[2] && vUv.x < uGridCols[3]) cIdx = 3.0;',
+      '  else if (vUv.x > uGridCols[3] && vUv.x < uGridCols[4]) cIdx = 4.0;',
+      '  else if (vUv.x > uGridCols[4] && vUv.x < uGridCols[5]) cIdx = 5.0;',
+      '  else if (vUv.x > uGridCols[5] && vUv.x < uGridCols[6]) cIdx = 6.0;',
+      '  else if (vUv.x > uGridCols[6] && vUv.x < uGridCols[7]) cIdx = 7.0;',
+      '  else if (vUv.x > uGridCols[7] && vUv.x <= uGridCols[8]) cIdx = 8.0;',
+      
+      // Draw visible vertical lines at the exact column boundaries
+      // Using 'uv.x' here instead of 'vUv.x' means the lines will physically tear and warp with the glitch!
+      '  float line = 0.0;',
+      '  float thickness = 0.5 / uResolution.x;',
+      '  if (abs(uv.x - uGridCols[1]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[2]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[3]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[4]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[5]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[6]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[7]) < thickness) line = 1.0;',
+      '  col *= 1.0 - (line * uGridOpacity * uGridOn);',
 
       '  col += h12(pixUv*7. + fract(uTime*.3)) * glitch * .12 * vec3(1.,.65,1.4);',
       '  col  = (col-.5)*1.08+.5;',
@@ -449,6 +485,23 @@
   window.addEventListener('touchmove',  function (e) { var t = e.touches[0]; setMouse(t.clientX, t.clientY); }, { passive: true });
   window.addEventListener('touchstart', function (e) { var t = e.touches[0]; setMouse(t.clientX, t.clientY); }, { passive: true });
 
+  function syncGridCols() {
+    var linesContainer = document.querySelector('.grid-lines');
+    var cols = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
+    if (linesContainer && W > 0) {
+      var spans = linesContainer.querySelectorAll('span');
+      if (spans.length === 8) {
+        var arr = [];
+        for (var i=0; i<8; i++) {
+          arr.push(spans[i].getBoundingClientRect().left / W);
+        }
+        arr.push(spans[7].getBoundingClientRect().right / W);
+        cols = arr;
+      }
+    }
+    glitchMat.uniforms.uGridCols.value = cols;
+  }
+
   // ── Resize ─────────────────────────────────────────────────────────────────
   function resize() {
     var size = getSize();
@@ -471,6 +524,7 @@
       layer.baseOX = cf.ox;
       layer.baseOY = cf.oy;
     });
+    syncGridCols();
   }
   resize();
   window.addEventListener('resize', resize);
