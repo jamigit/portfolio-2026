@@ -490,12 +490,23 @@
     var cols = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
     if (linesContainer && W > 0) {
       var spans = linesContainer.querySelectorAll('span');
-      if (spans.length === 8) {
-        var arr = [];
-        for (var i=0; i<8; i++) {
-          arr.push(spans[i].getBoundingClientRect().left / W);
+      var visibleSpans = [];
+      for (var j=0; j<spans.length; j++) {
+        if (window.getComputedStyle(spans[j]).display !== 'none') {
+          visibleSpans.push(spans[j]);
         }
-        arr.push(spans[7].getBoundingClientRect().right / W);
+      }
+      if (visibleSpans.length > 0) {
+        var arr = [];
+        for (var i=0; i<visibleSpans.length; i++) {
+          arr.push(visibleSpans[i].getBoundingClientRect().left / W);
+        }
+        arr.push(visibleSpans[visibleSpans.length - 1].getBoundingClientRect().right / W);
+        
+        // Pad the remainder of the array safely over 1.0 so graphics shaders ignore them
+        while (arr.length < 9) {
+          arr.push(1.5);
+        }
         cols = arr;
       }
     }

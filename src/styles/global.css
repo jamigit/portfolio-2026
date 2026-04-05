@@ -974,6 +974,7 @@ a {
 /* Tag badge */
 .tag-badge {
   display: inline-block;
+  align-self: flex-start;
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 0.75rem;
@@ -981,10 +982,11 @@ a {
   text-transform: uppercase;
   padding: 0.25rem 0.625rem;
   border-radius: 3px;
-  border: 1px solid currentColor;
+  border: 2px solid currentColor;
 }
 .tag-badge--default { color: var(--color-text-strong); }
 .tag-badge--accent  { color: var(--color-accent); border-color: var(--color-accent); }
+.tag-badge--grey    { color: var(--color-text-muted); border-color: var(--color-text-muted); }
 
 /* Case number */
 .case-number {
@@ -999,20 +1001,57 @@ a {
   .case-number { font-size: 3rem; }
 }
 
-/* Grid system — mobile-first */
-.grid {
-  display: block;
-  padding: 0 1rem;
+/* Grid system — responsive multi-breakpoint */
+.grid, .grid-lines {
+  display: grid;
+  margin: 0 auto;
+  grid-template-columns: 16px repeat(4, 1fr) 16px;
+  gap: var(--grid-gutter);
+}
+
+.grid-lines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.grid-lines span {
+  border-right: 1px solid var(--color-grid-line);
+}
+
+.has-canvas-hero .grid-lines span {
+  border-right-color: var(--color-grid-line-dark);
+}
+
+/* Base tablet/mobile logic (4 columns = 6 spans including margins) */
+@media (max-width: 1023px) {
+  .grid { padding: 0; }
+  /* Hide 7th and 8th spans as they don't exist in a 4-column layout */
+  .grid-lines span:nth-last-child(-n+2) {
+    display: none;
+  }
+  
+  .col-full       { grid-column: 1 / -1; }
+  .col-content    { grid-column: 2 / 6; }
+  .col-narrow     { grid-column: 2 / 5; }
+  .col-centered   { grid-column: 2 / 6; }
+  .col-left       { grid-column: 2 / 4; }
+  .col-right      { grid-column: 4 / 6; }
+  .col-left-wide  { grid-column: 2 / 5; }
+  .col-right-wide { grid-column: 3 / 6; }
 }
 
 @media (min-width: 768px) {
-  .grid {
-    display: grid;
-    grid-template-columns: var(--grid-margin) repeat(6, 1fr) var(--grid-margin);
-    gap: var(--grid-gutter);
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 0;
+  .grid, .grid-lines {
+    grid-template-columns: 24px repeat(4, 1fr) 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid, .grid-lines {
+    max-width: 1200px;
+    grid-template-columns: 32px repeat(6, 1fr) 32px;
   }
 
   .col-full       { grid-column: 1 / -1; }
@@ -1025,29 +1064,17 @@ a {
   .col-right-wide { grid-column: 4 / 8; }
 }
 
-/* Grid overlay — column lines */
-.grid-lines {
-  display: none;
+@media (min-width: 1400px) {
+  .grid, .grid-lines {
+    max-width: 1600px;
+    grid-template-columns: 48px repeat(6, 1fr) 48px;
+  }
 }
 
-@media (min-width: 768px) {
-  .grid-lines {
-    display: grid;
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    grid-template-columns: var(--grid-margin) repeat(6, 1fr) var(--grid-margin);
-    max-width: var(--max-width);
-    margin: 0 auto;
-  }
-
-  .grid-lines span {
-    border-right: 1px solid var(--color-grid-line);
-  }
-
-  .has-canvas-hero .grid-lines span {
-    border-right-color: var(--color-grid-line-dark);
+@media (min-width: 1920px) {
+  .grid, .grid-lines {
+    max-width: 1600px;
+    grid-template-columns: 48px repeat(6, 1fr) 48px;
   }
 }
 
@@ -1084,20 +1111,35 @@ a {
   margin: 0;
 }
 
-.workitem-container {
-  border-top: 1px solid var(--color-border);
-  padding: 2.5rem 0;
+.list-workitems-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
 }
 
-.workitem-container:last-child {
-  border-bottom: 1px solid var(--color-border);
+@media (min-width: 768px) {
+  .list-workitems-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+  }
 }
+
+@media (min-width: 1024px) {
+  .list-workitems-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 
 /* The link wraps everything */
 .workitem {
   display: block;
   text-decoration: none;
   color: var(--color-text-strong);
+  padding: 2.5rem 0;
 }
 
 .workitem:visited {
@@ -1112,7 +1154,7 @@ a {
 }
 
 @media (min-width: 768px) {
-  .workitem-container {
+  .workitem {
     padding: 3.5rem 0;
   }
 
@@ -1214,20 +1256,21 @@ a {
   transform: scale(1.02);
 }
 
-/* Project variant — no accent circle, smaller scale */
-.workitem-container--project {
-  padding: 1.75rem 0;
+/* Project variant — vertical cards */
+.workitem--project {
+  padding: 0;
+  height: 100%;
 }
 
-@media (min-width: 768px) {
-  .workitem-container--project {
-    padding: 2.5rem 0;
-  }
+.workitem--project .workitem-inner {
+  display: flex;
+  flex-direction: column-reverse; /* Image on top */
+  gap: 1.5rem;
+  height: 100%;
+}
 
-  .workitem--project .workitem-inner {
-    grid-template-columns: 3fr 2fr;
-    gap: 3rem;
-  }
+.workitem--project .workitem-image-wrap {
+  border-radius: 8px; /* Optional slight rounding for card image */
 }
 
 #projects {
