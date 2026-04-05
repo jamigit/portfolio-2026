@@ -1,17 +1,15 @@
 ---
-import Social from "../components/Social.astro";
 import WorkitemSimple from "../components/WorkitemSimple.astro";
 import Logo from "./Logo.astro";
 
 const allCaseStudies = Object.values(
   import.meta.glob("../pages/case-study/*.mdx", { eager: true })
-);
+).sort((a: any, b: any) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
+
 const allProjects = Object.values(
   import.meta.glob("../pages/projects/*.mdx", { eager: true })
-);
+).sort((a: any, b: any) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
 ---
-
-
 
 <footer>
   <Logo />
@@ -20,28 +18,18 @@ const allProjects = Object.values(
     <div>
       <h4 class="small-title">Case studies</h4>
       <ul>
-        {
-          allCaseStudies.map((post: any) => (
-            <WorkitemSimple url={post.url} title={post.frontmatter.titleShort} />
-          ))
-        }
+        {allCaseStudies.map((post: any) => (
+          <WorkitemSimple url={post.url} title={post.frontmatter.titleShort ?? post.frontmatter.title} />
+        ))}
       </ul>
     </div>
     <div>
       <h4 class="small-title">Projects</h4>
-
       <ul>
-        {
-          allProjects.map((post: any) => (
-            <WorkitemSimple url={post.url} title={post.frontmatter.title} />
-          ))
-        }
+        {allProjects.map((post: any) => (
+          <WorkitemSimple url={post.url} title={post.frontmatter.title} />
+        ))}
       </ul>
     </div>
-    <!--  
-      <a href="/about">About</a>
-      -->
-   
-    </div>
-
+  </div>
 </footer>

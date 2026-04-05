@@ -1,3 +1,45 @@
+/* OT Abalos — hero display */
+@font-face {
+  font-family: 'OT Abalos';
+  src: url('../assets/fonts/OTAbalos-Light.woff2') format('woff2'),
+       url('../assets/fonts/OTAbalos-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OT Abalos';
+  src: url('../assets/fonts/OTAbalos-Regular.woff2') format('woff2'),
+       url('../assets/fonts/OTAbalos-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OT Abalos';
+  src: url('../assets/fonts/OTAbalos-Semibold.woff2') format('woff2'),
+       url('../assets/fonts/OTAbalos-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OT Abalos';
+  src: url('../assets/fonts/OTAbalos-Bold.woff2') format('woff2'),
+       url('../assets/fonts/OTAbalos-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OT Abalos';
+  src: url('../assets/fonts/OTAbalos-Extrabold.woff2') format('woff2'),
+       url('../assets/fonts/OTAbalos-Extrabold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* PP Paloma — headings */
 @font-face {
   font-family: 'PP Paloma';
