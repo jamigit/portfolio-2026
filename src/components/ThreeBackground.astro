@@ -481,6 +481,29 @@
 
   // ── Render loop ────────────────────────────────────────────────────────────
   var pageVisible = true;
+  var scrollPaused = false;
+  
+  // Parallax fade and pause observer
+  window.addEventListener('scroll', function() {
+    var scrollY = window.scrollY;
+    var maxScroll = window.innerHeight;
+    
+    // Calculate opacity (1.0 at top, 0.0 at window height)
+    var opacity = 1.0 - (scrollY / maxScroll);
+    opacity = Math.max(0, Math.min(1, opacity));
+    
+    if (canvas) {
+      canvas.style.opacity = opacity.toFixed(3);
+    }
+    
+    // Pause rendering if canvas is invisible
+    if (opacity <= 0.0) {
+      scrollPaused = true;
+    } else {
+      scrollPaused = false;
+    }
+  }, { passive: true });
+
   document.addEventListener('visibilitychange', function () {
     pageVisible = !document.hidden;
     if (pageVisible) clock.getDelta();
@@ -488,7 +511,7 @@
 
   (function loop() {
     requestAnimationFrame(loop);
-    if (!pageVisible) return;
+    if (!pageVisible || scrollPaused) return;
     var t   = clock.getElapsedTime();
     var dx  = (mouse.x - prev.x) * W;
     var dy  = (mouse.y - prev.y) * H;

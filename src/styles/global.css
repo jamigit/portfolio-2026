@@ -656,16 +656,19 @@ nav.nav-hidden {
 .hero-home {
   position: relative;
   min-height: 100svh;
-  overflow: hidden;
-  background-color: var(--color-dark-bg);
+  background-color: transparent; /* Allows body var(--color-bg) to show through when canvas fades */
+  /* Remove overflow: hidden so sticky/fixed elements aren't clipped unexpectedly */
 }
 
 .hero-home #threejs-hero {
   display: block;
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
