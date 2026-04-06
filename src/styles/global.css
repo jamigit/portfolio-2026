@@ -665,10 +665,10 @@ nav.nav-hidden {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  right: 0;
   height: 100vh;
   z-index: 0;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -685,7 +685,6 @@ nav.nav-hidden {
   flex-direction: column;
   justify-content: flex-end;
   min-height: 100svh;
-  padding: 2rem 1rem 3rem;
 }
 
 .hero-display-title {
@@ -711,11 +710,6 @@ nav.nav-hidden {
   text-align: left;
 }
 
-@media (min-width: 768px) {
-  .hero-content-home {
-    padding: 2rem 2rem 4rem;
-  }
-}
 
 .hero-casestudy {
   background-color: var(--color-dark-bg);
@@ -807,21 +801,6 @@ nav.nav-hidden {
 }
 
 @media screen and (min-width: 768px) {
-  .hero-content {
-    max-width: var(--max-width-content-wide);
-    margin: 0 auto;
-    padding: 9rem 2rem 6rem 2rem;
-  }
-
-  .hero-content-casestudy, 
-  .hero-content-project {
-    max-width: var(--max-width-content);
-  }
-
-  .hero-content-project {
-    padding-bottom: 0;
-  }
-
   .hero-content-home p {
     max-width: var(--max-width-content-narrow);
   }
@@ -832,42 +811,12 @@ nav.nav-hidden {
   padding: 2rem 1rem;
 }
 
-.content-home {
-  max-width: var(--max-width-content-wide);
-  margin: 0 auto;
-}
 
 .content-case-study {
   padding-top: 3rem;
   padding-bottom: 4rem;
 }
 
-/* Default grid placement for MDX prose children — col-content (all 6 content cols) */
-@media (min-width: 768px) {
-  .content-case-study > * {
-    grid-column: 2 / 8;
-  }
-
-  /* Full-width override for images that need edge-to-edge treatment */
-  .content-case-study > .col-full,
-  .content-case-study > figure.col-full {
-    grid-column: 1 / -1;
-  }
-
-  /* Narrower prose reading width */
-  .content-case-study > .col-narrow {
-    grid-column: 2 / 6;
-  }
-
-  /* Side-by-side — both must be siblings */
-  .content-case-study > .col-left {
-    grid-column: 2 / 5;
-  }
-
-  .content-case-study > .col-right {
-    grid-column: 5 / 8;
-  }
-}
 
 
 /* Links */
@@ -1001,19 +950,55 @@ a {
   .case-number { font-size: 3rem; }
 }
 
-/* Grid system — responsive multi-breakpoint */
-.grid, .grid-lines {
+/* ── Grid system ──────────────────────────────────────────────────────────── */
+
+/* Single grid definition: 6 content cols with flexible minmax margins */
+/* Mobile base: 16px fixed margins */
+.grid {
   display: grid;
-  margin: 0 auto;
-  grid-template-columns: 16px repeat(4, 1fr) 16px;
+  grid-template-columns: 16px repeat(6, 1fr) 16px;
   gap: var(--grid-gutter);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .grid-lines {
+  display: grid;
+  grid-template-columns: 16px repeat(6, 1fr) 16px;
+  gap: var(--grid-gutter);
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  height: 100vh;
   pointer-events: none;
   z-index: 0;
+  /* left and width are set by JavaScript to sync with .grid */
+}
+
+/* Tablet (768px+): 24px margins */
+@media (min-width: 768px) {
+  .grid,
+  .grid-lines {
+    grid-template-columns: 24px repeat(6, 1fr) 24px;
+  }
+}
+
+/* Desktop (1024px+): 32px margins */
+@media (min-width: 1024px) {
+  .grid,
+  .grid-lines {
+    grid-template-columns: 32px repeat(6, 1fr) 32px;
+  }
+}
+
+/* Large desktop (1400px+): 48px margins */
+@media (min-width: 1400px) {
+  .grid,
+  .grid-lines {
+    grid-template-columns: 48px repeat(6, 1fr) 48px;
+  }
 }
 
 .grid-lines span {
@@ -1024,36 +1009,18 @@ a {
   border-right-color: var(--color-grid-line-dark);
 }
 
-/* Base tablet/mobile logic (4 columns = 6 spans including margins) */
-@media (max-width: 1023px) {
-  .grid { padding: 0; }
-  /* Hide 7th and 8th spans as they don't exist in a 4-column layout */
-  .grid-lines span:nth-last-child(-n+2) {
+/* Mobile: grid is display: block, col utilities don't apply */
+@media (max-width: 767px) {
+  .grid {
+    display: block;
+  }
+  .grid-lines {
     display: none;
   }
-  
-  .col-full       { grid-column: 1 / -1; }
-  .col-content    { grid-column: 2 / 6; }
-  .col-narrow     { grid-column: 2 / 5; }
-  .col-centered   { grid-column: 2 / 6; }
-  .col-left       { grid-column: 2 / 4; }
-  .col-right      { grid-column: 4 / 6; }
-  .col-left-wide  { grid-column: 2 / 5; }
-  .col-right-wide { grid-column: 3 / 6; }
 }
 
+/* Desktop (768px+): col utilities — 6 content cols (cols 2–7) */
 @media (min-width: 768px) {
-  .grid, .grid-lines {
-    grid-template-columns: 24px repeat(4, 1fr) 24px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .grid, .grid-lines {
-    max-width: 1200px;
-    grid-template-columns: 32px repeat(6, 1fr) 32px;
-  }
-
   .col-full       { grid-column: 1 / -1; }
   .col-content    { grid-column: 2 / 8; }
   .col-narrow     { grid-column: 2 / 6; }
@@ -1062,20 +1029,6 @@ a {
   .col-right      { grid-column: 5 / 8; }
   .col-left-wide  { grid-column: 2 / 6; }
   .col-right-wide { grid-column: 4 / 8; }
-}
-
-@media (min-width: 1400px) {
-  .grid, .grid-lines {
-    max-width: 1600px;
-    grid-template-columns: 48px repeat(6, 1fr) 48px;
-  }
-}
-
-@media (min-width: 1920px) {
-  .grid, .grid-lines {
-    max-width: 1600px;
-    grid-template-columns: 48px repeat(6, 1fr) 48px;
-  }
 }
 
 /* Grid bracket marks */
@@ -1109,6 +1062,9 @@ a {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 .list-workitems-grid {
@@ -1136,14 +1092,28 @@ a {
 
 /* The link wraps everything */
 .workitem {
-  display: block;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: var(--color-text-strong);
   padding: 2.5rem 0;
+  cursor: pointer;
+  transition: opacity var(--transition-1-fast);
+  border-radius: 4px;
 }
 
 .workitem:visited {
   color: var(--color-text-strong);
+}
+
+.workitem:hover {
+  opacity: 0.85;
+}
+
+.workitem:focus-visible {
+  opacity: 0.85;
+  outline: 2px solid var(--color-accent-border);
+  outline-offset: 4px;
 }
 
 /* Two-column inner grid */
@@ -1151,6 +1121,8 @@ a {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
+  width: 100%;
+  flex: 1;
 }
 
 @media (min-width: 768px) {

@@ -41,7 +41,7 @@ const heroImages = {
 
 const imageFilename = image.url.split('/').pop();
 const heroImageSrc = heroImages[imageFilename];
-const heroClasses = `hero hero-casestudy ${frontmatter.bgClass ?? ''}`.trim();
+const heroClasses = `hero hero-casestudy grid ${frontmatter.bgClass ?? ''}`.trim();
 ---
 
 <BaseLayout
@@ -53,7 +53,7 @@ const heroClasses = `hero hero-casestudy ${frontmatter.bgClass ?? ''}`.trim();
   image={image}
 >
   <section class={heroClasses}>
-    <div class="hero-content hero-content-casestudy">
+    <div class="hero-content hero-content-casestudy col-content">
       <TagBadge label="Case Study" />
       <h1 class="banner-text">{frontmatter.title}</h1>
       <p class="overview-text-small">{frontmatter.overview}</p>

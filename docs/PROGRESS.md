@@ -6,8 +6,8 @@
 
 ## Current status
 
-**Phase:** Pre-redesign complete — ready to begin Phase 1 (Design Tokens & Typography)
-**Last updated:** 2026-04-04
+**Phase:** Phases 1–5 complete. Phase 6 (Grid System Rebuild & Homepage Layout) in progress.
+**Last updated:** 2026-04-06
 
 ---
 
@@ -58,7 +58,7 @@
 
 ## Phase checklist
 
-### Phase 1 — Design Tokens & Typography [x] IN PROGRESS
+### Phase 1 — Design Tokens & Typography [x] COMPLETE
 - [x] Create `src/styles/fonts.css` with `@font-face` declarations for PP Paloma and PP Neue Montreal
 - [x] Import `fonts.css` into `global.css` via `@import`
 - [x] Rewrite token block in `global.css` — full grey scale, accent, secondary, tertiary, semantic aliases
@@ -67,8 +67,8 @@
 - [x] Set `font-family` base to PP Neue Montreal (`--font-body`)
 - [x] Apply PP Paloma to headings (`--font-heading`)
 - [x] Add new flat bgClass palette entries (slate, sage, rust, sand, indigo, midnight, accent)
-- [ ] `/mobile-review` pass
-- [ ] `/phase-gate phase-1` check — must PASS before Phase 2
+- [x] `/mobile-review` pass
+- [x] `/phase-gate phase-1` check — PASS
 
 #### Phase 1 notes
 - PP Paloma has no Bold weight — mapped Heavy (`PPPaloma-Heavy.woff2`) to `font-weight: 700`
@@ -110,21 +110,80 @@
 - [x] Created `IndexLayout.astro` inheriting `BaseLayout` — owns hero section structure
 - [x] Add `ThreeBackground` to `IndexLayout.astro` homepage hero
 - [x] Updated `index.astro` to use `IndexLayout` with named `hero` slot
-- [ ] `/phase-gate phase-4`
+- [x] `/phase-gate phase-4` — PASS
 
 #### Phase 4 notes
 - CDN approach used (not npm `three` import) — dynamic script injection guarantees load order
 - Canvas sizing reads from `canvas.parentElement` dimensions, not `window`, so it fills the hero section not the viewport
 - `threejsbackground/index.html` is untouched (source of truth for shader tweaks)
 
-### Phase 5 — Navigation [ ] NOT STARTED
-- [ ] Dark pill nav, centred, transparent over ThreeJS hero
-- [ ] Mobile nav (hamburger/drawer)
-- [ ] Keyboard accessible
-- [ ] `/mobile-review` + `/phase-gate phase-5`
+### Phase 5 — Navigation [x] COMPLETE
+- [x] Dark pill nav, centred, transparent over ThreeJS hero
+- [x] Mobile nav (hamburger/drawer)
+- [x] Keyboard accessible
+- [x] `/mobile-review` + `/phase-gate phase-5` — PASS
 
-### Phases 6–10 [ ] NOT STARTED
-See `docs/REDESIGN_PRD.md` for full phase breakdown.
+### Phase 6 — Grid System Rebuild & Homepage Layout [x] IN PROGRESS
+
+#### Session 2026-04-06 — Grid system rebuild & JavaScript sync
+
+**Completed:**
+- [x] **Identified root cause of grid misalignment:** `--grid-margin: minmax(1rem, 1fr)` margin columns computed differently for fixed vs. normal-flow elements (scrollbar width, layout context differences)
+- [x] **Rebuilt grid system:** Replaced 4-breakpoint fixed-px approach (16/24/32/48px) with consistent single rule + per-breakpoint overrides. Both `.grid` and `.grid-lines` now use identical `grid-template-columns` at each breakpoint.
+- [x] **Removed padding mirrors:** Deleted manual padding rules from `.hero-content-home` and `.content-home` — elements now placed as grid children with `.col-content` placement
+- [x] **Updated all layouts:** Added `.grid` class to hero sections and content sections in `IndexLayout.astro`, `CaseStudyLayout.astro`, `ProjectLayout.astro`
+- [x] **Removed redundant CSS:** Deleted `.content-case-study > *` child-selector column overrides (not needed with col utilities on elements)
+- [x] **Implemented JavaScript grid sync:** Created `src/scripts/sync-grid-overlay.js` to measure actual `.grid` position and sync `.grid-lines` left/width, eliminating visual offset
+- [x] **Integrated sync script:** Added import to `BaseLayout.astro` to run on load, resize, and scroll
+
+**Decisions made:**
+- **JavaScript sync over CSS:** Fixed-positioned overlays can't reliably sync with normal-flow grids due to viewport vs. layout-context width differences. JS measurement + positioning provides pixel-perfect alignment across all pages.
+- **Single grid rule:** Moved away from flexible `minmax()` margins to fixed pixels (16/24/32/48px) at breakpoints — guarantees identical column widths for fixed and normal elements
+
+**Problems encountered & resolved:**
+- Hero and main grid were offset because fixed `.grid-lines` used `left: 50%; transform: translateX(-50%)` while normal `.grid` used `margin: 0 auto` — different centering models produced different results
+- Solution: JS measures actual grid position and applies it to overlay
+
+**Left incomplete:**
+- `/mobile-review` pass on new grid structure
+- `/phase-gate phase-6` check (grid foundation gate)
+- Homepage card redesign (Workitem/WorkitemProject visual update) — deferred to Phase 7
+
+#### Phase 6 checklist — Grid System Rebuild & Foundation
+
+**Grid foundation (foundation gate):**
+- [x] Rebuild `.grid` CSS — single rule with pixel margins at breakpoints (16/24/32/48px)
+- [x] Rebuild `.grid-lines` with identical columns and gap as `.grid`
+- [x] Remove `minmax(1rem, 1fr)` margin columns (caused fixed vs. normal flow misalignment)
+- [x] Consolidate col utilities to single `@media (min-width: 768px)` block
+- [x] Remove `.content-case-study > *` child-selector overrides
+- [x] Remove padding mirror rules from `.hero-content-home` and `.content-home`
+- [x] Create `src/scripts/sync-grid-overlay.js` — JS syncs fixed overlay with normal-flow grid position
+- [x] Integrate sync script into `BaseLayout.astro`
+- [x] Apply `.grid` class to `section.hero` in `IndexLayout.astro`
+- [x] Apply `.grid` class to `section.hero` in `CaseStudyLayout.astro` and `ProjectLayout.astro`
+- [x] Apply `.col-content` to hero content divs
+- [x] Apply `.col-content` to body content wrapper divs
+
+**Next steps (deferred to Phase 7):**
+- [ ] `/mobile-review` pass on grid alignment at 375px, 768px, 1024px, 1400px+
+- [ ] `/phase-gate phase-6` — grid foundation gate, must PASS before Phase 7
+
+#### Phase 6 notes
+- Grid now used on all page sections: hero, homepage content, case study hero, case study body, project pages
+- Grid-lines overlay now syncs via JS, stays in sync during resize/scroll
+- Grid spans remain consistent: `col-content` = columns 2/8 (6 content columns) across all breakpoints
+- Fixed-positioned overlay synced via `getBoundingClientRect()` + `scrollX` measurement — accounts for viewport width differences
+
+### Phase 7 — Homepage Cards Redesign [ ] NOT STARTED
+- [ ] Update `Workitem.astro` visual design (case number, accent circle, border, spacing)
+- [ ] Update `WorkitemProject.astro` visual design
+- [ ] Place cards in grid (`.col-narrow` or `.col-left` / `.col-right` pairs)
+- [ ] Update card image pipeline (optimize hero images, webp conversion)
+- [ ] `/mobile-review` + `/phase-gate phase-7`
+
+### Phases 8–10 [ ] NOT STARTED
+See `docs/REDESIGN_PRD.md` for full phase breakdown (case study cards, footer, misc pages, final QA).
 
 ---
 

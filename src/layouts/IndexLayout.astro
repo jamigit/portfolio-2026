@@ -5,15 +5,15 @@ import ThreeBackground from '../components/ThreeBackground.astro';
 const { title, metaTitle, metaDescription, author } = Astro.props;
 ---
 <BaseLayout title={title} metaTitle={metaTitle} metaDescription={metaDescription} author={author}>
-  <section class="hero hero-home has-canvas-hero">
+  <section class="hero hero-home has-canvas-hero grid">
     <ThreeBackground />
-    <div class="hero-content hero-content-home">
+    <div class="hero-content-home col-content">
       <slot name="hero" />
     </div>
   </section>
 
-  <section>
-    <div class="content content-home">
+  <section class="grid">
+    <div class="col-content">
       <slot />
     </div>
   </section>
