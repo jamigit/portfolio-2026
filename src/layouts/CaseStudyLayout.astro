@@ -120,6 +120,8 @@ const heroClasses = `hero hero-casestudy grid ${frontmatter.bgClass ?? ''}`.trim
   </section>
 
   <section class="content content-case-study grid">
-    <slot />
+    <div class="col-content">
+      <slot />
+    </div>
   </section>
 </BaseLayout>

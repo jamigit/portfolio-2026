@@ -28,7 +28,7 @@
   --transition-4: all 0.6s ease-out;
 
   /* Fonts */
-  --font-heading: 'PP Paloma', Georgia, serif;
+  --font-heading: 'OT Abalos', Georgia, serif;
   --font-body: 'PP Neue Montreal', Helvetica, Arial, sans-serif;
   --font-display: 'OT Abalos', 'PP Paloma', Georgia, serif;
 
@@ -237,6 +237,10 @@ h2 {
 .small-title {
   font-size: 1rem;
   margin-top: 0;
+}
+
+.section-first {
+  margin-top: 96px;
 }
 
 .content-home h2{
@@ -655,7 +659,7 @@ nav.nav-hidden {
 
 .hero-home {
   position: relative;
-  min-height: 100svh;
+  height: 100vh;
   background-color: transparent; /* Allows body var(--color-bg) to show through when canvas fades */
   /* Remove overflow: hidden so sticky/fixed elements aren't clipped unexpectedly */
 }
@@ -684,7 +688,8 @@ nav.nav-hidden {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 100svh;
+  padding-bottom: 120px;
+  height: 100vh;
 }
 
 .hero-display-title {
