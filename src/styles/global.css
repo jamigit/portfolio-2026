@@ -736,49 +736,76 @@ nav.nav-hidden {
 
 
 .hero-casestudy {
-  background-color: var(--color-dark-bg);
+  position: relative;
+  background-color: white;
   --cs-text: var(--grey-90);
   --cs-accent: var(--color-accent);
+  overflow: hidden;
 }
 
-.kepla {
+.hero-bg-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--color-dark-bg);
+  transition: opacity 0.1s linear;
+}
+
+.hero-casestudy.kepla .hero-bg-layer {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#a2e0d3), to(#649ee0));
   background-image: -o-linear-gradient(#a2e0d3, #649ee0);
   background-image: linear-gradient(#a2e0d3, #649ee0);
 }
 
-.pelorus {
+.hero-casestudy.pelorus .hero-bg-layer {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#407beb), to(#6fc6fc));
   background-image: -o-linear-gradient(#407beb, #6fc6fc);
   background-image: linear-gradient(#407beb, #6fc6fc);
 }
 
-.aurora {
+.hero-casestudy.aurora .hero-bg-layer {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#fdd893), to(#faa949));
   background-image: -o-linear-gradient(#fdd893, #faa949);
   background-image: linear-gradient(#fdd893, #faa949);
 }
 
-.npdc {
+.hero-casestudy.npdc .hero-bg-layer {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6dba9), to(#e09c74));
   background-image: -o-linear-gradient(#f6dba9, #e09c74);
   background-image: linear-gradient(#f6dba9, #e09c74);
 }
 
-.sitesmart {
+.hero-casestudy.sitesmart .hero-bg-layer {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#b7ddef), to(#4cadde));
   background-image: -o-linear-gradient(#b7ddef, #4cadde);
   background-image: linear-gradient(#b7ddef, #4cadde);
 }
 
 /* Flat palette bgClass entries — new case studies */
-.hero-casestudy.slate    { background-color: #7b93a8; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
-.hero-casestudy.sage     { background-color: #8fa68b; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
-.hero-casestudy.rust     { background-color: #c17a5a; --cs-text: #ffffff; --cs-accent: var(--grey-5); }
-.hero-casestudy.sand     { background-color: #d4bc94; --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
-.hero-casestudy.indigo   { background-color: #4a5580; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
-.hero-casestudy.midnight { background-color: #1a1a2e; --cs-text: #ffffff; --cs-accent: var(--color-accent); }
-.hero-casestudy.accent   { background-color: var(--color-accent); --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
+.hero-casestudy.slate    { --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.slate .hero-bg-layer { background-color: #7b93a8; }
+
+.hero-casestudy.sage     { --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.sage .hero-bg-layer { background-color: #8fa68b; }
+
+.hero-casestudy.rust     { --cs-text: #ffffff; --cs-accent: var(--grey-5); }
+.hero-casestudy.rust .hero-bg-layer { background-color: #c17a5a; }
+
+.hero-casestudy.sand     { --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
+.hero-casestudy.sand .hero-bg-layer { background-color: #d4bc94; }
+
+.hero-casestudy.indigo   { --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.indigo .hero-bg-layer { background-color: #4a5580; }
+
+.hero-casestudy.midnight { --cs-text: #ffffff; --cs-accent: var(--color-accent); }
+.hero-casestudy.midnight .hero-bg-layer { background-color: #1a1a2e; }
+
+.hero-casestudy.accent   { --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
+.hero-casestudy.accent .hero-bg-layer { background-color: var(--color-accent); }
 
 .hero-content {
   padding-top: 7rem;
@@ -794,6 +821,8 @@ nav.nav-hidden {
 
 .hero-content-casestudy,
 .hero-content-project {
+  position: relative;
+  z-index: 1;
   color: var(--cs-text);
   padding-bottom: 4rem;
   align-items: flex-start;

@@ -53,6 +53,7 @@ const heroClasses = `hero hero-casestudy grid ${frontmatter.bgClass ?? ''}`.trim
   image={image}
 >
   <section class={heroClasses}>
+    <div id="project-hero-bg" class="hero-bg-layer"></div>
     <div class="hero-content hero-content-project col-content">
       <TagBadge label="Project" variant="accent" />
       <h1 class="banner-text">{frontmatter.title}</h1>
@@ -125,3 +126,20 @@ const heroClasses = `hero hero-casestudy grid ${frontmatter.bgClass ?? ''}`.trim
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (function() {
+    const heroBg = document.getElementById('project-hero-bg');
+    if (!heroBg) return;
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const maxScroll = window.innerHeight * 0.8;
+      
+      let opacity = 1 - (scrollY / maxScroll);
+      opacity = Math.max(0, Math.min(1, opacity));
+      
+      heroBg.style.opacity = opacity.toFixed(3);
+    }, { passive: true });
+  })();
+</script>
