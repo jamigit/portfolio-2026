@@ -28,7 +28,7 @@
   --transition-4: all 0.6s ease-out;
 
   /* Fonts */
-  --font-heading: 'OT Abalos', Georgia, serif;
+  --font-heading: 'Bricolage Grotesque', Georgia, serif;
   --font-body: 'PP Neue Montreal', Helvetica, Arial, sans-serif;
   --font-display: 'OT Abalos', 'PP Paloma', Georgia, serif;
 
@@ -551,7 +551,7 @@ nav.nav-hidden {
 .logo {
   color: var(--color-text-on-dark);
   text-decoration: none;
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
   white-space: nowrap;
@@ -813,7 +813,14 @@ nav.nav-hidden {
 
 /* Content area styles */
 .content {
-  padding: 2rem 1rem;
+  padding: 2rem 1rem; /* mobile: horizontal padding for breathing room */
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 
@@ -944,7 +951,7 @@ a {
 
 /* Case number */
 .case-number {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 2rem;
   color: var(--color-text-strong);
@@ -1010,7 +1017,7 @@ a {
   border-right: 1px solid var(--color-grid-line);
 }
 
-.has-canvas-hero .grid-lines span {
+.grid-lines.over-dark span {
   border-right-color: var(--color-grid-line-dark);
 }
 
