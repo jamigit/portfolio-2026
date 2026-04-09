@@ -537,11 +537,11 @@ nav {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  width: calc(100% - 2rem);
-  max-width: 780px;
+  width: 100%;
+  max-width: var(--max-width);
   background-color: var(--color-dark-bg);
   border-radius: 999px;
-  padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  padding: 0.375rem var(--grid-margin);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -718,7 +718,7 @@ nav.nav-hidden {
   line-height: 0.9;
   letter-spacing: -0.02em;
   margin: 0;
-  color: var(--color-text-on-dark);
+  color: var(--color-text-strong);
 }
 
 .hero-subtext {
@@ -781,7 +781,8 @@ nav.nav-hidden {
 .hero-casestudy.accent   { background-color: var(--color-accent); --cs-text: var(--grey-100); --cs-accent: var(--grey-100); }
 
 .hero-content {
-  padding: 7rem 1rem 4rem 1rem;
+  padding-top: 7rem;
+  padding-bottom: 4rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -911,9 +912,9 @@ a {
 }
 .btn--primary:hover,
 .btn--primary:focus {
-  background-color: var(--grey-80);
-  border-color: var(--grey-80);
-  color: var(--grey-0);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--grey-100);
 }
 
 .btn--outline {
@@ -1033,13 +1034,25 @@ a {
   border-right-color: var(--color-grid-line-dark);
 }
 
-/* Mobile: grid is display: block, col utilities don't apply */
+/* Mobile: grid is 4 columns */
 @media (max-width: 767px) {
-  .grid {
-    display: block;
-  }
+  .grid,
   .grid-lines {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  
+  .grid-lines span:nth-child(n+5) {
     display: none;
+  }
+
+  .grid-lines span:nth-child(4) {
+    border-right: 1px solid var(--color-grid-line);
+  }
+
+  .grid-lines.over-dark span:nth-child(4) {
+    border-right-color: var(--color-grid-line-dark);
   }
 }
 
@@ -1053,6 +1066,18 @@ a {
   .col-right      { grid-column: 4 / 7; }
   .col-left-wide  { grid-column: 1 / 5; }
   .col-right-wide { grid-column: 3 / 7; }
+}
+
+/* Mobile (< 768px): col utilities — 4 content cols (cols 1–4) */
+@media (max-width: 767px) {
+  .col-full       { grid-column: 1 / -1; }
+  .col-content    { grid-column: 1 / 5; }
+  .col-narrow     { grid-column: 1 / 4; }
+  .col-centered   { grid-column: 2 / 4; }
+  .col-left       { grid-column: 1 / 3; }
+  .col-right      { grid-column: 3 / 5; }
+  .col-left-wide  { grid-column: 1 / 4; }
+  .col-right-wide { grid-column: 2 / 5; }
 }
 
 /* Grid bracket marks */
@@ -1172,6 +1197,25 @@ a {
   font-size: 1.75rem;
   line-height: 1.1;
   margin: 0;
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.workitem-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.workitem:hover .workitem-title::after,
+.workitem:focus-within .workitem-title::after {
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -1215,7 +1259,8 @@ a {
 /* Image column */
 .workitem-image-wrap {
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to allow 3D rotation without clipping if needed, though often hidden is still fine for slight tilts */
+  perspective: 1200px;
 }
 
 
@@ -1225,12 +1270,13 @@ a {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform var(--transition-2);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
 }
 
 .workitem:hover .workitem-img,
 .workitem:focus .workitem-img {
-  transform: scale(1.02);
+  transform: rotateY(8deg) rotateX(4deg) scale(1.04);
 }
 
 /* Project variant — vertical cards */
