@@ -15,21 +15,16 @@ function syncGridPosition() {
   const gridLines = document.querySelector('.grid-lines');
   if (!gridLines) return;
 
-  const clientWidth = document.documentElement.clientWidth;
-  const maxWidth = 1600; // matches --max-width CSS token
+  const grid = document.querySelector('.grid');
+  if (!grid) return;
 
-  if (clientWidth <= maxWidth) {
-    // Grid is full-width — deterministic, no DOM measurement needed
-    gridLines.style.left = '0px';
-    gridLines.style.width = clientWidth + 'px';
-  } else {
-    // Grid is capped at 1600px and centred — measure actual position
-    const grid = document.querySelector('.grid');
-    if (!grid) return;
-    const rect = grid.getBoundingClientRect();
-    gridLines.style.left = rect.left + 'px';
-    gridLines.style.width = rect.width + 'px';
-  }
+  const rect = grid.getBoundingClientRect();
+  const style = window.getComputedStyle(grid);
+  const paddingLeft = parseFloat(style.paddingLeft) || 0;
+  const paddingRight = parseFloat(style.paddingRight) || 0;
+
+  gridLines.style.left = (rect.left + paddingLeft) + 'px';
+  gridLines.style.width = (rect.width - paddingLeft - paddingRight) + 'px';
 }
 
 function syncGridTheme() {

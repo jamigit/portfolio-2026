@@ -327,16 +327,15 @@
       '  else if (vUv.x > uGridCols[7] && vUv.x <= uGridCols[8]) cIdx = 8.0;',
       
       // Draw visible vertical lines at the exact column boundaries
-      // Using 'uv.x' here instead of 'vUv.x' means the lines will physically tear and warp with the glitch!
       '  float line = 0.0;',
       '  float thickness = 0.5 / uResolution.x;',
-      '  if (abs(uv.x - uGridCols[1]) < thickness) line = 1.0;',
+      '  if (abs(uv.x - uGridCols[0]) < thickness) line = 1.0;',
+      '  else if (abs(uv.x - uGridCols[1]) < thickness) line = 1.0;',
       '  else if (abs(uv.x - uGridCols[2]) < thickness) line = 1.0;',
       '  else if (abs(uv.x - uGridCols[3]) < thickness) line = 1.0;',
       '  else if (abs(uv.x - uGridCols[4]) < thickness) line = 1.0;',
       '  else if (abs(uv.x - uGridCols[5]) < thickness) line = 1.0;',
       '  else if (abs(uv.x - uGridCols[6]) < thickness) line = 1.0;',
-      '  else if (abs(uv.x - uGridCols[7]) < thickness) line = 1.0;',
       '  col *= 1.0 - (line * uGridOpacity * uGridOn);',
 
       '  col += h12(pixUv*7. + fract(uTime*.3)) * glitch * .12 * vec3(1.,.65,1.4);',

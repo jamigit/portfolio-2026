@@ -1,0 +1,20 @@
+# This is an example configuration file
+# To learn more, see the full config.yaml reference: https://docs.continue.dev/reference
+
+name: Example Config
+version: 1.0.0
+schema: v1
+# ----------------------------------------------------------------
+# Configuration for Gemma E4B via Ollama in Continue (YAML Format)
+# ------------------------------------------------------------
+# NOTE: Ensure Ollama is running in the background before opening VS Code.
+
+models:
+  # 1. Define the specific Gemma model we want to use
+  - name: ollama-gemma-e4b
+    provider: ollama          # Specifies that the connection uses the local Ollama server
+    model: gemma:e4b          # <--- THIS IS THE MODEL TAG YOU ARE USING
+    api: http://localhost:11434 # Default address and port for the Ollama API
+
+# 2. Set the default model for general tasks
+completionModel: ollama-gemma-e4b

@@ -21,6 +21,9 @@
   --nav-height-mob: 58px;
   --nav-height-desktop: 80px;
 
+  /* Grid margins */
+  --grid-margin: 16px;
+
   /* Transitions */
   --transition-1-fast: all 0.15s ease-out;
   --transition-2: all 0.3s ease-out;
@@ -348,6 +351,22 @@ margin-top:0.5rem;
   
   .overview-text-small {
     font-size: 1.25rem;
+  }
+
+  :root {
+    --grid-margin: 24px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  :root {
+    --grid-margin: 32px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  :root {
+    --grid-margin: 48px;
   }
 }
 
@@ -718,7 +737,7 @@ nav.nav-hidden {
 
 .hero-casestudy {
   background-color: var(--color-dark-bg);
-  --cs-text: var(--grey-0);
+  --cs-text: var(--grey-90);
   --cs-accent: var(--color-accent);
 }
 
@@ -775,7 +794,8 @@ nav.nav-hidden {
 .hero-content-casestudy,
 .hero-content-project {
   color: var(--cs-text);
-  padding-bottom: 0;
+  padding-bottom: 4rem;
+  align-items: flex-start;
 }
 
 .hero-content-casestudy .tag-badge,
@@ -965,59 +985,51 @@ a {
 /* ── Grid system ──────────────────────────────────────────────────────────── */
 
 /* Single grid definition: 6 content cols with flexible minmax margins */
-/* Mobile base: 16px fixed margins */
 .grid {
   display: grid;
-  grid-template-columns: 16px repeat(6, 1fr) 16px;
-  gap: var(--grid-gutter);
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
   width: 100%;
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
+  padding-left: var(--grid-margin);
+  padding-right: var(--grid-margin);
 }
 
 .grid-lines {
   display: grid;
-  grid-template-columns: 16px repeat(6, 1fr) 16px;
-  gap: var(--grid-gutter);
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   pointer-events: none;
   z-index: 0;
-  /* left and width are set by JavaScript to sync with .grid */
+  /* left and width are set by JavaScript to sync with the grid area inside .grid */
 }
 
 /* Tablet (768px+): 24px margins */
 @media (min-width: 768px) {
   .grid,
   .grid-lines {
-    grid-template-columns: 24px repeat(6, 1fr) 24px;
-  }
-}
-
-/* Desktop (1024px+): 32px margins */
-@media (min-width: 1024px) {
-  .grid,
-  .grid-lines {
-    grid-template-columns: 32px repeat(6, 1fr) 32px;
-  }
-}
-
-/* Large desktop (1400px+): 48px margins */
-@media (min-width: 1400px) {
-  .grid,
-  .grid-lines {
-    grid-template-columns: 48px repeat(6, 1fr) 48px;
+    /* grid-template-columns: repeat(6, 1fr); gap 0 already set */
   }
 }
 
 .grid-lines span {
+  border-left: 1px solid var(--color-grid-line);
+}
+
+.grid-lines span:last-child {
   border-right: 1px solid var(--color-grid-line);
 }
 
 .grid-lines.over-dark span {
+  border-left-color: var(--color-grid-line-dark);
+}
+.grid-lines.over-dark span:last-child {
   border-right-color: var(--color-grid-line-dark);
 }
 
@@ -1031,16 +1043,16 @@ a {
   }
 }
 
-/* Desktop (768px+): col utilities — 6 content cols (cols 2–7) */
+/* Desktop (768px+): col utilities — 6 content cols (cols 1–6) */
 @media (min-width: 768px) {
   .col-full       { grid-column: 1 / -1; }
-  .col-content    { grid-column: 2 / 8; }
-  .col-narrow     { grid-column: 2 / 6; }
-  .col-centered   { grid-column: 3 / 7; }
-  .col-left       { grid-column: 2 / 5; }
-  .col-right      { grid-column: 5 / 8; }
-  .col-left-wide  { grid-column: 2 / 6; }
-  .col-right-wide { grid-column: 4 / 8; }
+  .col-content    { grid-column: 1 / 7; }
+  .col-narrow     { grid-column: 1 / 5; }
+  .col-centered   { grid-column: 2 / 6; }
+  .col-left       { grid-column: 1 / 4; }
+  .col-right      { grid-column: 4 / 7; }
+  .col-left-wide  { grid-column: 1 / 5; }
+  .col-right-wide { grid-column: 3 / 7; }
 }
 
 /* Grid bracket marks */
@@ -1206,25 +1218,6 @@ a {
   overflow: hidden;
 }
 
-/* Accent circle — hidden on mobile, shown on desktop */
-.workitem-accent-circle {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .workitem-accent-circle {
-    display: block;
-    position: absolute;
-    width: 85%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background-color: var(--workitem-accent, var(--color-accent));
-    z-index: 0;
-    right: -15%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-}
 
 .workitem-img {
   position: relative;

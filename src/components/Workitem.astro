@@ -17,7 +17,7 @@ const orderLabel = String(order).padStart(2, '0') + '.';
 ---
 
 <li class="workitem-container">
-  <a class="workitem" href={url} style={`--workitem-accent: ${accentColor}`}>
+  <a class="workitem" href={url}>
     <div class="workitem-inner">
       <div class="workitem-text">
         <span class="case-number">{orderLabel}</span>
@@ -27,7 +27,6 @@ const orderLabel = String(order).padStart(2, '0') + '.';
         <span class="workitem-cta">Read</span>
       </div>
       <div class="workitem-image-wrap">
-        <div class="workitem-accent-circle" aria-hidden="true"></div>
         {optimizedImage ? (
           <Image
             src={optimizedImage}
