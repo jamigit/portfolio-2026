@@ -6,8 +6,8 @@
 
 ## Current status
 
-**Phase:** Phases 1–5 complete. Phase 6 (Grid System Rebuild & Homepage Layout) in progress.
-**Last updated:** 2026-04-06
+**Phase:** Phase 6 complete. Phase 7 (Homepage Cards Redesign) in progress.
+**Last updated:** 2026-04-10
 
 ---
 
@@ -123,7 +123,31 @@
 - [x] Keyboard accessible
 - [x] `/mobile-review` + `/phase-gate phase-5` — PASS
 
-### Phase 6 — Grid System Rebuild & Homepage Layout [x] IN PROGRESS
+### Phase 6 — Grid System Rebuild & Homepage Layout [x] COMPLETE
+
+#### Session 2026-04-09 — Grid Refactor, Line Sync & Refinements
+
+**Completed:**
+- [x] **Simplified Grid Architecture:** Refactored main `.grid` to a 0-gap, centered 6-column structure (Desktop) and 4-column (Mobile). Removed complex `minmax()` margin columns in favor of container padding + `margin: auto`.
+- [x] **Synchronized Visual Overlay:** Updated `GridOverlay.astro` to render exactly 7 lines (edges of the 6 columns). Refined `sync-grid-overlay.js` to ensure the overlay stays pixel-perfect with the content container regardless of scrollbar presence.
+- [x] **ThreeJS Background Update:** Modified the shader in `ThreeBackground.astro` to draw exactly 7 vertical boundaries, ensuring the background animation aligns perfectly with the layout grid.
+- [x] **Case Study Hero Refinement:** Aligned case study hero content flush with the first grid line by removing horizontal padding and moving metadata into the grid flow.
+- [x] **Visual Cleanup:** Removed the legacy orange background circles from case study sections to simplify the aesthetic and focus on the grid-based layout.
+- [x] **Mobile Grid Implementation:** Established a 4-column mobile grid with synchronized line overlay.
+
+**Decisions made:**
+- **0-Gap Grid:** Removed internal gutters entirely. This simplifies alignment math and creates a "tighter" technical aesthetic where content anchors directly to shared lines.
+- **7-Line Overlay:** Switched from 8 columns to 6 columns + 2 margins (represented by the edge lines), totaling 7 lines.
+- **Removed Decorative Circles:** The orange background circles were deemed redundant with the new minimal, grid-focused design system.
+
+**Problems encountered & resolved:**
+- **ThreeJS Sync:** The background shader was previously out of sync with the DOM grid. Resolved by updating the line count and spacing logic in the GLSL/JS wrapper.
+- **Mobile Alignment:** Mobile users were seeing grid lines that didn't match the content. Implemented a 4-column overlay for mobile breakpoints.
+
+**Left incomplete:**
+- Homepage card visual redesign (Phase 7 focus).
+
+#### Phase 6 checklist — Grid System Rebuild & Foundation [x] COMPLETE
 
 #### Session 2026-04-06 — Grid system rebuild & JavaScript sync
 
@@ -166,8 +190,8 @@
 - [x] Apply `.col-content` to body content wrapper divs
 
 **Next steps (deferred to Phase 7):**
-- [ ] `/mobile-review` pass on grid alignment at 375px, 768px, 1024px, 1400px+
-- [ ] `/phase-gate phase-6` — grid foundation gate, must PASS before Phase 7
+- [x] `/mobile-review` pass on grid alignment at 375px, 768px, 1024px, 1400px+
+- [x] `/phase-gate phase-6` — PASS
 
 #### Phase 6 notes
 - Grid now used on all page sections: hero, homepage content, case study hero, case study body, project pages
@@ -175,7 +199,7 @@
 - Grid spans remain consistent: `col-content` = columns 2/8 (6 content columns) across all breakpoints
 - Fixed-positioned overlay synced via `getBoundingClientRect()` + `scrollX` measurement — accounts for viewport width differences
 
-### Phase 7 — Homepage Cards Redesign [ ] NOT STARTED
+### Phase 7 — Homepage Cards Redesign [/] IN PROGRESS
 - [ ] Update `Workitem.astro` visual design (case number, accent circle, border, spacing)
 - [ ] Update `WorkitemProject.astro` visual design
 - [ ] Place cards in grid (`.col-narrow` or `.col-left` / `.col-right` pairs)
@@ -189,4 +213,4 @@ See `docs/REDESIGN_PRD.md` for full phase breakdown (case study cards, footer, m
 
 ## PRD deviations
 
-_None yet. Log any changes from the spec here with date and reason._
+- **2026-04-09: Grid Architecture Refactor** — Deviated from 8-column spec (6 content + 2 margin cols) to a 0-gap 6-column centered structure. Reason: Simplifying alignment with visual overlay and ThreeJS background lines. The 0-gap approach creates a tighter, more deterministic layout where content shares single boundary lines rather than wide gutters.

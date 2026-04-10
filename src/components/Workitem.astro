@@ -10,21 +10,22 @@ export interface Props {
   optimizedImage?: any;
   order: number;
   accentColor?: string;
+  bgClass?: string;
 }
 
-const { title, description, url, image, optimizedImage, order, accentColor = '#F7C099' } = Astro.props;
+const { title, description, url, image, optimizedImage, order, accentColor = '#F7C099', bgClass } = Astro.props;
 const orderLabel = String(order).padStart(2, '0') + '.';
 ---
 
 <li class="workitem-container">
-  <a class="workitem" href={url}>
+  <a class="workitem" href={url} data-bg={bgClass}>
     <div class="workitem-inner">
       <div class="workitem-text">
         <span class="case-number">{orderLabel}</span>
         <TagBadge label="Case Study" />
         <h3 class="workitem-title">{title}</h3>
         <p class="overview-text-small">{description}</p>
-        <span class="workitem-cta">Read</span>
+        <span class="workitem-cta"><span class="workitem-cta-label">Read</span><span class="workitem-cta-arrow" aria-hidden="true">→</span></span>
       </div>
       <div class="workitem-image-wrap">
         {optimizedImage ? (

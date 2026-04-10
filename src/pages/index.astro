@@ -54,7 +54,7 @@ const processedProjects = allProjects
 <IndexLayout>
   <Fragment slot="hero">
     <h1 class="hero-display-title">Jamie Barter</h1>
-    <p class="hero-subtext">Lead Product Designer at Do AI. Architecting AI-driven experiences and rethinking the future of design workflows.</p>
+    <p class="hero-subtext">Lead Product Designer at Do AI.<br />Architecting AI-driven experiences and rethinking the future of design workflows.</p>
   </Fragment>
 
   <h2 class="small-title section-first" id="case-studies">Case studies</h2>
@@ -68,6 +68,7 @@ const processedProjects = allProjects
         optimizedImage={post.optimizedImage}
         order={post.frontmatter.order}
         accentColor={post.frontmatter.accentColor}
+        bgClass={post.frontmatter.bgClass}
       />
     ))}
   </ul>

@@ -727,7 +727,7 @@ nav.nav-hidden {
   font-size: clamp(0.8rem, 1.5vw, 1.1rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-text-on-dark);
+  color: var(--color-text-strong);
   margin: 1.5rem 0 0;
   align-self: flex-end;
   max-width: 50%;
@@ -737,7 +737,7 @@ nav.nav-hidden {
 
 .hero-casestudy {
   position: relative;
-  background-color: white;
+  background-color: var(--color-bg);
   --cs-text: var(--grey-90);
   --cs-accent: var(--color-accent);
   overflow: hidden;
@@ -1194,11 +1194,11 @@ a {
   outline-offset: 4px;
 }
 
-/* Two-column inner grid */
+/* Inner grid: 4 cols on mobile, 6 cols on desktop, zero gap */
 .workitem-inner {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   width: 100%;
   flex: 1;
 }
@@ -1209,17 +1209,24 @@ a {
   }
 
   .workitem-inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: repeat(6, 1fr);
     align-items: center;
   }
 }
 
-/* Text column */
+/* Text column placement */
 .workitem-text {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
+  grid-column: 1 / 5; /* mobile: full 4 cols */
+}
+
+@media (min-width: 768px) {
+  .workitem-text {
+    grid-column: 1 / 4; /* desktop: col 1-3 */
+    padding-right: 2rem; /* internal spacing since gap is 0 */
+  }
 }
 
 .workitem-title {
@@ -1264,6 +1271,12 @@ a {
 }
 
 /* CTA pill — visual only, sits inside the <a> */
+/* Hero gradient per bgClass — drives the button fill on hover */
+.workitem[data-bg="kepla"]     { --cta-gradient: linear-gradient(135deg, #a2e0d3, #649ee0); }
+.workitem[data-bg="pelorus"]   { --cta-gradient: linear-gradient(135deg, #407beb, #6fc6fc); }
+.workitem[data-bg="aurora"]    { --cta-gradient: linear-gradient(135deg, #fdd893, #faa949); }
+.workitem[data-bg="sitesmart"] { --cta-gradient: linear-gradient(135deg, #b7ddef, #4cadde); }
+
 .workitem-cta {
   display: inline-flex;
   align-items: center;
@@ -1277,7 +1290,36 @@ a {
   font-weight: 700;
   font-size: 1rem;
   width: fit-content;
-  transition: background-color var(--transition-1-fast);
+  position: relative;
+  overflow: hidden;
+  transition: background-color var(--transition-1-fast), color 0.3s ease;
+}
+
+.workitem-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--cta-gradient, none);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 0;
+}
+
+.workitem-cta-label,
+.workitem-cta-arrow {
+  position: relative;
+  z-index: 1;
+}
+
+.workitem-cta-arrow {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+  white-space: nowrap;
+  transition: max-width 0.35s ease, opacity 0.25s ease, margin-left 0.35s ease;
 }
 
 .workitem:hover .workitem-cta,
@@ -1285,11 +1327,37 @@ a {
   background-color: var(--grey-80);
 }
 
-/* Image column */
+.workitem[data-bg]:hover .workitem-cta,
+.workitem[data-bg]:focus-within .workitem-cta {
+  color: var(--color-text-strong);
+}
+
+.workitem:hover .workitem-cta::before,
+.workitem:focus-within .workitem-cta::before {
+  opacity: 1;
+}
+
+.workitem:hover .workitem-cta-arrow,
+.workitem:focus-within .workitem-cta-arrow {
+  max-width: 1.5rem;
+  opacity: 1;
+  margin-left: 0.5rem;
+}
+
+/* Image column placement */
 .workitem-image-wrap {
   position: relative;
-  overflow: visible; /* Changed from hidden to allow 3D rotation without clipping if needed, though often hidden is still fine for slight tilts */
+  overflow: visible;
   perspective: 1200px;
+  grid-column: 1 / 5; /* mobile: full 4 cols */
+  margin-top: 2rem; /* spacing between text and image on mobile stack */
+}
+
+@media (min-width: 768px) {
+  .workitem-image-wrap {
+    grid-column: 4 / 7; /* desktop: col 4-6 */
+    margin-top: 0;
+  }
 }
 
 
@@ -1305,7 +1373,7 @@ a {
 
 .workitem:hover .workitem-img,
 .workitem:focus .workitem-img {
-  transform: rotateY(8deg) rotateX(4deg) scale(1.04);
+  transform: rotateY(-8deg) rotateX(-4deg) scale(1.04);
 }
 
 /* Project variant — vertical cards */

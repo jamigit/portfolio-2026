@@ -229,24 +229,29 @@ Full token reference is in [`docs/REDESIGN_PRD.md`](docs/REDESIGN_PRD.md) Sectio
 
 ## Grid System
 
-The site uses an 8-column grid (6 content + 1 margin each side). Grid lines are a visible design element, rendered by `GridOverlay.astro`.
+The site uses a centered 6-column grid (Desktop) and 4-column grid (Mobile) with **zero internal gaps**. Visual grid lines are rendered by `GridOverlay.astro` and synchronized via `src/scripts/sync-grid-overlay.js`.
 
 ```css
-/* Container */
-.grid { display: grid; grid-template-columns: minmax(1rem,1fr) repeat(6,1fr) minmax(1rem,1fr); gap: 1.5rem; }
+/* Container (Desktop 768px+) */
+.grid { 
+  display: grid; 
+  grid-template-columns: repeat(6, 1fr); 
+  gap: 0; 
+  padding: 0 var(--grid-margin); /* margin scales: 16/24/32/48px */
+}
 
-/* Placement utilities (desktop only — all scoped in min-width: 768px) */
-.col-full       /* all 8 columns */
-.col-content    /* 6 content columns */
-.col-narrow     /* 4 cols left-aligned */
-.col-centered   /* 4 cols centred */
-.col-left       /* left 3 content cols */
-.col-right      /* right 3 content cols */
-.col-left-wide  /* left 4 cols */
-.col-right-wide /* right 4 cols */
+/* Placement utilities (min-width: 768px) */
+.col-full       /* 1 / -1 (all 6 cols) */
+.col-content    /* 1 / 7 (all 6 content cols) */
+.col-narrow     /* 1 / 5 (4 cols left) */
+.col-centered   /* 2 / 6 (4 cols centered) */
+.col-left       /* 1 / 4 (left 3 cols) */
+.col-right      /* 4 / 7 (right 3 cols) */
+.col-left-wide  /* 1 / 5 (left 4 cols) */
+.col-right-wide /* 3 / 7 (right 4 cols) */
 ```
 
-On mobile: `.grid` is `display: block`. All `.col-*` utilities only apply at `min-width: 768px`.
+On mobile (< 768px): `.grid` uses `grid-template-columns: repeat(4, 1fr)`. Placement utilities (e.g., `.col-content`) automatically shift to `1 / 5`.
 
 ---
 
