@@ -184,6 +184,11 @@ html {
   }
 }
 
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-dark-bg);
+}
+
 body {
   width: 100%;
   font-family: var(--font-body);
@@ -1238,21 +1243,6 @@ a {
   width: fit-content;
 }
 
-.workitem-title::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--color-accent);
-  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.workitem:hover .workitem-title::after,
-.workitem:focus-within .workitem-title::after {
-  width: 100%;
-}
 
 @media (min-width: 768px) {
   .workitem-title {
