@@ -12,19 +12,39 @@ const allProjects = Object.values(
 ---
 
 <footer>
-  <Logo />
+  <div class="footer-name-row">
+    <Logo />
+  </div>
+
+  <div class="footer-brand footer-column-brand">
+    <p class="footer-subtitle">
+      Lead Product Designer at Do AI.<br />Architecting AI-driven experiences and rethinking the future of design workflows.
+    </p>
+    <div class="footer-contact" aria-label="Contact links">
+      <h4 class="footer-section-title footer-contact-title">Contact Me</h4>
+      <a class="footer-link footer-contact-link" href="mailto:jamiehbarter@gmail.com">jamiehbarter@gmail.com</a>
+      <a
+        class="footer-link footer-contact-link"
+        href="https://www.linkedin.com/in/jamie-barter/"
+        target="_blank"
+        rel="noopener"
+      >
+        LinkedIn
+      </a>
+    </div>
+  </div>
 
   <div class="footer-links">
-    <div>
-      <h4 class="small-title">Case studies</h4>
+    <div class="footer-column footer-column-case-studies">
+      <h4 class="footer-section-title">Case studies</h4>
       <ul>
         {allCaseStudies.map((post: any) => (
           <WorkitemSimple url={post.url} title={post.frontmatter.titleShort ?? post.frontmatter.title} />
         ))}
       </ul>
     </div>
-    <div>
-      <h4 class="small-title">Projects</h4>
+    <div class="footer-column footer-column-projects">
+      <h4 class="footer-section-title">Projects</h4>
       <ul>
         {allProjects.map((post: any) => (
           <WorkitemSimple url={post.url} title={post.frontmatter.title} />

@@ -6,12 +6,291 @@
 
 ## Current status
 
-**Phase:** Phase 6 complete. Phase 7 (Homepage Cards Redesign) in progress.
+**Phase:** Phase 7 complete. Phase 8 not started.
 **Last updated:** 2026-04-14
 
 ---
 
 ## Session log
+
+### 2026-04-14 — Mobile homepage card wrapper span fix (confirmed)
+
+#### Completed
+
+- [x] Set homepage list wrappers `.list-workitems` and `.list-workitems-grid` to `grid-column: 1 / -1` so case study and project cards span full grid width on mobile
+- [x] Verified successful production build (`npm run build`)
+- [x] Confirmed visually by user (“fixed”)
+
+#### Decisions made
+
+- Root cause was list wrappers not explicitly spanning full mobile grid width, which constrained cards despite child card width rules.
+
+### 2026-04-14 — Mobile card spacing leak fix
+
+#### Completed
+
+- [x] Added `.workitem-container` override to remove global `li` top padding leakage on homepage cards
+- [x] Added `.workitem-img` margin reset to prevent global `img` margin from creating broken spacing within cards
+- [x] Kept both case study and project cards full grid width on mobile
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied targeted card-level overrides rather than changing global `li`/`img` defaults to avoid unintended regressions in MDX/content pages.
+
+### 2026-04-14 — Mobile card width reset (case studies + projects)
+
+#### Completed
+
+- [x] Removed mobile project-card 2-column image constraint so project cards render full grid width on mobile
+- [x] Kept case study cards at full grid width on mobile with no extra side inset
+- [x] Cleaned the project-card CSS block to remove conflicting mobile overrides
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Prioritized a consistent full-grid-width mobile card layout for both case studies and projects.
+
+### 2026-04-14 — Mobile project card width fix (follow-up)
+
+#### Completed
+
+- [x] Replaced mobile project image `max-width` approach with explicit 4-column grid placement inside project card content
+- [x] Set mobile project image wrapper to `grid-column: 1 / 3` (2 columns) while keeping title/description/CTA full-width (`1 / 5`)
+- [x] Preserved desktop project card behavior by restoring flex column layout at `min-width: 768px`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Switched to explicit grid-column placement for mobile project cards because width-only constraints were not producing the intended layout.
+
+### 2026-04-14 — Mobile homepage full-grid width update
+
+#### Completed
+
+- [x] Removed extra homepage card side inset so case-study and project cards use full grid width on mobile (`.workitem` margins set to `0`)
+- [x] Updated mobile footer horizontal padding to use `--grid-margin` for full grid-width alignment
+- [x] Updated mobile project card image area to max `50%` width (2 of 4 mobile grid columns equivalent) while keeping each project card full-width
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Interpreted “full width generally” as full grid width (not edge-to-edge viewport), so spacing follows existing grid margin tokens.
+- Limited the project image width constraint to mobile only; desktop project cards continue to use full image width.
+
+### 2026-04-14 — Projects heading margin refinement
+
+#### Completed
+
+- [x] Updated homepage `#projects` heading spacing to exact `64px` top margin and `48px` bottom margin in `src/styles/global.css`
+- [x] Removed breakpoint-specific `#projects` margin overrides so spacing remains consistent across viewport sizes
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied the exact pixel values requested for both mobile and desktop to keep section spacing consistent.
+
+### 2026-04-14 — Homepage section heading display style
+
+#### Completed
+
+- [x] Updated homepage section headings (`Case studies`, `Projects`) to use dedicated display-title class in `src/pages/index.astro`
+- [x] Added scoped `.home-section-title` styles in `src/styles/global.css` using display font, centered alignment, and responsive sizing (`2.25rem` mobile, `4rem` desktop)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept scope strictly to homepage section headers only; case study/project detail hero titles were not changed.
+- Implemented desktop target size as `4rem` (64px) at `min-width: 768px` with a smaller mobile size for readability.
+
+### 2026-04-14 — Homepage card horizontal margin tweak
+
+#### Completed
+
+- [x] Added `8px` left and right margin to homepage cards via `.workitem` style update
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied margin at the shared card link level (`.workitem`) so both case-study and project cards receive the same side inset.
+
+### 2026-04-14 — Homepage work item lists aligned to main grid
+
+#### Completed
+
+- [x] Removed extra homepage content wrapper in `IndexLayout.astro` so homepage section children can participate directly in the section-level `.grid`
+- [x] Updated homepage section headings to explicit grid items (`.col-full`)
+- [x] Refactored `.list-workitems` and `.list-workitems-grid` to stop defining independent nested grid templates
+- [x] Updated desktop list behavior to flow list items through the main grid (`display: contents` on list wrappers at desktop)
+- [x] Kept project cards at 3-up desktop placement via `grid-column: span 2` on `.workitem-container--project`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Prioritized single-source grid alignment over duplicate nested grid definitions to prevent future drift from `.grid` and `GridOverlay` structure.
+- Preserved existing homepage visual rhythm with per-item bottom spacing while switching placement control to the main grid.
+
+### 2026-04-14 — Project card tag removal
+
+#### Completed
+
+- [x] Removed the `Project` TagBadge from homepage project cards (`WorkitemProject.astro`)
+- [x] Removed now-unused `TagBadge` import from project card component
+
+#### Decisions made
+
+- Kept the project card hierarchy focused on title, image, description, and CTA only to reduce visual density.
+
+### 2026-04-14 — Homepage + project card alignment follow-ups
+
+#### Completed
+
+- [x] Restored homepage section alignment after article column update by switching homepage wrappers in `IndexLayout.astro` to full-span grid utility (`.col-full`)
+- [x] Updated project card content flow so project images render directly below project titles
+- [x] Updated project card CSS to support the new image placement while keeping CTA pinned to the bottom of the card text block
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept article-specific 4-column text rule intact and resolved homepage regression with layout-specific wrapper classes instead of broad CSS rollback.
+- Chose image-under-title ordering for project cards to reduce perceived row misalignment when project titles wrap to different heights.
+
+### 2026-04-14 — Footer text style implementation
+
+#### Completed
+
+- [x] Updated footer brand area to include hero-inspired Jamie Barter display styling at smaller scale
+- [x] Added subtitle text below the footer brand title using homepage hero subtitle copy
+- [x] Added contact links in footer brand block (email + LinkedIn)
+- [x] Updated footer section heading typography (`Case studies`, `Projects`) to dedicated token-based style
+- [x] Updated footer link and contact text colors to token-based values (removed hardcoded rgba in touched text selectors)
+- [x] Added `--color-text-muted-on-dark` semantic token for muted text on dark surfaces
+- [x] Added `Contact Me` heading above footer contact links
+- [x] Added shared `.footer-link` style for both contact links and footer list links (accent underline on hover/focus)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Scoped this pass to text styling and content only; no footer layout/grid/fade behavior changes included.
+- Kept existing footer content list generation logic unchanged (still sourced from MDX frontmatter via `import.meta.glob`).
+
+### 2026-04-14 — Footer layout + hero fade bridge
+
+#### Completed
+
+- [x] Updated footer structure to explicit desktop column hooks: brand/contact, case studies, projects
+- [x] Implemented desktop footer alignment to 3 columns where each section spans 2 of 6 grid columns
+- [x] Added desktop-only top margin above footer (`64px`)
+- [x] Added all-page footer fallback top gradient transition to avoid abrupt dark-edge appearance
+- [x] Extended homepage `ThreeBackground` scroll logic to sync footer fade-in progress with hero canvas fade-out (no shader edits)
+- [x] Added global body hook class in `BaseLayout.astro` for footer fallback transition targeting
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Implemented homepage footer transition by updating CSS custom property `--footer-hero-fade-progress` from existing scroll listener rather than modifying shader code.
+- Kept fallback transition CSS-only on non-home pages using a top gradient layer so behavior remains lightweight without canvas dependencies.
+
+### 2026-04-14 — Bottom canvas visibility fix
+
+#### Completed
+
+- [x] Updated homepage scroll effect so canvas opacity now has a second reveal phase as footer enters viewport
+- [x] Added homepage body hook class (`home-canvas-active`) from `ThreeBackground.astro` for targeted footer-canvas blending styles
+- [x] Updated homepage footer background to translucent dark on desktop so canvas is visible behind footer at page bottom
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept shader pipeline untouched; fixed visibility entirely through scroll opacity math and CSS layer transparency.
+- Scoped translucent footer blend to desktop (`min-width: 768px`) to avoid mobile readability/performance side effects.
+
+### 2026-04-14 — Footer edge cleanup (no gradient/no top line)
+
+#### Completed
+
+- [x] Removed footer top border line
+- [x] Removed footer top gradient pseudo-layer used for transition blending
+- [x] Removed desktop footer top gap so footer starts immediately (`margin: 0 auto`) and grid continuity reads to the bottom
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Prioritized continuous grid read to page bottom over blended top-edge transition effect.
+
+### 2026-04-14 — Footer background removed
+
+#### Completed
+
+- [x] Removed footer background fill (set footer background to transparent)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept footer text in dark token colors so readability remains intact over the visible page/canvas background.
+
+### 2026-04-14 — Footer text switched to all dark
+
+#### Completed
+
+- [x] Updated footer subtitle color to dark text token
+- [x] Updated footer link color (contact + list links) to dark text token
+- [x] Updated footer section-title color to dark text token
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied a consistent dark-text treatment across all footer typography for visual uniformity.
+
+### 2026-04-14 — Footer link spacing tightened
+
+#### Completed
+
+- [x] Reduced vertical gap between footer link items (`.footer-links ul`) from `0.75rem` to `0.4rem`
+- [x] Verified successful production build (`npm run build`)
+
+### 2026-04-14 — Footer dense-link + spacing/type tweaks
+
+#### Completed
+
+- [x] Removed vertical gap between footer list items (`.footer-links ul` gap set to `0`)
+- [x] Set footer link item height to `32px` (`.footer-link-item` and `.footer-contact-link` min-height)
+- [x] Added `48px` spacing from footer description to `Contact Me` in column 1
+- [x] Updated footer subheaders to use heading font family (`var(--font-heading)`)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied a denser footer link rhythm as requested, accepting smaller-than-44px touch targets for this visual direction.
+
+### 2026-04-14 — Footer name moved to top row
+
+#### Completed
+
+- [x] Moved footer name/logo into its own dedicated row above the 3 footer columns
+- [x] Updated desktop footer grid to 2-row structure (row 1 name, row 2 content columns)
+- [x] Expanded name row width on desktop to span columns `1 / 5`
+- [x] Kept existing 3-column second-row structure: col 1 subtitle/contact, col 2 case studies, col 3 projects
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Added `row-gap: 1.5rem` in desktop footer grid to clearly separate the standalone name row from the content row.
+
+### 2026-04-14 — Article desktop grid structure update
+
+#### Completed
+
+- [x] Updated desktop case study/project article body text width to 4 columns (left aligned)
+- [x] Updated article image behavior so body images can span full 6-column width while `.img-half` remains 3 columns
+- [x] Kept case study/project hero content at full 6-column width on desktop via targeted hero override
+- [x] Adjusted layering so page content renders above grid lines
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied hero width as a targeted override (`.hero-content-casestudy.col-content`, `.hero-content-project.col-content`) so article heroes remain full-width while article body text stays at 4 columns.
+- Kept mobile behavior unchanged by scoping the new structure to desktop breakpoint rules.
 
 ### 2026-04-14 — Backlog structure update
 
@@ -34,6 +313,38 @@
 
 - Kept the change scoped to `.workitem` padding in `global.css` to avoid affecting project-card-specific layout logic.
 
+### 2026-04-14 — Nav constrained to grid area
+
+#### Completed
+
+- [x] Updated fixed top nav width to fit within grid content bounds using `--grid-margin`
+- [x] Updated mobile nav dropdown panel width to match the same grid bounds
+
+#### Decisions made
+
+- Applied grid-bound sizing to both nav layers to keep horizontal alignment consistent across desktop and mobile.
+
+### 2026-04-14 — Nav logo hover state match
+
+#### Completed
+
+- [x] Updated header logo hover/focus state to use the same pill background treatment as nav links
+- [x] Scoped logo hover treatment to `nav .logo` so footer logo styling remains unaffected
+
+#### Decisions made
+
+- Matched mobile and desktop hover opacities to existing nav link behavior for visual consistency.
+
+### 2026-04-14 — Nav edge spacing balance
+
+#### Completed
+
+- [x] Updated desktop nav container padding to symmetric horizontal insets so hovered logo and right nav links have matching outer gaps
+
+#### Decisions made
+
+- Kept hover styles unchanged; only container spacing was adjusted.
+
 ### 2026-04-14 — Homepage card updates (no accent circles)
 
 #### Completed
@@ -42,14 +353,18 @@
 - [x] Removed `accentColor` prop usage from homepage card rendering flow
 - [x] Updated `Workitem.astro` to keep non-Button CTA pattern and simplified card structure
 - [x] Updated `WorkitemProject.astro` to match simplified non-Button card pattern
-- [x] Updated homepage card list layout to explicit paired left/right grid placement classes
+- [x] Updated homepage card list layout to final grid rule: case studies full-width, projects 3-up on desktop
 - [x] Updated card image rendering to optimized `astro:assets` image path only (removed raw `<img>` fallback in card components)
 - [x] Verified successful production build (`npm run build`)
+- [x] Updated homepage grid alignment: case studies full-width, projects in 3 desktop columns with each project card spanning 2 of 6 grid columns
+- [x] Completed mobile review for homepage cards/grid behavior (single-column on mobile, no accent-circle overflow risk)
+- [x] Completed Phase 7 gate check against current source-of-truth checklist
 
 #### Decisions made
 
 - Accent circles are removed from card design
 - No Button component is used for homepage card CTAs in this phase
+- Homepage alignment rule: case studies render full-width; projects render as three cards per row on desktop and single-column on mobile
 
 ### 2026-04-04 — Project setup & pre-flight
 
@@ -237,12 +552,12 @@
 - Grid spans remain consistent: `col-content` = columns 2/8 (6 content columns) across all breakpoints
 - Fixed-positioned overlay synced via `getBoundingClientRect()` + `scrollX` measurement — accounts for viewport width differences
 
-### Phase 7 — Homepage Cards Redesign [/] IN PROGRESS
+### Phase 7 — Homepage Cards Redesign [x] COMPLETE
 - [x] Update `Workitem.astro` visual design (case number, border, spacing; accent circles removed) — 2026-04-14
 - [x] Update `WorkitemProject.astro` visual design (accent circles removed) — 2026-04-14
-- [x] Place cards in grid (left/right paired placement) — 2026-04-14
+- [x] Place cards in grid (case studies full-width, projects 3-up desktop / single-column mobile) — 2026-04-14
 - [x] Update card image pipeline (optimize hero images, webp conversion) — 2026-04-14
-- [ ] `/mobile-review` + `/phase-gate phase-7`
+- [x] `/mobile-review` + `/phase-gate phase-7` — PASS (with approved deviations: no accent circles, no Button component in homepage cards)
 
 ### Phases 8–10 [ ] NOT STARTED
 See `docs/REDESIGN_PRD.md` for full phase breakdown (case study cards, footer, misc pages, final QA).

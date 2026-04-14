@@ -7,14 +7,12 @@ const { title, metaTitle, metaDescription, author } = Astro.props;
 <BaseLayout title={title} metaTitle={metaTitle} metaDescription={metaDescription} author={author}>
   <section class="hero hero-home has-canvas-hero grid">
     <ThreeBackground />
-    <div class="hero-content-home col-content">
+    <div class="hero-content-home col-full">
       <slot name="hero" />
     </div>
   </section>
 
-  <section class="grid">
-    <div class="col-content">
-      <slot />
-    </div>
+  <section class="content content-home grid">
+    <slot />
   </section>
 </BaseLayout>

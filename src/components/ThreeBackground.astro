@@ -17,6 +17,7 @@
   function init() {
   const canvas = document.getElementById('threejs-hero');
   if (!canvas) return;
+  document.body.classList.add('home-canvas-active');
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function getSize() {
@@ -546,27 +547,48 @@
   // ── Render loop ────────────────────────────────────────────────────────────
   var pageVisible = true;
   var scrollPaused = false;
+  var footer = document.querySelector('footer');
+
+  function updateScrollEffects() {
+    var scrollY = window.scrollY;
+    var maxScroll = window.innerHeight;
+    var topFade = 1.0 - (scrollY / maxScroll);
+    topFade = Math.max(0, Math.min(1, topFade));
+
+    var footerReveal = 0;
+    if (footer) {
+      var footerRect = footer.getBoundingClientRect();
+      var revealDistance = window.innerHeight * 0.9;
+      if (footerRect.top < revealDistance) {
+        footerReveal = 1.0 - (footerRect.top / revealDistance);
+        footerReveal = Math.max(0, Math.min(1, footerReveal));
+      }
+    }
+
+    var canvasOpacity = Math.max(topFade, footerReveal);
+
+    if (canvas) {
+      canvas.style.opacity = canvasOpacity.toFixed(3);
+    }
+
+    if (footer) {
+      var footerProgress = 1.0 - topFade;
+      footerProgress = Math.max(0, Math.min(1, footerProgress));
+      footer.style.setProperty('--footer-hero-fade-progress', footerProgress.toFixed(3));
+    }
+
+    scrollPaused = canvasOpacity <= 0.0;
+  }
   
   // Parallax fade and pause observer
   window.addEventListener('scroll', function() {
-    var scrollY = window.scrollY;
-    var maxScroll = window.innerHeight;
-    
-    // Calculate opacity (1.0 at top, 0.0 at window height)
-    var opacity = 1.0 - (scrollY / maxScroll);
-    opacity = Math.max(0, Math.min(1, opacity));
-    
-    if (canvas) {
-      canvas.style.opacity = opacity.toFixed(3);
-    }
-    
-    // Pause rendering if canvas is invisible
-    if (opacity <= 0.0) {
-      scrollPaused = true;
-    } else {
-      scrollPaused = false;
-    }
+    updateScrollEffects();
   }, { passive: true });
+
+  // Set initial state so footer transition is in sync before first scroll event.
+  (function syncInitialFooterFade() {
+    updateScrollEffects();
+  })();
 
   document.addEventListener('visibilitychange', function () {
     pageVisible = !document.hidden;
