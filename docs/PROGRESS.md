@@ -7,11 +7,49 @@
 ## Current status
 
 **Phase:** Phase 6 complete. Phase 7 (Homepage Cards Redesign) in progress.
-**Last updated:** 2026-04-10
+**Last updated:** 2026-04-14
 
 ---
 
 ## Session log
+
+### 2026-04-14 — Backlog structure update
+
+#### Completed
+
+- [x] Added separate backlog categories for future feature work and content production
+- [x] Added backlog items for internal tools/personal projects section and writing new case studies
+
+#### Decisions made
+
+- Future feature ideas and content writing tasks are tracked separately in `docs/PROGRESS.md` to keep implementation work distinct from editorial pipeline tasks.
+
+### 2026-04-14 — Homepage case study spacing tweak
+
+#### Completed
+
+- [x] Reduced homepage case study card top/bottom padding to 24px (`1.5rem`) across mobile and desktop breakpoints
+
+#### Decisions made
+
+- Kept the change scoped to `.workitem` padding in `global.css` to avoid affecting project-card-specific layout logic.
+
+### 2026-04-14 — Homepage card updates (no accent circles)
+
+#### Completed
+
+- [x] Removed accent-circle direction from homepage cards
+- [x] Removed `accentColor` prop usage from homepage card rendering flow
+- [x] Updated `Workitem.astro` to keep non-Button CTA pattern and simplified card structure
+- [x] Updated `WorkitemProject.astro` to match simplified non-Button card pattern
+- [x] Updated homepage card list layout to explicit paired left/right grid placement classes
+- [x] Updated card image rendering to optimized `astro:assets` image path only (removed raw `<img>` fallback in card components)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Accent circles are removed from card design
+- No Button component is used for homepage card CTAs in this phase
 
 ### 2026-04-04 — Project setup & pre-flight
 
@@ -200,14 +238,26 @@
 - Fixed-positioned overlay synced via `getBoundingClientRect()` + `scrollX` measurement — accounts for viewport width differences
 
 ### Phase 7 — Homepage Cards Redesign [/] IN PROGRESS
-- [ ] Update `Workitem.astro` visual design (case number, accent circle, border, spacing)
-- [ ] Update `WorkitemProject.astro` visual design
-- [ ] Place cards in grid (`.col-narrow` or `.col-left` / `.col-right` pairs)
-- [ ] Update card image pipeline (optimize hero images, webp conversion)
+- [x] Update `Workitem.astro` visual design (case number, border, spacing; accent circles removed) — 2026-04-14
+- [x] Update `WorkitemProject.astro` visual design (accent circles removed) — 2026-04-14
+- [x] Place cards in grid (left/right paired placement) — 2026-04-14
+- [x] Update card image pipeline (optimize hero images, webp conversion) — 2026-04-14
 - [ ] `/mobile-review` + `/phase-gate phase-7`
 
 ### Phases 8–10 [ ] NOT STARTED
 See `docs/REDESIGN_PRD.md` for full phase breakdown (case study cards, footer, misc pages, final QA).
+
+---
+
+## Future backlog (post-redesign)
+
+### Feature backlog
+
+- [ ] Add a dedicated section for internal tools / personal projects
+
+### Content backlog
+
+- [ ] Write new case studies
 
 ---
 

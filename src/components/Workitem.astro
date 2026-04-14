@@ -9,11 +9,10 @@ export interface Props {
   image: { url: string; alt: string; };
   optimizedImage?: any;
   order: number;
-  accentColor?: string;
   bgClass?: string;
 }
 
-const { title, description, url, image, optimizedImage, order, accentColor = '#F7C099', bgClass } = Astro.props;
+const { title, description, url, image, optimizedImage, order, bgClass } = Astro.props;
 const orderLabel = String(order).padStart(2, '0') + '.';
 ---
 
@@ -28,7 +27,7 @@ const orderLabel = String(order).padStart(2, '0') + '.';
         <span class="workitem-cta"><span class="workitem-cta-label">Read</span><span class="workitem-cta-arrow" aria-hidden="true">→</span></span>
       </div>
       <div class="workitem-image-wrap">
-        {optimizedImage ? (
+        {optimizedImage && (
           <Image
             src={optimizedImage}
             alt={image.alt}
@@ -38,8 +37,6 @@ const orderLabel = String(order).padStart(2, '0') + '.';
             class="workitem-img"
             quality={80}
           />
-        ) : (
-          <img src={image.url} alt={image.alt} class="workitem-img" />
         )}
       </div>
     </div>

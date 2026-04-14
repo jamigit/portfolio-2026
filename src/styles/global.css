@@ -1145,8 +1145,8 @@ a {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 3rem;
 }
 
@@ -1155,20 +1155,29 @@ a {
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 3rem;
 }
 
 @media (min-width: 768px) {
+  .list-workitems,
   .list-workitems-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 3rem 2rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .list-workitems-grid {
-    grid-template-columns: repeat(3, 1fr);
+.workitem-container {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .list-workitems .workitem-container {
+    grid-column: 1 / -1;
+  }
+
+  .list-workitems-grid .workitem-container--project {
+    grid-column: span 2;
   }
 }
 
@@ -1179,7 +1188,7 @@ a {
   flex-direction: column;
   text-decoration: none;
   color: var(--color-text-strong);
-  padding: 2.5rem 0;
+  padding: 1.5rem 0;
   cursor: pointer;
   transition: opacity var(--transition-1-fast);
   border-radius: 4px;
@@ -1210,7 +1219,7 @@ a {
 
 @media (min-width: 768px) {
   .workitem {
-    padding: 3.5rem 0;
+    padding: 1.5rem 0;
   }
 
   .workitem-inner {

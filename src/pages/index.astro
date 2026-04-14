@@ -2,6 +2,7 @@
 import IndexLayout from '../layouts/IndexLayout.astro';
 import Workitem from '../components/Workitem.astro';
 import WorkitemProject from '../components/WorkitemProject.astro';
+import type { ImageMetadata } from 'astro';
 
 // Import all hero images
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
@@ -18,7 +19,7 @@ import sitesafeHero from '../assets/images/hero/sitesafe-hero.png';
 import times7HomeShadow from '../assets/images/hero/times7-home-shadow.png';
 import vocalHomeShadow from '../assets/images/hero/vocal-home-shadow.png';
 
-const heroImages = {
+const heroImages: Record<string, ImageMetadata> = {
   'Aurora-home-shadow.png': auroraHomeShadow,
   'FoL-Home-shadow.png': folHomeShadow,
   'Gbag-home-shadow.png': gbagHomeShadow,
@@ -37,10 +38,10 @@ const heroImages = {
 const allPosts = Object.values(import.meta.glob('../pages/case-study/*.mdx', { eager: true }));
 const allProjects = Object.values(import.meta.glob('../pages/projects/*.mdx', { eager: true }));
 
-const getOptimizedImage = (imagePath) => {
+const getOptimizedImage = (imagePath?: { url?: string }): ImageMetadata | null => {
   if (!imagePath || !imagePath.url) return null;
   const filename = imagePath.url.split('/').pop();
-  return heroImages[filename] || null;
+  return filename ? heroImages[filename] || null : null;
 };
 
 const processedCaseStudies = allPosts
@@ -67,7 +68,6 @@ const processedProjects = allProjects
         image={post.frontmatter.image}
         optimizedImage={post.optimizedImage}
         order={post.frontmatter.order}
-        accentColor={post.frontmatter.accentColor}
         bgClass={post.frontmatter.bgClass}
       />
     ))}
