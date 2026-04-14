@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import GridOverlay from '../components/GridOverlay.astro';
 import '../styles/global.css';
 
-const { title, metaTitle, metaDescription, author, customData } = Astro.props;
+const { title, metaTitle, metaDescription, author, customData, bodyClass = '' } = Astro.props;
 
 const resolvedTitle = metaTitle ?? title ?? 'Jamie Barter — UX & Product Design';
 const resolvedDescription = metaDescription ?? 'UX and Product Design Lead with 5+ years experience designing B2B SaaS products and web applications.';
@@ -32,8 +32,9 @@ const siteUrl = 'https://yourdomain.com'; // TODO: update to production domain
 
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
-  <body class="site-body">
+  <body class={`site-body ${bodyClass}`.trim()}>
     <GridOverlay />
+    <div class="grid page-grid-anchor" aria-hidden="true"></div>
     <a href="#main-content" class="skip-link">Skip to content</a>
     <Header />
     <main id="main-content">

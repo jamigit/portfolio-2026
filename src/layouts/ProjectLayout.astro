@@ -41,11 +41,12 @@ const heroImages = {
 
 const imageFilename = image.url.split('/').pop();
 const heroImageSrc = heroImages[imageFilename];
-const heroClasses = `hero hero-casestudy grid ${frontmatter.bgClass ?? ''}`.trim();
+const heroClasses = `hero hero-casestudy hero-project hero-grid-visible grid ${frontmatter.bgClass ?? ''}`.trim();
 ---
 
 <BaseLayout
   customData={customData}
+  bodyClass="article-grid-visible"
   title={title}
   metaTitle={metaTitle ?? title}
   metaDescription={metaDescription ?? frontmatter.description}

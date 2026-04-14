@@ -7,24 +7,114 @@
 ## Current status
 
 **Phase:** Phase 7 complete. Phase 8 not started.
-**Last updated:** 2026-04-14
+**Last updated:** 2026-04-15
 
 ---
 
 ## Session log
 
-### 2026-04-14 — Homepage case-study mobile image order update
+### 2026-04-15 — Dark-line threshold now tracks hero fade
 
 #### Completed
 
-- [x] Updated case-study card markup to split content into `workitem-text--head` (number/badge/title) and `workitem-text--body` (description/CTA)
-- [x] Moved case-study card image block between the head and body blocks so mobile flow renders image below title
-- [x] Added mobile-first spacing and desktop grid-row rules to preserve existing desktop two-column card layout
+- [x] Updated `sync-grid-overlay.js` dark-line toggle to consider `.hero-bg-layer` opacity, not only hero viewport intersection
+- [x] Added threshold handoff so dark lines are used only while hero background opacity is meaningfully present (`opacity > 0.55`)
 - [x] Verified successful production build (`npm run build`)
 
 #### Decisions made
 
-- Applied the image-order change to case-study cards only; project-card markup and flow were left unchanged.
+- Switched to opacity-aware handoff to fix the “no lines between sections” state where white lines persisted over light backgrounds.
+
+### 2026-04-15 — Long-term grid continuity refactor (article pages)
+
+#### Completed
+
+- [x] Added a dedicated page-level grid anchor (`.page-grid-anchor`) in `BaseLayout.astro` to provide a stable source of truth for overlay alignment
+- [x] Updated `sync-grid-overlay.js` to align grid lines using `.page-grid-anchor` (with fallback to `.grid`)
+- [x] Removed stacked hero/content seam spacing by making hero spacing the single owner and setting article content top padding to `0`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Implemented continuity via stable page-level alignment + seam spacing cleanup instead of per-section overlay adjustments for lower maintenance and fewer edge cases.
+
+### 2026-04-15 — Follow-up continuity fix (mobile inset mismatch)
+
+#### Completed
+
+- [x] Removed duplicate horizontal padding on `.content` (`2rem 1rem` → `2rem 0`) so grid sections do not receive double mobile inset
+- [x] Tightened hero bottom seam spacing (`.hero-content` bottom padding `3rem` → `1.5rem`) to reduce perceived section split
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Treated `.grid` as the sole owner of horizontal alignment spacing to avoid drift between hero/content/article sections.
+
+### 2026-04-15 — Article page grid-line visibility fix
+
+#### Completed
+
+- [x] Added `bodyClass` prop support in `BaseLayout.astro` and applied `article-grid-visible` on case study + project layouts
+- [x] Elevated `.grid-lines` z-index on article pages via `.site-body.article-grid-visible .grid-lines`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Chose page-scoped body class elevation instead of global overlay z-index increase so homepage/nav layering behavior remains unchanged.
+
+### 2026-04-15 — Grid-line color handoff refinement (hero gradient to content)
+
+#### Completed
+
+- [x] Added border-color transitions on `.grid-lines` columns so dark-to-light line color change is smooth while scrolling off hero gradients
+- [x] Increased article-page light grid-line contrast between sections for better visibility on light backgrounds
+- [x] Preserved dark line override while gradient hero is in view
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Used CSS transition + article-page contrast tuning instead of complex JS interpolation to keep behavior predictable and maintainable.
+
+### 2026-04-15 — Hero controls de-accented + mobile metadata columns + hero grid-line visibility
+
+#### Completed
+
+- [x] Removed project hero orange accent treatment from badge and button outlines; switched to grey token-based styling
+- [x] Updated case study and project hero metadata (`.info`) to a 2-column layout on mobile
+- [x] Tightened spacing between hero badge, title, and subtitle on both mobile and desktop
+- [x] Ensured main grid lines are visible while case study/project hero sections are in viewport by adding hero visibility hooks and overlay z-index toggle
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Used hero-scoped classes (`hero-grid-visible`, `has-canvas-hero`) with script-driven overlay state so grid lines elevate only when hero is visible, avoiding a permanent global overlay over all content.
+
+### 2026-04-15 — Project hero switched to light style + intrinsic hero controls
+
+#### Completed
+
+- [x] Updated project detail hero container to include dedicated `.hero-project` class in `ProjectLayout.astro`
+- [x] Added project-only light hero treatment in `global.css` (light grey hero background, dark text, brand-accent badge/button accents)
+- [x] Kept case study hero styling unchanged
+- [x] Updated case study + project hero badges and buttons to intrinsic width (`fit-content`) with `justify-self: start` so controls only size to content
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied width-fit behavior specifically in detail hero context to satisfy the request without changing button/badge behavior globally across the site.
+
+### 2026-04-15 — Homepage mobile project cards set to 2/4 columns
+
+#### Completed
+
+- [x] Updated homepage `.list-workitems-grid` to a mobile 4-column grid
+- [x] Set `.workitem-container--project` to span 2 columns on mobile (two project cards per row)
+- [x] Kept desktop behavior unchanged (`display: contents` + desktop span rules at `min-width: 768px`)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Interpreted request as a two-up mobile project layout where each project card is exactly 2 of 4 homepage grid columns.
 
 ### 2026-04-14 — Mobile homepage card wrapper span fix (confirmed)
 

@@ -15,7 +15,7 @@ function syncGridPosition() {
   const gridLines = document.querySelector('.grid-lines');
   if (!gridLines) return;
 
-  const grid = document.querySelector('.grid');
+  const grid = document.querySelector('.page-grid-anchor') || document.querySelector('.grid');
   if (!grid) return;
 
   const rect = grid.getBoundingClientRect();
@@ -29,13 +29,27 @@ function syncGridPosition() {
 
 function syncGridTheme() {
   const gridLines = document.querySelector('.grid-lines');
-  const hero = document.querySelector('.has-canvas-hero');
+  const darkHero = document.querySelector('.has-canvas-hero');
+  const visibleHero = document.querySelector('.hero-grid-visible');
   if (!gridLines) return;
 
-  if (hero) {
-    gridLines.classList.toggle('over-dark', hero.getBoundingClientRect().bottom > 0);
+  if (darkHero) {
+    const darkHeroRect = darkHero.getBoundingClientRect();
+    const darkHeroVisible = darkHeroRect.bottom > 0 && darkHeroRect.top < window.innerHeight;
+    const darkHeroBg = darkHero.querySelector('.hero-bg-layer');
+    const bgOpacity = darkHeroBg ? parseFloat(window.getComputedStyle(darkHeroBg).opacity) : 1;
+    const shouldUseDarkLines = darkHeroVisible && (Number.isNaN(bgOpacity) || bgOpacity > 0.55);
+    gridLines.classList.toggle('over-dark', shouldUseDarkLines);
   } else {
     gridLines.classList.remove('over-dark');
+  }
+
+  if (visibleHero) {
+    const visibleHeroRect = visibleHero.getBoundingClientRect();
+    const heroInView = visibleHeroRect.bottom > 0 && visibleHeroRect.top < window.innerHeight;
+    gridLines.classList.toggle('over-hero', heroInView);
+  } else {
+    gridLines.classList.remove('over-hero');
   }
 }
 
