@@ -13,6 +13,19 @@
 
 ## Session log
 
+### 2026-04-14 — Homepage case-study mobile image order update
+
+#### Completed
+
+- [x] Updated case-study card markup to split content into `workitem-text--head` (number/badge/title) and `workitem-text--body` (description/CTA)
+- [x] Moved case-study card image block between the head and body blocks so mobile flow renders image below title
+- [x] Added mobile-first spacing and desktop grid-row rules to preserve existing desktop two-column card layout
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied the image-order change to case-study cards only; project-card markup and flow were left unchanged.
+
 ### 2026-04-14 — Mobile homepage card wrapper span fix (confirmed)
 
 #### Completed
