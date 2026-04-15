@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import TagBadge from './TagBadge.astro';
 
 export interface Props {
   title: string;
@@ -22,7 +21,6 @@ const orderLabel = String(order).padStart(2, '0') + '.';
       <div class="workitem-left">
         <span class="case-number">{orderLabel}</span>
         <h3 class="workitem-title">{title}</h3>
-        <TagBadge label="Case Study" />
         <p class="overview-text-small">{description}</p>
         <span class="workitem-cta"><span class="workitem-cta-label">Read case study</span><span class="workitem-cta-arrow" aria-hidden="true">→</span></span>
       </div>

@@ -13,6 +13,18 @@
 
 ## Session log
 
+### 2026-04-15 — Homepage case-study card mobile reorder + tag removal
+
+#### Completed
+
+- [x] Moved the homepage case-study card image above the subtitle on mobile
+- [x] Removed the `Case Study` tag from homepage case-study cards
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept the desktop card layout unchanged and scoped the reorder to the mobile presentation only.
+
 ### 2026-04-15 — Homepage mobile hero spacing refinement
 
 #### Completed
