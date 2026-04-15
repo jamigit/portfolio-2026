@@ -548,6 +548,7 @@
   var pageVisible = true;
   var scrollPaused = false;
   var footer = document.querySelector('footer');
+  var CANVAS_OPACITY_SCALE = 0.6;
 
   function updateScrollEffects() {
     var scrollY = window.scrollY;
@@ -565,7 +566,8 @@
       }
     }
 
-    var canvasOpacity = Math.max(topFade, footerReveal);
+    var canvasOpacity = Math.max(topFade, footerReveal) * CANVAS_OPACITY_SCALE;
+    canvasOpacity = Math.max(0, Math.min(1, canvasOpacity));
 
     if (canvas) {
       canvas.style.opacity = canvasOpacity.toFixed(3);

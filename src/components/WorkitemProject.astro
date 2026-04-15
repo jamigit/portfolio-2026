@@ -16,8 +16,6 @@ const { title, description, url, image, optimizedImage } = Astro.props;
   <a class="workitem workitem--project" href={url}>
     <div class="workitem-inner">
       <div class="workitem-text">
-        <h3 class="workitem-title workitem-title--project">{title}</h3>
-
         <div class="workitem-image-wrap">
           {optimizedImage && (
             <Image
@@ -32,8 +30,10 @@ const { title, description, url, image, optimizedImage } = Astro.props;
           )}
         </div>
 
+        <h3 class="workitem-title workitem-title--project">{title}</h3>
+
         <p class="overview-text-small">{description}</p>
-        <span class="workitem-cta">View</span>
+        <span class="workitem-cta workitem-cta--view-sm">View</span>
       </div>
     </div>
   </a>

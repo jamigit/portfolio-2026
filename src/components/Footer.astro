@@ -14,24 +14,9 @@ const allProjects = Object.values(
 <footer>
   <div class="footer-name-row">
     <Logo />
-  </div>
-
-  <div class="footer-brand footer-column-brand">
     <p class="footer-subtitle">
       Lead Product Designer at Do AI.<br />Architecting AI-driven experiences and rethinking the future of design workflows.
     </p>
-    <div class="footer-contact" aria-label="Contact links">
-      <h4 class="footer-section-title footer-contact-title">Contact Me</h4>
-      <a class="footer-link footer-contact-link" href="mailto:jamiehbarter@gmail.com">jamiehbarter@gmail.com</a>
-      <a
-        class="footer-link footer-contact-link"
-        href="https://www.linkedin.com/in/jamie-barter/"
-        target="_blank"
-        rel="noopener"
-      >
-        LinkedIn
-      </a>
-    </div>
   </div>
 
   <div class="footer-links">
@@ -50,6 +35,41 @@ const allProjects = Object.values(
           <WorkitemSimple url={post.url} title={post.frontmatter.title} />
         ))}
       </ul>
+    </div>
+    <div class="footer-column footer-column-contact">
+      <div class="footer-contact" aria-label="Contact links">
+        <h4 class="footer-section-title footer-contact-title">Contact Me</h4>
+        <a class="footer-link footer-contact-link" href="mailto:jamiehbarter@gmail.com">
+          <span class="footer-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" focusable="false">
+              <path d="M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+              <path d="M3 7l9 7 9-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="footer-contact-text">
+            <span class="footer-contact-label">Email</span>
+            <span class="footer-contact-value">jamiehbarter@gmail.com</span>
+          </span>
+        </a>
+        <a
+          class="footer-link footer-contact-link"
+          href="https://www.linkedin.com/in/jamie-barter/"
+          target="_blank"
+          rel="noopener"
+        >
+          <span class="footer-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" focusable="false">
+              <path d="M7 10v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+              <circle cx="7" cy="7" r="1.4" fill="currentColor"></circle>
+              <path d="M12 19v-5.1c0-1.8 1.1-3.1 2.8-3.1 1.8 0 2.9 1.2 2.9 3.4V19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <span class="footer-contact-text">
+            <span class="footer-contact-label">Linked in</span>
+            <span class="footer-contact-value">linkedin.com/in/jamie-barter</span>
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </footer>

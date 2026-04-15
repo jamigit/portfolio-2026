@@ -13,17 +13,161 @@
 
 ## Session log
 
-### 2026-04-15 — Dark-line threshold now tracks hero fade
+### 2026-04-15 — Homepage case-study card flex refactor (remove inner grid)
 
 #### Completed
 
-- [x] Updated `sync-grid-overlay.js` dark-line toggle to consider `.hero-bg-layer` opacity, not only hero viewport intersection
-- [x] Added threshold handoff so dark lines are used only while hero background opacity is meaningfully present (`opacity > 0.55`)
+- [x] Refactored homepage case-study card markup in [src/components/Workitem.astro](src/components/Workitem.astro) to explicit left/right regions (`.workitem-left`, `.workitem-right`)
+- [x] Removed dependency on inner card grid layout for case-study cards and replaced with flexbox-based left/right structure in [src/styles/global.css](src/styles/global.css)
+- [x] Kept project card behavior unchanged by scoping the new layout rules to `.workitem:not(.workitem--project)`
+- [x] Kept image centering container-based in the right region and retained proportional scaling
+- [x] Consolidated case-study spacing control into `.workitem-left` rhythm rules for easier gap tuning
 - [x] Verified successful production build (`npm run build`)
 
 #### Decisions made
 
-- Switched to opacity-aware handoff to fix the “no lines between sections” state where white lines persisted over light backgrounds.
+- Used a 50/50 desktop split for case-study left/right regions to align with the existing 6-column page grid without nested card-level grid complexity.
+
+### 2026-04-15 — Homepage case-study card CTA copy update
+
+#### Completed
+
+- [x] Updated homepage case-study card CTA label from `Read` to `Read case study`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied text change in `Workitem.astro` only so project card CTA copy remains unchanged.
+
+### 2026-04-15 — Follow-up spacing pass (32px adjacent images + tighter hero link/image rhythm)
+
+#### Completed
+
+- [x] Increased adjacent half-width image gap to `32px` on desktop (`.content-case-study > .col-content > .img-adjacent`)
+- [x] Reduced hero image top spacing by half for case-study and project heroes (`2rem` → `1rem`)
+- [x] Reduced metadata-to-link spacing further on case-study and project heroes (`.info` bottom + `.btn` top)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied spacing updates through shared hero selectors so the same behavior is guaranteed across both case-study and project layouts.
+
+### 2026-04-15 — Case-study/project article and hero spacing refinement
+
+#### Completed
+
+- [x] Added desktop gap between adjacent half-width images in article content (`.content-case-study > .col-content > .img-adjacent`)
+- [x] Added top margin above adjacent half-width image blocks to separate them from preceding content
+- [x] Reduced spacing between hero metadata block (`.info`) and CTA button on case-study/project pages
+- [x] Increased bottom padding of case-study/project hero content blocks (`.hero-content-casestudy`, `.hero-content-project`)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Used existing layout token `--grid-gutter` for the half-width image gap (`calc(var(--grid-gutter) / 2)`) to stay aligned with grid rhythm.
+
+### 2026-04-15 — Homepage case-study card spacing and order refinement
+
+#### Completed
+
+- [x] Moved case-study badge below the case-study title in homepage card header
+- [x] Tightened header spacing so title and badge sit closer together
+- [x] Moved case-study number closer to the title block
+- [x] Center-aligned case-study card images horizontally within the image column
+- [x] Slightly reduced desktop right padding of case-study text area (`2rem` to `1.5rem`)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Scoped spacing and image-centering changes to case-study cards only (`.workitem:not(.workitem--project)`) so project card behavior remains unchanged.
+
+### 2026-04-15 — Homepage project card sizing follow-up (12px padding, 65% image width)
+
+#### Completed
+
+- [x] Updated homepage project card padding from `8px` to `12px`
+- [x] Updated homepage project card image wrapper width from `75%` to `65%`
+- [x] Kept image alignment non-centered (left-aligned) as requested
+- [x] Preserved proportional image scaling (`width: 100%; height: auto;`)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied value-only CSS changes to avoid layout behavior changes beyond requested sizing adjustments.
+
+### 2026-04-15 — Homepage project cards: image order, sizing, padding, and View button style
+
+#### Completed
+
+- [x] Moved homepage project card images above project titles in [src/components/WorkitemProject.astro](src/components/WorkitemProject.astro)
+- [x] Reduced homepage project card image area to 75% of card container width while preserving proportional scaling (`width: 100%; height: auto;` on image)
+- [x] Added `8px` padding on all sides of each homepage project card
+- [x] Added a new small, thinner outline View button style for project cards via `.workitem-cta--view-sm`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept image scaling proportional by constraining the image wrapper width to `75%` and keeping the image itself responsive (`width: 100%; height: auto;`) to avoid distortion.
+
+### 2026-04-15 — Footer title-row content move + heading typography alignment
+
+#### Completed
+
+- [x] Moved footer description text from column 1 into the top name/title row in `Footer.astro` so it sits above the 3-column row
+- [x] Updated footer title row to span full desktop grid width (`1 / 7`) and support stacked logo + description
+- [x] Set footer description width to 4 of 6 desktop columns via `.footer-subtitle { max-width: calc((100% / 6) * 4); }`
+- [x] Updated footer column headings (`Contact Me`, `Case studies`, `Projects`) to match site `h4` styling direction: heading font + `700` weight, non-uppercase, normal tracking
+- [x] Reordered footer columns to `Case studies` (1st), `Projects` (2nd), `Contact Me` (3rd) in the 3-column row
+- [x] Added labeled contact items with logos for `Email` and `Linked in` using inline SVG icons in footer contact links
+- [x] Reduced homepage canvas visibility by scaling scroll-driven canvas opacity in `ThreeBackground.astro` (`CANVAS_OPACITY_SCALE = 0.6`) so footer text stands out more
+- [x] Reduced vertical gap between footer list links by overriding global list spacing inside footer (`.footer-links li { padding-top: 0; }`)
+- [x] Updated footer-only link hover states to use rounded light-grey badge fill (`var(--color-surface)`) instead of the prior orange underline
+- [x] Refined footer-only hover badge to translucent dark-grey fill with light text so the animated background remains slightly visible
+- [x] Updated footer-only hover badge to non-transparent full-opacity dark-grey fill (`var(--color-dark-bg)`) while keeping light text
+- [x] Increased footer heading-to-link spacing by raising `.footer-section-title` bottom margin to `0.75rem`
+- [x] Increased footer hover badge horizontal padding to `0.75rem` and applied matching negative left margin (`-0.75rem`) to keep link text aligned to grid
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Interpreted request as footer-scoped typography only: changed `.footer-section-title` instead of altering global `h4` styles.
+
+### 2026-04-15 — Final stacking-context fix for article grid layering
+
+#### Completed
+
+- [x] Added article-page override to remove `main` stacking context (`.site-body.article-grid-visible main { z-index: auto; }`)
+- [x] Normalized `.grid-lines.over-dark` to `z-index: 1` so grid stays in the middle layer
+- [x] Switched article content elevation from child-level to wrapper-level (`.content-case-study`) and set article content wrappers to `z-index: 2`
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Resolved layering conflicts by removing z-index trapping at the `main` level and using a stable page stack: background (0) < grid (1) < article content (2).
+
+### 2026-04-15 — Conditional grid layering (dark hero only)
+
+#### Completed
+
+- [x] Set `.grid-lines.over-dark` to elevated `z-index: 3` so lines sit above dark hero gradients only while needed
+- [x] Reset `.grid-lines.over-hero` and `.site-body.article-grid-visible .grid-lines` to base `z-index: 1` so lines sit behind article content by default
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Switched from always-elevated article overlay to state-driven elevation so both conditions are satisfied: hero visibility and content readability.
+
+### 2026-04-15 — Article layering stack: grid between backgrounds and content
+
+#### Completed
+
+- [x] Kept article grid overlay at `z-index: 3` while adding page-scoped content elevation to `z-index: 4`
+- [x] Elevated hero content, article body children, and footer on article pages so text/images/buttons render above grid lines
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Implemented explicit layering tiers on article pages (background < grid < content) to satisfy both hero-grid visibility and content readability.
 
 ### 2026-04-15 — Long-term grid continuity refactor (article pages)
 
