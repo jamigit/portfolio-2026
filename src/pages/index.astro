@@ -2,6 +2,8 @@
 import IndexLayout from '../layouts/IndexLayout.astro';
 import Workitem from '../components/Workitem.astro';
 import WorkitemProject from '../components/WorkitemProject.astro';
+import WorkitemTool from '../components/WorkitemTool.astro';
+import { tools } from '../data/tools.js';
 import type { ImageMetadata } from 'astro';
 
 // Import all hero images
@@ -51,6 +53,8 @@ const processedCaseStudies = allPosts
 const processedProjects = allProjects
   .map((post: any) => ({ ...post, optimizedImage: getOptimizedImage(post.frontmatter.image) }))
   .sort((a, b) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
+
+const sortedTools = [...tools].sort((a, b) => (a.order || 999) - (b.order || 999));
 ---
 <IndexLayout>
   <Fragment slot="hero">
@@ -85,4 +89,20 @@ const processedProjects = allProjects
       />
     ))}
   </ul>
+
+  {sortedTools.length > 0 && (
+    <>
+      <h2 class="small-title home-section-title col-full" id="tools">Tools and side projects</h2>
+      <ul class="list-workitems-tools col-full">
+        {sortedTools.map((tool) => (
+          <WorkitemTool
+            title={tool.title}
+            description={tool.description}
+            url={tool.url}
+            tech={tool.tech}
+          />
+        ))}
+      </ul>
+    </>
+  )}
 </IndexLayout>

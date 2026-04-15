@@ -1,6 +1,7 @@
 ---
 import WorkitemSimple from "../components/WorkitemSimple.astro";
 import Logo from "./Logo.astro";
+import { tools } from "../data/tools.js";
 
 const allCaseStudies = Object.values(
   import.meta.glob("../pages/case-study/*.mdx", { eager: true })
@@ -9,6 +10,8 @@ const allCaseStudies = Object.values(
 const allProjects = Object.values(
   import.meta.glob("../pages/projects/*.mdx", { eager: true })
 ).sort((a: any, b: any) => (a.frontmatter.order || 999) - (b.frontmatter.order || 999));
+
+const sortedTools = [...tools].sort((a: any, b: any) => (a.order || 999) - (b.order || 999));
 ---
 
 <footer>
@@ -36,6 +39,20 @@ const allProjects = Object.values(
         ))}
       </ul>
     </div>
+    {sortedTools.length > 0 && (
+      <div class="footer-column footer-column-tools">
+        <h4 class="footer-section-title">Tools</h4>
+        <ul>
+          {sortedTools.map((tool: any) => (
+            <li>
+              <a class="footer-link" href={tool.url} target="_blank" rel="noopener">
+                {tool.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
     <div class="footer-column footer-column-contact">
       <div class="footer-contact" aria-label="Contact links">
         <h4 class="footer-section-title footer-contact-title">Contact Me</h4>

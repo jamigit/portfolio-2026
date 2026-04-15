@@ -2183,6 +2183,98 @@ a {
   margin-bottom: 48px;
 }
 
+#tools {
+  margin-top: 64px;
+  margin-bottom: 48px;
+}
+
+/* ── Tools variant — compact grid cards ──────────────────────────────────── */
+
+.list-workitems-tools {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 540px) {
+  .list-workitems-tools {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .list-workitems-tools {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.workitem--tool {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.25rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-strong);
+  text-decoration: none;
+  transition: background-color var(--transition-1-fast), border-color var(--transition-1-fast);
+}
+
+.workitem--tool:hover,
+.workitem--tool:focus-within {
+  background-color: var(--color-accent-subtle);
+  border-color: var(--color-accent-border);
+}
+
+.workitem--tool .workitem-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.workitem-title--tool {
+  font-size: 1.125rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .workitem-title--tool {
+    font-size: 1.25rem;
+  }
+}
+
+.workitem--tool .overview-text-small {
+  flex: 1;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+}
+
+.workitem-cta--tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.75rem;
+  padding: 0.375rem 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--color-text-strong);
+  border-bottom: 1.5px solid var(--color-accent-border);
+  width: fit-content;
+  transition: border-color var(--transition-1-fast);
+}
+
+.workitem--tool:hover .workitem-cta--tool,
+.workitem--tool:focus-within .workitem-cta--tool {
+  border-color: var(--color-text-strong);
+}
+
 
 /**    CASE STUDY INFO **/
 
