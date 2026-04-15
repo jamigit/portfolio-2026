@@ -5,6 +5,7 @@ import BaseLayout from "./BaseLayout.astro";
 import { Image } from 'astro:assets';
 import Button from '../components/Button.astro';
 import TagBadge from '../components/TagBadge.astro';
+import Sidebar from '../components/Sidebar.astro';
 
 // Import all hero images
 import auroraHomeShadow from '../assets/images/hero/Aurora-home-shadow.png';
@@ -40,7 +41,9 @@ const heroImages = {
 };
 
 const imageFilename = image.url.split('/').pop();
-const heroImageSrc = heroImages[imageFilename];
+const heroImageSrc = imageFilename
+  ? heroImages[imageFilename as keyof typeof heroImages]
+  : undefined;
 const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid ${frontmatter.bgClass ?? ''}`.trim();
 ---
 
@@ -53,9 +56,9 @@ const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid 
   author={author}
   image={image}
 >
-  <section class={heroClasses}>
+  <section class={heroClasses} id="overview">
     <div id="casestudy-hero-bg" class="hero-bg-layer"></div>
-    <div class="hero-content hero-content-casestudy col-content">
+    <div class="hero-content hero-content-casestudy col-content" data-section-label="Overview">
       <TagBadge label="Case Study" />
       <h1 class="banner-text">{frontmatter.title}</h1>
       <p class="overview-text-small">{frontmatter.overview}</p>
@@ -126,6 +129,8 @@ const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid 
       <slot />
     </div>
   </section>
+
+  <Sidebar />
 </BaseLayout>
 
 <script is:inline>

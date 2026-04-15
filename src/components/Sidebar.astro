@@ -2,349 +2,263 @@
 // Sidebar.astro
 ---
 
-<div class="sidebar" aria-label="Page navigation">
-  <div class="sidebar__content">
-    <!-- Desktop title -->
-    <h3 class="sidebar__title">On this page</h3>
-    
-    <!-- Mobile header -->
-    <div class="sidebar__mobile-header">
-      <div>
-        <p class="sidebar__mobile-title">Table of Contents</p>
-        <p class="sidebar__mobile-current">Current section</p>
-      </div>
-      <button class="sidebar__mobile-toggle" aria-label="Toggle navigation">
-        <span class="sidebar__toggle-icon">▲</span>
-      </button>
-    </div>
-    
-    <ul class="sidebar__list"></ul>
-  </div>
-</div>
+<nav class="section-nav" aria-label="Case study section navigation">
+  <div class="section-nav__bar">
+    <button class="section-nav__btn section-nav__btn--nav" type="button" data-dir="prev" aria-label="Go to previous section">
+      <span aria-hidden="true">&larr;</span>
+    </button>
 
-<style>
-  .sidebar {
-    --sidebar-bg: #ffffff;
-    --sidebar-border: #e5e7eb;
-    --sidebar-text: #374151;
-    --sidebar-text-hover: #111827;
-    --sidebar-accent: #3b82f6;
-    --sidebar-accent-bg: #eff6ff;
-    --sidebar-shadow: rgba(0, 0, 0, 0.1);
-    
-    position: fixed;
-    top: 50%;
-    left: 2rem;
-    transform: translateY(-50%);
-    width: 280px;
-    max-height: 80vh;
-    background: var(--sidebar-bg);
-    border: 1px solid var(--sidebar-border);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px var(--sidebar-shadow);
-    z-index: 100;
-    display: none;
-  }
-  
-  .sidebar__content {
-    padding: 1.5rem;
-    height: 100%;
-    overflow-y: auto;
-  }
-  
-  .sidebar__title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--sidebar-text);
-    margin: 0 0 1rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  
-  .sidebar__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .sidebar__item {
-    margin-bottom: 0.25rem;
-  }
-  
-  .sidebar__link {
-    display: block;
-    padding: 0.75rem 1rem;
-    color: var(--sidebar-text);
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .sidebar__link:hover {
-    color: var(--sidebar-text-hover);
-    background-color: var(--sidebar-accent-bg);
-    border-left-color: var(--sidebar-accent);
-  }
-  
-  .sidebar__link:focus {
-    outline: 2px solid var(--sidebar-accent);
-    outline-offset: 2px;
-  }
-  
-  .sidebar__link--active {
-    color: var(--sidebar-accent);
-    background-color: var(--sidebar-accent-bg);
-    border-left-color: var(--sidebar-accent);
-    font-weight: 500;
-  }
-  
-  .sidebar__content::-webkit-scrollbar {
-    width: 4px;
-  }
-  
-  .sidebar__content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .sidebar__content::-webkit-scrollbar-thumb {
-    background: var(--sidebar-border);
-    border-radius: 2px;
-  }
-  
-  @media (min-width: 1025px) {
-    .sidebar--visible {
-      display: block;
-    }
-  }
-  
-  /* Mobile bottom bar styles */
-  @media (max-width: 1024px) {
-    .sidebar {
-      position: fixed;
-      top: auto;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      max-height: none;
-      height: auto;
-      transform: none;
-      border-radius: 0;
-      border: none;
-      border-top: 1px solid var(--sidebar-border);
-      box-shadow: 0 -4px 6px -1px var(--sidebar-shadow);
-      z-index: 1000;
-    }
-    
-    .sidebar__content {
-      padding: 0;
-      height: auto;
-      overflow: visible;
-    }
-    
-    .sidebar__title {
-      display: none;
-    }
-    
-    .sidebar__mobile-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid var(--sidebar-border);
-      background: var(--sidebar-bg);
-      cursor: pointer;
-    }
-    
-    .sidebar__mobile-title {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--sidebar-text);
-      margin: 0;
-    }
-    
-    .sidebar__mobile-current {
-      font-size: 0.75rem;
-      color: var(--sidebar-text);
-      opacity: 0.7;
-      margin: 0;
-      max-width: 60%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .sidebar__mobile-toggle {
-      background: none;
-      border: none;
-      color: var(--sidebar-accent);
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 0.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-      transition: background-color 0.2s ease;
-    }
-    
-    .sidebar__mobile-toggle:hover {
-      background-color: var(--sidebar-accent-bg);
-    }
-    
-    .sidebar__list {
-      max-height: 50vh;
-      overflow-y: auto;
-      padding: 1rem;
-      display: none;
-    }
-    
-    .sidebar__list--expanded {
-      display: block;
-    }
-    
-    .sidebar__link {
-      padding: 1rem;
-      border-radius: 8px;
-      border-left: none;
-      border: 1px solid transparent;
-    }
-    
-    .sidebar__link:hover,
-    .sidebar__link--active {
-      border-color: var(--sidebar-accent);
-    }
-  }
-</style>
+    <button
+      class="section-nav__summary"
+      type="button"
+      aria-label="Toggle section list"
+      aria-expanded="false"
+      aria-controls="section-nav-sections-list"
+    >
+      <span class="section-nav__current-wrap">
+        <span class="section-nav__eyebrow">On this page</span>
+        <span class="section-nav__current" aria-live="polite">Current section</span>
+      </span>
+      <span class="section-nav__summary-icon" aria-hidden="true">▾</span>
+    </button>
+
+    <button class="section-nav__btn section-nav__btn--nav" type="button" data-dir="next" aria-label="Go to next section">
+      <span aria-hidden="true">&rarr;</span>
+    </button>
+  </div>
+
+  <div class="section-nav__panel" id="section-nav-sections-list" aria-hidden="true">
+    <ul class="section-nav__list"></ul>
+  </div>
+</nav>
 
 <script>
+  // @ts-nocheck
   function initSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarList = document.querySelector('.sidebar__list');
-    const mobileHeader = document.querySelector('.sidebar__mobile-header');
-    const mobileToggle = document.querySelector('.sidebar__mobile-toggle');
-    const toggleIcon = document.querySelector('.sidebar__toggle-icon');
-    const currentSection = document.querySelector('.sidebar__mobile-current');
-    
-    if (!sidebar || !sidebarList) return;
-    
-    // Find H2 headings in main content only
-    const headings = document.querySelectorAll('.content h2, .content-case-study h2');
-    
-    if (headings.length === 0) return;
-    
-    // Show sidebar
-    sidebar.classList.add('sidebar--visible');
-    
-    let isExpanded = false;
-    
-    // Mobile toggle functionality
-    if (mobileHeader && mobileToggle) {
-      mobileHeader.addEventListener('click', () => {
-        isExpanded = !isExpanded;
-        sidebarList.classList.toggle('sidebar__list--expanded', isExpanded);
-        toggleIcon.textContent = isExpanded ? '▼' : '▲';
-        mobileToggle.setAttribute('aria-expanded', isExpanded);
+    const sectionNav = document.querySelector('.section-nav');
+    if (!(sectionNav instanceof HTMLElement) || sectionNav.dataset.initialized === 'true') return;
+
+    const sectionNavList = sectionNav.querySelector('.section-nav__list');
+    const sectionPanel = sectionNav.querySelector('.section-nav__panel');
+    const summaryToggle = sectionNav.querySelector('.section-nav__summary');
+    const previousButton = sectionNav.querySelector('[data-dir="prev"]');
+    const followingButton = sectionNav.querySelector('[data-dir="next"]');
+    const currentSectionLabel = sectionNav.querySelector('.section-nav__current');
+
+    if (!(sectionNavList instanceof HTMLUListElement)) return;
+
+    const heroOverview = document.querySelector('.hero-content-casestudy[data-section-label="Overview"]');
+    const headings = Array.from(document.querySelectorAll('.content-case-study h2')).filter(
+      (heading) => heading instanceof HTMLHeadingElement
+    );
+
+    if (!heroOverview && headings.length === 0) return;
+
+    sectionNav.dataset.initialized = 'true';
+    sectionNavList.innerHTML = '';
+
+    const usedIds = new Set();
+    const headingsData = [];
+
+    if (heroOverview instanceof HTMLElement) {
+      if (!heroOverview.id) {
+        heroOverview.id = 'overview';
+      }
+      usedIds.add(heroOverview.id);
+      headingsData.push({
+        heading: heroOverview,
+        label: 'Overview',
+        fullLabel: 'Overview',
+        id: heroOverview.id
       });
     }
-    
-    // Generate navigation
+
     headings.forEach((heading, index) => {
-      // Create ID if doesn't exist
-      if (!heading.id) {
-        const text = heading.textContent.trim();
-        heading.id = text
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-|-$/g, '') || `section-${index + 1}`;
-      }
-      
-      // Create nav item
-      const li = document.createElement('li');
-      li.className = 'sidebar__item';
-      
-      const a = document.createElement('a');
-      a.className = 'sidebar__link';
-      a.href = `#${heading.id}`;
-      a.textContent = heading.textContent.trim();
-      a.title = heading.textContent.trim(); // For truncated text
-      
-      // Smooth scroll on click
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.getElementById(heading.id);
-        if (target) {
-          const offset = target.offsetTop - 80; // Adjust offset as needed
-          window.scrollTo({
-            top: offset,
-            behavior: 'smooth'
-          });
-          
-          // Close mobile menu after navigation
-          if (window.innerWidth <= 1024) {
-            isExpanded = false;
-            sidebarList.classList.remove('sidebar__list--expanded');
-            toggleIcon.textContent = '▲';
-            mobileToggle.setAttribute('aria-expanded', false);
-          }
-        }
+      const rawText = heading.textContent?.trim() ?? '';
+      const label = truncateLabel(rawText, 40);
+      const id = ensureHeadingId(heading, rawText, index, usedIds);
+      headingsData.push({
+        heading,
+        label,
+        fullLabel: rawText || `Section ${index + 1}`,
+        id
       });
-      
-      li.appendChild(a);
-      sidebarList.appendChild(li);
     });
-    
-    // Track scroll position
-    const links = sidebarList.querySelectorAll('.sidebar__link');
-    
-    function updateActiveLink() {
-      const scrollPos = window.scrollY + 100; // Offset for better UX
-      
-      let current = '';
-      let currentHeading = null;
-      headings.forEach((heading) => {
-        if (heading.offsetTop <= scrollPos) {
-          current = heading.id;
-          currentHeading = heading;
-        }
+
+    // Generate navigation links.
+    headingsData.forEach((item) => {
+      const li = document.createElement('li');
+      li.className = 'section-nav__item';
+
+      const a = document.createElement('a');
+      a.className = 'section-nav__link';
+      a.href = `#${item.id}`;
+      a.textContent = item.label;
+      a.title = item.fullLabel;
+      a.setAttribute('data-target-id', item.id);
+
+      a.addEventListener('click', (event) => {
+        event.preventDefault();
+        scrollToHeading(item.heading);
+        setExpanded(false);
       });
-      
-      links.forEach((link) => {
-        link.classList.remove('sidebar__link--active');
-        if (link.getAttribute('href') === `#${current}`) {
-          link.classList.add('sidebar__link--active');
-        }
+
+      li.appendChild(a);
+      sectionNavList.appendChild(li);
+    });
+
+    // Show section nav.
+    sectionNav.classList.add('section-nav--visible');
+
+    document.body.classList.add('has-section-sidebar');
+
+    let activeIndex = 0;
+    let isExpanded = false;
+    const links = Array.from(sectionNavList.querySelectorAll('.section-nav__link'));
+
+    function getScrollOffset() {
+      const desktop = window.matchMedia('(min-width: 768px)').matches;
+      const cssVar = desktop ? '--nav-height-desktop' : '--nav-height-mob';
+      const navHeight = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue(cssVar)) || 80;
+      return navHeight + 16;
+    }
+
+    function scrollToHeading(heading) {
+      const targetTop = heading.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: 'smooth'
       });
-      
-      // Update mobile current section
-      if (currentSection && currentHeading) {
-        currentSection.textContent = currentHeading.textContent.trim();
+    }
+
+    function setExpanded(nextState) {
+      isExpanded = nextState;
+      sectionNav.classList.toggle('section-nav--expanded', isExpanded);
+      if (sectionPanel) {
+        sectionPanel.setAttribute('aria-hidden', String(!isExpanded));
+      }
+      if (summaryToggle) {
+        summaryToggle.setAttribute('aria-expanded', String(isExpanded));
+        summaryToggle.classList.toggle('section-nav__summary--expanded', isExpanded);
       }
     }
-    
-    // Update on scroll
-    window.addEventListener('scroll', updateActiveLink);
-    updateActiveLink(); // Initial call
-    
-    // Handle resize
-    window.addEventListener('resize', () => {
-      if (window.innerWidth <= 1024) {
-        // Reset mobile state
-        isExpanded = false;
-        sidebarList.classList.remove('sidebar__list--expanded');
-        if (toggleIcon) toggleIcon.textContent = '▲';
-        if (mobileToggle) mobileToggle.setAttribute('aria-expanded', false);
+
+    function setCurrentLabel(text) {
+      if (!currentSectionLabel || currentSectionLabel.textContent === text) return;
+      currentSectionLabel.classList.add('section-nav__current--changing');
+      window.setTimeout(() => {
+        currentSectionLabel.textContent = text;
+        currentSectionLabel.classList.remove('section-nav__current--changing');
+      }, 90);
+    }
+
+    function updateDirectionalButtons() {
+      if (previousButton) {
+        previousButton.disabled = activeIndex <= 0;
       }
-      sidebar.classList.add('sidebar--visible');
+      if (followingButton) {
+        followingButton.disabled = activeIndex >= headingsData.length - 1;
+      }
+    }
+
+    function updateActiveLink() {
+      const scrollPos = window.scrollY + getScrollOffset() + 8;
+      let currentIndex = 0;
+
+      for (let i = 0; i < headingsData.length; i += 1) {
+        if (headingsData[i].heading.offsetTop <= scrollPos) {
+          currentIndex = i;
+        }
+      }
+
+      activeIndex = currentIndex;
+      links.forEach((link, index) => {
+        link.classList.toggle('section-nav__link--active', index === activeIndex);
+      });
+
+      setCurrentLabel(headingsData[activeIndex].label);
+      updateDirectionalButtons();
+    }
+
+    if (summaryToggle) {
+      summaryToggle.addEventListener('click', () => {
+        setExpanded(!isExpanded);
+      });
+    }
+
+    if (previousButton) {
+      previousButton.addEventListener('click', () => {
+        if (activeIndex <= 0) return;
+        const nextIndex = activeIndex - 1;
+        scrollToHeading(headingsData[nextIndex].heading);
+      });
+    }
+
+    if (followingButton) {
+      followingButton.addEventListener('click', () => {
+        if (activeIndex >= headingsData.length - 1) return;
+        const nextIndex = activeIndex + 1;
+        scrollToHeading(headingsData[nextIndex].heading);
+      });
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        updateActiveLink();
+        ticking = false;
+      });
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      updateActiveLink();
     });
+
+    updateActiveLink();
+
+    /**
+     * @param {HTMLHeadingElement} heading
+     * @param {string} text
+     * @param {number} index
+     * @param {Set<string>} idSet
+     */
+    function ensureHeadingId(heading, text, index, idSet) {
+      const existingId = heading.id?.trim();
+      if (existingId) {
+        idSet.add(existingId);
+        return existingId;
+      }
+
+      const base = slugify(text) || `section-${index + 1}`;
+      let candidate = base;
+      let increment = 2;
+
+      while (idSet.has(candidate) || document.getElementById(candidate)) {
+        candidate = `${base}-${increment}`;
+        increment += 1;
+      }
+
+      heading.id = candidate;
+      idSet.add(candidate);
+      return candidate;
+    }
+
+    function slugify(value) {
+      return value
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    function truncateLabel(value, maxLength) {
+      if (!value) return 'Section';
+      if (value.length <= maxLength) return value;
+      return `${value.slice(0, maxLength - 1).trimEnd()}…`;
+    }
   }
   
   // Initialize when page loads

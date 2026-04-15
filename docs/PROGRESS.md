@@ -6,12 +6,79 @@
 
 ## Current status
 
-**Phase:** Phase 7 complete. Phase 8 not started.
+**Phase:** Phase 8 in progress.
 **Last updated:** 2026-04-15
 
 ---
 
 ## Session log
+
+### 2026-04-15 — Mobile section-nav interaction refinement
+
+#### Completed
+
+- [x] Moved previous/next arrow controls to the left and right sides of the current section chip on mobile
+- [x] Made the central `On this page` / current-section area the tap target for expanding and collapsing the section list
+- [x] Added the hero overview as the first section-nav anchor so users can jump back to the top of the case study
+- [x] Reduced total section-nav height by tightening padding, control size, label sizing, and content bottom spacing
+- [x] Increased the glass/transparency treatment so the navigator feels lighter over content
+- [x] Kept successful production build verification (`npm run build`)
+
+#### Decisions made
+
+- Removed the separate mobile `Sections` action in favor of making the main center label itself the expandable control.
+
+### 2026-04-15 — Header nav selector hardening (fix section-nav interference)
+
+#### Completed
+
+- [x] Scoped global header navigation CSS from broad `nav` selectors to `header nav` selectors in [src/styles/global.css](src/styles/global.css) so case-study section navigator (`.section-nav`) does not inherit header nav positioning/appearance rules
+- [x] Updated menu script nav lookup from `document.querySelector('nav')` to `document.querySelector('header nav')` in [src/scripts/menu.js](src/scripts/menu.js) so scroll-hide and transparent nav classes always target the real header nav
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Header nav behavior must be explicitly scoped to header context; no global element selectors for shared tags when secondary nav landmarks exist on pages.
+
+### 2026-04-15 — Section navigator regression fix (selector namespace + bottom fallback)
+
+#### Completed
+
+- [x] Renamed section navigator class namespace from generic `.sidebar*` to `.section-nav*` in [src/components/Sidebar.astro](src/components/Sidebar.astro) and [src/styles/global.css](src/styles/global.css) to prevent styling collisions
+- [x] Updated all client-side selectors and active-state class toggles to the new `.section-nav*` names
+- [x] Added safe bottom-position fallback for navigator placement (`bottom: 1rem` + `env(..., 0px)` fallback) in [src/styles/global.css](src/styles/global.css)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Keep section navigator styles fully namespaced to avoid any interference with existing nav/footer/layout selectors.
+- Keep navigator fixed to viewport bottom with explicit fallback-first declaration for cross-browser consistency.
+
+### 2026-04-15 — Case-study section navigator (bottom glass chip)
+
+#### Completed
+
+- [x] Implemented bottom-anchored case-study section navigator in [src/components/Sidebar.astro](src/components/Sidebar.astro) with current-section label, previous/next controls, and expandable full section list
+- [x] Added automatic H2 anchor ID generation with duplicate-safe suffixing and fallback section IDs
+- [x] Added smooth scrolling with header-aware offset, active-section tracking, and directional button disabled states
+- [x] Mounted navigator on case-study pages only via [src/layouts/CaseStudyLayout.astro](src/layouts/CaseStudyLayout.astro)
+- [x] Added token-based global styling and transitions for a light/glass chip UI in [src/styles/global.css](src/styles/global.css)
+- [x] Added case-study content bottom padding guard when navigator is present (`.site-body.has-section-sidebar .content-case-study`) to prevent overlap
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Navigator scope is case-study pages only for v1; project pages are excluded.
+- Desktop and mobile both use bottom placement.
+- Visual direction is light/white glass chip.
+- Section labels are truncated for concise scroller display.
+- Expanded list keeps focus on toggle (no focus jump into list).
+
+#### Deferred (v2)
+
+- Nested H3/H4 navigation
+- Auto theme switching by section background
+- Reading progress bar
 
 ### 2026-04-15 — Homepage case-study card flex refactor (remove inner grid)
 
@@ -126,6 +193,7 @@
 - [x] Updated footer-only hover badge to non-transparent full-opacity dark-grey fill (`var(--color-dark-bg)`) while keeping light text
 - [x] Increased footer heading-to-link spacing by raising `.footer-section-title` bottom margin to `0.75rem`
 - [x] Increased footer hover badge horizontal padding to `0.75rem` and applied matching negative left margin (`-0.75rem`) to keep link text aligned to grid
+- [x] Added a subtler footer hover transition: slower dark badge fill easing plus a slight `translateX(1px)` motion cue
 - [x] Verified successful production build (`npm run build`)
 
 #### Decisions made

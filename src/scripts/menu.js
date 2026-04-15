@@ -1,4 +1,4 @@
-const nav       = document.querySelector('nav');
+const nav       = document.querySelector('header nav');
 const hamburger = document.querySelector('.hamburger');
 const navLinks  = document.querySelector('.nav-links');
 const menuHamburger = document.querySelector('.menu-hamburger');
