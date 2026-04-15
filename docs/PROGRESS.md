@@ -19,6 +19,32 @@
 
 ## Session log
 
+### 2026-04-15 — Homepage / site grid contrast balance
+
+#### Completed
+
+- [x] Slightly darkened the homepage dark-mode grid overlay for better visibility over the hero
+- [x] Slightly lightened the shared default grid lines on other pages for a softer background texture
+- [x] Balanced both values toward a closer middle-ground contrast in [src/styles/global.css](src/styles/global.css)
+
+#### Decisions made
+
+- Kept the change scoped to the shared grid tokens so the overlay system stays consistent across layouts.
+
+### 2026-04-15 — Mobile header nav animation + width stability
+
+#### Completed
+
+- [x] Smoothed the mobile header menu reveal so the secondary nav expands open with opacity/scale instead of popping in
+- [x] Anchored the opened mobile nav panel to the same width as the main top nav pill
+- [x] Matched the opened mobile dropdown background/transparency to the main nav pill, rounded the opened panel shape, and added faint separators between menu items
+- [x] Prevented opening-state layout shift by stabilizing the viewport scrollbar gutter and keeping the header footprint fixed
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept the refinement scoped to the existing header system in [src/styles/global.css](src/styles/global.css) and [src/scripts/menu.js](src/scripts/menu.js) without changing desktop nav behavior.
+
 ### 2026-04-15 — Planning / implementation / todo list sync
 
 #### Completed
@@ -50,6 +76,7 @@
 - [x] Shifted the homepage hero summary block on mobile so it begins from the second grid line using the home grid itself
 - [x] Reduced the gap between the hero summary and the first `Case studies` heading on mobile by lowering hero/content spacing
 - [x] Added an extra `32px` below the `Case studies` title before the card list
+- [x] Moved the homepage hero title/subtitle block a further ~150px upward on mobile
 
 #### Decisions made
 

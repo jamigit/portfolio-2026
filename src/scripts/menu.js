@@ -67,7 +67,9 @@ window.addEventListener('scroll', () => {
 // ── Mobile menu ───────────────────────────────────────────────────────────────
 function closeMenu() {
   navLinks && navLinks.classList.remove('expanded');
+  nav && nav.classList.remove('nav-open');
   hamburger && hamburger.setAttribute('aria-expanded', 'false');
+  navLinks && navLinks.setAttribute('aria-hidden', 'true');
   if (menuHamburger) menuHamburger.style.display = 'block';
   if (menuX) menuX.style.display = 'none';
   document.body.style.overflow = '';
@@ -76,7 +78,9 @@ function closeMenu() {
 
 function openMenu() {
   navLinks && navLinks.classList.add('expanded');
+  nav && nav.classList.add('nav-open');
   hamburger && hamburger.setAttribute('aria-expanded', 'true');
+  navLinks && navLinks.setAttribute('aria-hidden', 'false');
   if (menuHamburger) menuHamburger.style.display = 'none';
   if (menuX) menuX.style.display = 'block';
   document.body.style.overflow = 'hidden';
@@ -112,4 +116,5 @@ window.addEventListener('resize', () => {
 if (menuHamburger) menuHamburger.style.display = 'block';
 if (menuX) menuX.style.display = 'none';
 hamburger && hamburger.setAttribute('aria-expanded', 'false');
+navLinks && navLinks.setAttribute('aria-hidden', 'true');
 handleScroll();
