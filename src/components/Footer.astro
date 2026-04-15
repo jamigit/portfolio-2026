@@ -38,21 +38,22 @@ const sortedTools = [...tools].sort((a: any, b: any) => (a.order || 999) - (b.or
           <WorkitemSimple url={post.url} title={post.frontmatter.title} />
         ))}
       </ul>
+
+      {sortedTools.length > 0 && (
+        <div class="footer-subsection footer-subsection-tools">
+          <h4 class="footer-section-title">Tools</h4>
+          <ul>
+            {sortedTools.map((tool: any) => (
+              <li>
+                <a class="footer-link" href={tool.url} target="_blank" rel="noopener">
+                  {tool.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-    {sortedTools.length > 0 && (
-      <div class="footer-column footer-column-tools">
-        <h4 class="footer-section-title">Tools</h4>
-        <ul>
-          {sortedTools.map((tool: any) => (
-            <li>
-              <a class="footer-link" href={tool.url} target="_blank" rel="noopener">
-                {tool.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
     <div class="footer-column footer-column-contact">
       <div class="footer-contact" aria-label="Contact links">
         <h4 class="footer-section-title footer-contact-title">Contact Me</h4>

@@ -259,6 +259,7 @@
 - [x] Refined footer-only hover badge to translucent dark-grey fill with light text so the animated background remains slightly visible
 - [x] Updated footer-only hover badge to non-transparent full-opacity dark-grey fill (`var(--color-dark-bg)`) while keeping light text
 - [x] Fixed the footer at mid-size widths (around `625px`) to use the shared 4-column grid instead of a separate flex layout
+- [x] Moved the `Tools` content to sit below `Projects` within the second footer column so `Contact Me` remains the third column
 - [x] Increased footer heading-to-link spacing by raising `.footer-section-title` bottom margin to `0.75rem`
 - [x] Increased footer hover badge horizontal padding to `0.75rem` and applied matching negative left margin (`-0.75rem`) to keep link text aligned to grid
 - [x] Added a subtler footer hover transition: slower dark badge fill easing plus a slight `translateX(1px)` motion cue

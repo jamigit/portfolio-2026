@@ -924,6 +924,10 @@ footer .logo {
   min-width: 0;
 }
 
+.footer-subsection {
+  margin-top: 1.5rem;
+}
+
 .footer-links ul {
   list-style: none;
   padding: 0;
