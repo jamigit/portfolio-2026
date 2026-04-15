@@ -13,6 +13,42 @@
 
 ## Session log
 
+### 2026-04-15 — Homepage mobile hero spacing refinement
+
+#### Completed
+
+- [x] Shifted the homepage hero summary block on mobile so it begins from the second grid line using the home grid itself
+- [x] Reduced the gap between the hero summary and the first `Case studies` heading on mobile by lowering hero/content spacing
+- [x] Added an extra `32px` below the `Case studies` title before the card list
+
+#### Decisions made
+
+- Scoped the spacing adjustments to the homepage/mobile rhythm so desktop layout stays unchanged.
+
+### 2026-04-15 — Duplicate Overview label fix
+
+#### Completed
+
+- [x] Renamed the hero-area anchor from the duplicated `Overview` label to a distinct top-of-page label (`Intro` by default)
+- [x] Added support for per-case-study hero anchor naming via `navOverviewLabel` frontmatter in [src/layouts/CaseStudyLayout.astro](src/layouts/CaseStudyLayout.astro)
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- The hero jump and the first content section should have distinct names so the in-page navigator is unambiguous.
+
+### 2026-04-15 — Desktop section-nav width refinement
+
+#### Completed
+
+- [x] Constrained the desktop bottom section navigator to a narrower two-column-style width so it no longer stretches too broadly across the page
+- [x] Kept the expanded section list aligned to the same narrower desktop footprint
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Desktop section nav should read as a compact utility control, not a full-width footer-like bar.
+
 ### 2026-04-15 — Mobile section-nav interaction refinement
 
 #### Completed
@@ -187,10 +223,12 @@
 - [x] Reordered footer columns to `Case studies` (1st), `Projects` (2nd), `Contact Me` (3rd) in the 3-column row
 - [x] Added labeled contact items with logos for `Email` and `Linked in` using inline SVG icons in footer contact links
 - [x] Reduced homepage canvas visibility by scaling scroll-driven canvas opacity in `ThreeBackground.astro` (`CANVAS_OPACITY_SCALE = 0.6`) so footer text stands out more
+- [x] Increased footer-area canvas transparency by using a lower footer reveal scale in `ThreeBackground.astro` (`FOOTER_CANVAS_OPACITY_SCALE = 0.35`)
 - [x] Reduced vertical gap between footer list links by overriding global list spacing inside footer (`.footer-links li { padding-top: 0; }`)
 - [x] Updated footer-only link hover states to use rounded light-grey badge fill (`var(--color-surface)`) instead of the prior orange underline
 - [x] Refined footer-only hover badge to translucent dark-grey fill with light text so the animated background remains slightly visible
 - [x] Updated footer-only hover badge to non-transparent full-opacity dark-grey fill (`var(--color-dark-bg)`) while keeping light text
+- [x] Fixed the footer at mid-size widths (around `625px`) to use the shared 4-column grid instead of a separate flex layout
 - [x] Increased footer heading-to-link spacing by raising `.footer-section-title` bottom margin to `0.75rem`
 - [x] Increased footer hover badge horizontal padding to `0.75rem` and applied matching negative left margin (`-0.75rem`) to keep link text aligned to grid
 - [x] Added a subtler footer hover transition: slower dark badge fill easing plus a slight `translateX(1px)` motion cue

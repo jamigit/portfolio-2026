@@ -44,6 +44,7 @@ const imageFilename = image.url.split('/').pop();
 const heroImageSrc = imageFilename
   ? heroImages[imageFilename as keyof typeof heroImages]
   : undefined;
+const topNavLabel = frontmatter.navOverviewLabel ?? 'Intro';
 const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid ${frontmatter.bgClass ?? ''}`.trim();
 ---
 
@@ -56,9 +57,9 @@ const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid 
   author={author}
   image={image}
 >
-  <section class={heroClasses} id="overview">
+  <section class={heroClasses} id="case-study-top">
     <div id="casestudy-hero-bg" class="hero-bg-layer"></div>
-    <div class="hero-content hero-content-casestudy col-content" data-section-label="Overview">
+    <div class="hero-content hero-content-casestudy col-content" data-section-label={topNavLabel}>
       <TagBadge label="Case Study" />
       <h1 class="banner-text">{frontmatter.title}</h1>
       <p class="overview-text-small">{frontmatter.overview}</p>

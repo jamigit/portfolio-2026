@@ -549,6 +549,7 @@
   var scrollPaused = false;
   var footer = document.querySelector('footer');
   var CANVAS_OPACITY_SCALE = 0.6;
+  var FOOTER_CANVAS_OPACITY_SCALE = 0.35;
 
   function updateScrollEffects() {
     var scrollY = window.scrollY;
@@ -566,7 +567,9 @@
       }
     }
 
-    var canvasOpacity = Math.max(topFade, footerReveal) * CANVAS_OPACITY_SCALE;
+    var heroCanvasOpacity = topFade * CANVAS_OPACITY_SCALE;
+    var footerCanvasOpacity = footerReveal * FOOTER_CANVAS_OPACITY_SCALE;
+    var canvasOpacity = Math.max(heroCanvasOpacity, footerCanvasOpacity);
     canvasOpacity = Math.max(0, Math.min(1, canvasOpacity));
 
     if (canvas) {

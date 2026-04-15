@@ -47,7 +47,7 @@
 
     if (!(sectionNavList instanceof HTMLUListElement)) return;
 
-    const heroOverview = document.querySelector('.hero-content-casestudy[data-section-label="Overview"]');
+    const heroOverview = document.querySelector('.hero-content-casestudy[data-section-label]');
     const headings = Array.from(document.querySelectorAll('.content-case-study h2')).filter(
       (heading) => heading instanceof HTMLHeadingElement
     );
@@ -61,14 +61,15 @@
     const headingsData = [];
 
     if (heroOverview instanceof HTMLElement) {
+      const heroLabel = heroOverview.dataset.sectionLabel?.trim() || 'Intro';
       if (!heroOverview.id) {
-        heroOverview.id = 'overview';
+        heroOverview.id = 'case-study-top';
       }
       usedIds.add(heroOverview.id);
       headingsData.push({
         heading: heroOverview,
-        label: 'Overview',
-        fullLabel: 'Overview',
+        label: truncateLabel(heroLabel, 40),
+        fullLabel: heroLabel,
         id: heroOverview.id
       });
     }
