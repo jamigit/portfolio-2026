@@ -6,12 +6,30 @@
 
 ## Current status
 
-**Phase:** Phase 8 in progress.
+**Phase:** Phase 8 in progress, with Phase 9 cleanup queued next.
 **Last updated:** 2026-04-15
+
+**Active next steps:**
+- Finish cleanup of legacy styles/tokens and remaining documentation sync
+- Set the live site/domain config to clear the current sitemap warning
+- Confirm remaining mobile/QA review items before phase sign-off
+- Complete the final QA and styleguide pass
 
 ---
 
 ## Session log
+
+### 2026-04-15 — Planning / implementation / todo list sync
+
+#### Completed
+
+- [x] Updated the redesign PRD from an outdated planning state to the current active implementation state
+- [x] Synced phase checklists with what is actually built, what is still in progress, and what remains for cleanup/QA
+- [x] Added a clearer active-next-steps summary for the remaining work
+
+#### Decisions made
+
+- The PRD now reflects the current homepage card direction: no homepage `Case Study` tag, and the mobile card order prioritizes the image before the supporting subtitle/description.
 
 ### 2026-04-15 — Homepage case-study card mobile reorder + tag removal
 
