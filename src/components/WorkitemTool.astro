@@ -1,0 +1,26 @@
+---
+import TagBadge from './TagBadge.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  url: string;
+  tech?: string;
+}
+
+const { title, description, url, tech } = Astro.props;
+---
+
+<li class="workitem-container workitem-container--tool">
+  <a class="workitem workitem--tool" href={url} target="_blank" rel="noopener" aria-label={`${title} — opens on GitHub`}>
+    <div class="workitem-inner">
+      {tech && <TagBadge label={tech} variant="grey" />}
+      <h3 class="workitem-title workitem-title--tool">{title}</h3>
+      <p class="overview-text-small">{description}</p>
+      <span class="workitem-cta workitem-cta--tool" aria-hidden="true">
+        View on GitHub
+        <span class="workitem-cta-arrow">↗</span>
+      </span>
+    </div>
+  </a>
+</li>
