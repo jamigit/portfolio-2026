@@ -37,13 +37,25 @@
 
 - [x] Smoothed the mobile header menu reveal so the secondary nav expands open with opacity/scale instead of popping in
 - [x] Anchored the opened mobile nav panel to the same width as the main top nav pill
-- [x] Matched the opened mobile dropdown background/transparency to the main nav pill, rounded the opened panel shape, and added faint separators between menu items
+- [x] Matched the opened mobile dropdown background/transparency to the main nav pill, replaced infinite pill radii with height-based nav rounding, and removed the menu item top separators for a cleaner dropdown
 - [x] Prevented opening-state layout shift by stabilizing the viewport scrollbar gutter and keeping the header footprint fixed
 - [x] Verified successful production build (`npm run build`)
 
 #### Decisions made
 
 - Kept the refinement scoped to the existing header system in [src/styles/global.css](src/styles/global.css) and [src/scripts/menu.js](src/scripts/menu.js) without changing desktop nav behavior.
+
+### 2026-04-16 — Bottom section-nav open-close animation refinement
+
+#### Completed
+
+- [x] Updated the bottom case-study section navigator so its expanded list has a stronger visible grow-from-the-bar animation, then sped the motion up for a snappier feel, strengthened the matching top mobile subnav reveal, and set a consistent 16px gap between each bar and its expanded panel
+- [x] Tightened the visual join between the bottom bar and the expanded panel for a more unified motion
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Kept the change scoped to the existing bottom section-nav motion in [src/styles/global.css](src/styles/global.css) without changing its content structure or desktop behavior.
 
 ### 2026-04-15 — Planning / implementation / todo list sync
 

@@ -20,6 +20,8 @@
   /* Nav */
   --nav-height-mob: 58px;
   --nav-height-desktop: 80px;
+  --nav-radius-mob: calc(var(--nav-height-mob) / 2);
+  --nav-radius-desktop: calc(var(--nav-height-desktop) / 2);
 
   /* Grid margins */
   --grid-margin: 16px;
@@ -481,6 +483,7 @@ img {
   gap: 0.375rem;
   grid-template-columns: 40px minmax(0, 1fr) 40px;
   padding: 0.375rem;
+  transition: box-shadow var(--transition-2), background-color var(--transition-2), border-color var(--transition-2), transform var(--transition-2);
 }
 
 .section-nav__summary {
@@ -605,8 +608,8 @@ img {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid color-mix(in srgb, var(--color-border) 48%, transparent);
-  border-radius: 0.875rem;
-  bottom: calc(100% + 0.5rem);
+  border-radius: 1.5rem;
+  bottom: calc(100% + 1rem);
   left: 0;
   max-height: 0;
   opacity: 0;
@@ -614,15 +617,27 @@ img {
   pointer-events: none;
   position: absolute;
   right: 0;
-  transform: translateY(0.5rem);
-  transition: max-height var(--transition-2), opacity var(--transition-2), transform var(--transition-2);
+  clip-path: inset(85% 0 0 0 round 1.5rem);
+  transform: translateY(0.75rem) scaleY(0.84);
+  transform-origin: bottom center;
+  visibility: hidden;
+  will-change: transform, opacity, max-height, clip-path;
+  transition: max-height 0.22s ease, opacity 0.16s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.18s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.16s;
+}
+
+.section-nav--expanded .section-nav__bar {
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
 }
 
 .section-nav--expanded .section-nav__panel {
   max-height: min(50vh, 20rem);
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  clip-path: inset(0 0 0 0 round 1.5rem);
+  transform: translateY(0) scaleY(1);
+  visibility: visible;
+  transition: max-height 0.26s ease, opacity 0.18s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
 }
 
 .section-nav__list {
@@ -722,6 +737,7 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .section-nav__bar,
   .section-nav__current,
   .section-nav__btn,
   .section-nav__panel,
@@ -1078,6 +1094,12 @@ header nav .logo:focus-visible {
 }
 /* ── Navigation ───────────────────────────────────────────────────────────── */
 
+header nav,
+.nav-links {
+  --nav-surface: rgba(52, 50, 48, 0.4);
+  --nav-radius: var(--nav-radius-mob);
+}
+
 header nav {
   position: fixed;
   top: 1rem;
@@ -1087,7 +1109,7 @@ header nav {
   width: calc(100% - (var(--grid-margin) * 2));
   max-width: calc(var(--max-width) - (var(--grid-margin) * 2));
   background-color: var(--nav-surface);
-  border-radius: 999px;
+  border-radius: var(--nav-radius);
   padding: 0.375rem 0.75rem;
   display: flex;
   align-items: center;
@@ -1099,18 +1121,13 @@ header nav {
 }
 
 header nav.nav-transparent {
-  background-color: rgba(52, 50, 48, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-header nav,
-.nav-links {
-  --nav-surface: rgba(52, 50, 48, 0.4);
-}
-
 header nav:not(.nav-transparent),
-header nav.nav-open {
+header nav.nav-open,
+header nav.nav-open .nav-links {
   --nav-surface: rgba(52, 50, 48, 0.92);
 }
 
@@ -1146,7 +1163,7 @@ header nav .logo {
   align-items: center;
   min-height: 44px;
   padding: 0.5rem 1rem;
-  border-radius: 999px;
+  border-radius: calc(var(--nav-radius) - 0.375rem);
   flex: 0 1 auto;
   transition: background-color var(--transition-1-fast);
 }
@@ -1161,7 +1178,7 @@ header nav .logo {
   flex: 0 0 44px;
   cursor: pointer;
   color: var(--color-text-on-dark);
-  border-radius: 999px;
+  border-radius: calc(var(--nav-radius) - 0.375rem);
   transition: background-color var(--transition-1-fast);
   -webkit-tap-highlight-color: transparent;
 }
@@ -1176,7 +1193,7 @@ header nav .logo {
 
 .nav-links {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 1rem);
   left: -0.75rem;
   right: -0.75rem;
   display: flex;
@@ -1188,18 +1205,20 @@ header nav .logo {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+  border-radius: var(--nav-radius);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
-  padding: 0.375rem;
+  padding: 0.5rem 0.375rem 0.375rem;
   z-index: 999;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   max-height: 0;
   overflow: hidden;
-  transform: translateY(-0.35rem) scaleY(0.96);
+  clip-path: inset(0 0 88% 0 round var(--nav-radius));
+  transform: translateY(-0.55rem) scaleY(0.84);
   transform-origin: top center;
-  transition: opacity var(--transition-2), transform var(--transition-2), max-height var(--transition-3), visibility 0s linear var(--transition-2);
+  will-change: transform, opacity, max-height, clip-path;
+  transition: max-height 0.24s ease, opacity 0.18s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.18s;
 }
 
 .nav-links.expanded {
@@ -1207,8 +1226,9 @@ header nav .logo {
   visibility: visible;
   pointer-events: auto;
   max-height: 16rem;
+  clip-path: inset(0 0 0 0 round var(--nav-radius));
   transform: translateY(0) scaleY(1);
-  transition: opacity var(--transition-2), transform var(--transition-2), max-height var(--transition-3);
+  transition: max-height 0.28s ease, opacity 0.2s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), clip-path 0.24s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
 }
 
 .nav-links a {
@@ -1219,12 +1239,8 @@ header nav .logo {
   font-size: 1rem;
   font-weight: 400;
   min-height: 44px;
-  border-radius: 999px;
+  border-radius: calc(var(--nav-radius) - 0.375rem);
   transition: background-color var(--transition-1-fast), border-radius var(--transition-1-fast);
-}
-
-.nav-links a + a {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-links a:hover,
@@ -1235,6 +1251,7 @@ header nav .logo {
 /* Desktop */
 @media (min-width: 768px) {
   header nav {
+    --nav-radius: var(--nav-radius-desktop);
     padding: 0.375rem;
   }
 
