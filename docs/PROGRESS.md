@@ -19,6 +19,18 @@
 
 ## Session log
 
+### 2026-04-16 — Navigation visibility fixes (mobile + desktop)
+
+#### Completed
+
+- [x] Fixed mobile nav-links dropdown visibility — added `z-index: 0` to `.hamburger` so nav-links dropdown (z-index: 999) renders on top when expanded
+- [x] Fixed desktop nav-links visibility — added `flex: 0 0 auto` to ensure nav-links container displays at correct width and added `z-index: 1` for proper layering
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Applied z-index fixes and flex properties to ensure nav-links are always visible and not obscured by sibling elements or background layers.
+
 ### 2026-04-16 — MDX frontmatter YAML fix
 
 #### Completed
