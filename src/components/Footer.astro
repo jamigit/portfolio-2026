@@ -24,7 +24,7 @@ const sortedTools = [...tools].sort((a: any, b: any) => (a.order || 999) - (b.or
 
   <div class="footer-links">
     <div class="footer-column footer-column-case-studies">
-      <h4 class="footer-section-title">Case studies</h4>
+      <a href="/#case-studies" class="footer-section-title footer-section-title-link">Case studies</a>
       <ul>
         {allCaseStudies.map((post: any) => (
           <WorkitemSimple url={post.url} title={post.frontmatter.titleShort ?? post.frontmatter.title} />
@@ -32,7 +32,7 @@ const sortedTools = [...tools].sort((a: any, b: any) => (a.order || 999) - (b.or
       </ul>
     </div>
     <div class="footer-column footer-column-projects">
-      <h4 class="footer-section-title">Projects</h4>
+      <a href="/#projects" class="footer-section-title footer-section-title-link">Projects</a>
       <ul>
         {allProjects.map((post: any) => (
           <WorkitemSimple url={post.url} title={post.frontmatter.title} />
@@ -55,7 +55,7 @@ const sortedTools = [...tools].sort((a: any, b: any) => (a.order || 999) - (b.or
       )}
     </div>
     <div class="footer-column footer-column-contact">
-      <div class="footer-contact" aria-label="Contact links">
+      <div class="footer-contact" id="contact" aria-label="Contact links">
         <h4 class="footer-section-title footer-contact-title">Contact Me</h4>
         <a class="footer-link footer-contact-link" href="mailto:jamiehbarter@gmail.com">
           <span class="footer-contact-icon" aria-hidden="true">

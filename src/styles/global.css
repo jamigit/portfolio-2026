@@ -981,6 +981,22 @@ footer .logo {
   margin-bottom: 0.75rem;
 }
 
+.footer-section-title-link {
+  display: inline-flex;
+  text-decoration: none;
+  color: var(--color-text-strong);
+  border-radius: 999px;
+  padding: 0.125rem 0.75rem;
+  margin-left: -0.75rem;
+  transition: var(--transition-2);
+}
+
+.footer-section-title-link:hover,
+.footer-section-title-link:focus-visible {
+  color: var(--color-text-on-dark);
+  background-color: var(--color-dark-bg);
+}
+
 @media (min-width: 540px) {
   footer {
     display: grid;
