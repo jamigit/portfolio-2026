@@ -43,7 +43,8 @@
 /* Bricolage Grotesque — headings (variable) */
 @font-face {
   font-family: 'Bricolage Grotesque';
-  src: url('../assets/fonts/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf') format('truetype');
+  src: url('../assets/fonts/BricolageGrotesque-VariableFont_opsz,wdth,wght.woff2') format('woff2'),
+       url('../assets/fonts/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf') format('truetype');
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -75,7 +76,7 @@
 }
 @font-face {
   font-family: 'PP Neue Montreal';
-  src: url('../assets/fonts/PPNeueMontreal-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/PPNeueMontreal-Book.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -84,6 +85,13 @@
   font-family: 'PP Neue Montreal';
   src: url('../assets/fonts/PPNeueMontreal-Medium.woff2') format('woff2');
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('../assets/fonts/PPNeueMontreal-Bold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }

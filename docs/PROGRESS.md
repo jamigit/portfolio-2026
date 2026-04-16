@@ -19,6 +19,17 @@
 
 ## Session log
 
+### 2026-04-16 — MDX frontmatter YAML fix
+
+#### Completed
+
+- [x] Fixed invalid YAML frontmatter quoting in the Kepla and Pelorus case-study files so the MDX parser no longer throws a YAMLException
+- [x] Verified successful production build (`npm run build`)
+
+#### Decisions made
+
+- Standardized the affected meta description fields to valid double-quoted YAML strings to safely support apostrophes.
+
 ### 2026-04-15 — Homepage / site grid contrast balance
 
 #### Completed

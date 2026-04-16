@@ -44,7 +44,7 @@
   --grey-20:  #d2d1d0;
   --grey-30:  #bcbab9;
   --grey-40:  #a5a3a2;
-  --grey-50:  #8f8d8b;
+  --grey-50:  #767473;
   --grey-60:  #797674;
   --grey-70:  #625f5d;
   --grey-80:  #4d4a48;
@@ -96,7 +96,7 @@
   --color-dark-bg:        var(--grey-100);
 
   --color-text:           var(--grey-80);
-  --color-text-muted:     var(--grey-50);
+  --color-text-muted:     #767473;
   --color-text-strong:    var(--grey-100);
   --color-text-on-dark:   var(--grey-0);
   --color-text-muted-on-dark: var(--grey-30);
@@ -1181,11 +1181,18 @@ header nav .logo {
   border-radius: calc(var(--nav-radius) - 0.375rem);
   transition: background-color var(--transition-1-fast);
   -webkit-tap-highlight-color: transparent;
+  background: none;
+  border: none;
 }
 
 .hamburger:hover,
-.hamburger:focus {
+.hamburger:focus-visible {
   background-color: rgba(255, 255, 255, 0.12);
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid var(--color-accent-border);
+  outline-offset: 2px;
 }
 
 .menu-hamburger { display: block; }
@@ -1244,8 +1251,13 @@ header nav .logo {
 }
 
 .nav-links a:hover,
-.nav-links a:focus {
+.nav-links a:focus-visible {
   background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-links a:focus-visible {
+  outline: 2px solid var(--color-accent-border);
+  outline-offset: 2px;
 }
 
 /* Desktop */
@@ -1652,10 +1664,17 @@ a {
   border-color: var(--color-text-strong);
 }
 .btn--primary:hover,
-.btn--primary:focus {
+.btn--primary:focus-visible {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
   color: var(--grey-100);
+}
+
+.btn--primary:focus-visible,
+.btn--outline:focus-visible,
+.btn--ghost:focus-visible {
+  outline: 2px solid var(--color-accent-border);
+  outline-offset: 2px;
 }
 
 .btn--outline {
@@ -1664,7 +1683,7 @@ a {
   border-color: var(--color-text-strong);
 }
 .btn--outline:hover,
-.btn--outline:focus {
+.btn--outline:focus-visible {
   background-color: var(--color-accent-subtle);
 }
 
@@ -1674,7 +1693,7 @@ a {
   border-color: transparent;
 }
 .btn--ghost:hover,
-.btn--ghost:focus {
+.btn--ghost:focus-visible {
   background-color: var(--color-accent-subtle);
 }
 
@@ -2364,7 +2383,7 @@ a {
   margin-bottom: 0.5rem;
 }
 
-.info-item h5 {
+.info-item dt {
   margin: 0 0 0.2rem;
   font-size: 0.75rem;
   font-weight: 500;
@@ -2373,7 +2392,7 @@ a {
   opacity: 0.6;
 }
 
-.info-item p {
+.info-item dd {
   margin: 0;
   font-size: 0.9375rem;
 }

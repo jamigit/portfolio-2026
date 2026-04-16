@@ -56,7 +56,18 @@ const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid 
   metaDescription={metaDescription ?? frontmatter.description}
   author={author}
   image={image}
+  ogType="article"
 >
+  <!-- JSON-LD CreativeWork Schema -->
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": frontmatter.title,
+    "creator": { "@type": "Person", "name": "Jamie Barter" },
+    "description": frontmatter.overview,
+    "client": frontmatter.client,
+    "dateCreated": frontmatter.timeframe
+  })} />
   <section class={heroClasses} id="case-study-top">
     <div id="casestudy-hero-bg" class="hero-bg-layer"></div>
     <div class="hero-content hero-content-casestudy col-content" data-section-label={topNavLabel}>
@@ -78,44 +89,44 @@ const heroClasses = `hero hero-casestudy has-canvas-hero hero-grid-visible grid 
         />
       ) : null}
 
-      <div class="info">
+      <dl class="info">
         {frontmatter.client && (
           <div class="info-item">
-            <h5>Client</h5>
-            <p>{frontmatter.client}</p>
+            <dt>Client</dt>
+            <dd>{frontmatter.client}</dd>
           </div>
         )}
         {frontmatter.projectType && (
           <div class="info-item">
-            <h5>Project Type</h5>
-            <p>{frontmatter.projectType}</p>
+            <dt>Project Type</dt>
+            <dd>{frontmatter.projectType}</dd>
           </div>
         )}
         {frontmatter.role && (
           <div class="info-item">
-            <h5>Role</h5>
-            <p>{frontmatter.role}</p>
+            <dt>Role</dt>
+            <dd>{frontmatter.role}</dd>
           </div>
         )}
         {frontmatter.timeframe && (
           <div class="info-item">
-            <h5>Timeframe</h5>
-            <p>{frontmatter.timeframe}</p>
+            <dt>Timeframe</dt>
+            <dd>{frontmatter.timeframe}</dd>
           </div>
         )}
         {frontmatter.team && (
           <div class="info-item">
-            <h5>Team</h5>
-            <p>{frontmatter.team}</p>
+            <dt>Team</dt>
+            <dd>{frontmatter.team}</dd>
           </div>
         )}
         {frontmatter.skills && (
           <div class="info-item">
-            <h5>Skills</h5>
-            <p>{frontmatter.skills}</p>
+            <dt>Skills</dt>
+            <dd>{frontmatter.skills}</dd>
           </div>
         )}
-      </div>
+      </dl>
 
       {frontmatter.projectLink && (
         <Button href={frontmatter.projectLink} variant="outline" external>
